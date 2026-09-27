@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pasti-app-v10';
+const CACHE_NAME = 'pasti-app-v11';
 
 const PRECACHE_ASSETS = [
   './',

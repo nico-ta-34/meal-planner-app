@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>MealPlan Pro - Pianificatore Pasti Settimanali & Lista Spesa</title>
+  <title>MealPlan.io - Pianificatore Pasti Settimanali & Lista Spesa</title>
   
   <!-- PWA & Mobile Web App Meta Tags -->
   <link rel="manifest" href="manifest.json">
@@ -94,41 +94,141 @@
         padding: 0 !important;
       }
     }
+
+    .disabled, button[disabled], button.disabled {
+      opacity: 0.3 !important;
+      cursor: not-allowed !important;
+      pointer-events: none !important;
+    }
+
+    :root {
+      --app-header-height: 84px;
+    }
+
+    .recipe-controls-sticky {
+      position: sticky;
+      top: var(--app-header-height, 84px);
+      z-index: 25;
+      background: #ffffff;
+      padding: 10px 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    /* ================= TUTORIAL SPOTLIGHT & DYNAMIC ARROW ================= */
+    #app-tutorial-modal {
+      z-index: 10000 !important;
+      padding-top: calc(env(safe-area-inset-top, 0px) + 72px) !important;
+      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 78px) !important;
+    }
+
+    .tutorial-spotlight-target {
+      position: relative !important;
+      z-index: 10001 !important;
+      box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.4), 0 0 25px rgba(0, 0, 0, 0.5) !important;
+      border-radius: 12px !important;
+      background: #ffffff !important;
+      transition: all 0.3s ease !important;
+      cursor: pointer !important;
+      pointer-events: auto !important;
+    }
+
+    .bottom-tab-btn.tutorial-spotlight-target {
+      padding-top: 6px !important;
+      padding-bottom: 6px !important;
+      padding-left: 8px !important;
+      padding-right: 8px !important;
+    }
+
+    body.tutorial-active #mobile-bottom-nav {
+      display: block !important;
+      z-index: 10001 !important;
+      background-color: transparent !important;
+      border-color: transparent !important;
+      box-shadow: none !important;
+      pointer-events: none !important;
+    }
+
+    body.tutorial-active #mobile-bottom-nav .bottom-tab-btn {
+      opacity: 0.35;
+      transition: opacity 0.3s ease;
+    }
+
+    body.tutorial-active #mobile-bottom-nav .bottom-tab-btn.tutorial-spotlight-target {
+      opacity: 1 !important;
+    }
+
+    body.tutorial-active #app-header {
+      z-index: 10001 !important;
+      background-color: transparent !important;
+      border-color: transparent !important;
+      box-shadow: none !important;
+      pointer-events: none !important;
+    }
+
+    body.tutorial-active #app-header .tutorial-spotlight-target {
+      opacity: 1 !important;
+      pointer-events: auto !important;
+    }
+
+    /* Directional Bounce Keyframes */
+    @keyframes tutorial-bounce-down {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    @keyframes tutorial-bounce-down-left {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-6px, 6px); }
+    }
+
+    @keyframes tutorial-bounce-down-right {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(6px, 6px); }
+    }
+
+    @keyframes tutorial-bounce-up {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .tutorial-bounce-down {
+      animation: tutorial-bounce-down 1.2s ease-in-out infinite;
+    }
+    .tutorial-bounce-down-left {
+      animation: tutorial-bounce-down-left 1.2s ease-in-out infinite;
+    }
+    .tutorial-bounce-down-right {
+      animation: tutorial-bounce-down-right 1.2s ease-in-out infinite;
+    }
+    .tutorial-bounce-up {
+      animation: tutorial-bounce-up 1.2s ease-in-out infinite;
+    }
   </style>
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex flex-col">
 
   <!-- ================= TOP HEADER (DUE LIVELLI) ================= -->
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs no-print" style="padding-top: env(safe-area-inset-top, 0px);">
+  <header id="app-header" class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs no-print" style="padding-top: env(safe-area-inset-top, 0px);">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
       
       <!-- LIVELLO 1: Brand e Controlli Principali -->
       <div class="flex items-center justify-between h-12 sm:h-14 gap-2">
-        <!-- Brand Sinistra: Logo + Nome "MealPlan.io" + Badge "PRO" -->
+        <!-- Brand Sinistra: Logo + Nome "MealPlan.io" (senza PRO) -->
         <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
           <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-xs shadow-emerald-600/20 shrink-0">
             <i data-lucide="utensils" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
           </div>
-          <div class="flex items-center gap-1.5 leading-none">
+          <div class="flex items-center leading-none">
             <span class="text-base sm:text-lg font-black tracking-tight text-slate-900 leading-none">MealPlan<span class="text-emerald-600">.io</span></span>
-            <span class="text-[9px] uppercase font-extrabold tracking-wider px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 leading-none">Pro</span>
           </div>
         </div>
 
-        <!-- Azioni Destra: Pulsante "Wizard" + "Listino Fruttivendolo" + "Obiettivi" + "Genera" -->
+        <!-- Azioni Destra: Guida + Archivio + Spazio Casa + Genera (Listino spostato in Spesa, Obiettivi unificato sotto) -->
         <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
           <button onclick="openOnboardingWizard()" class="inline-flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 active:scale-95 text-slate-700 font-semibold text-xs transition shadow-2xs shrink-0" title="Rifai configurazione guidata a 3 passi">
             <i data-lucide="wand-2" class="w-3.5 h-3.5 text-emerald-600"></i>
             <span class="hidden sm:inline">Configurazione Guidata</span>
-            <span class="sm:hidden">Wizard</span>
-          </button>
-
-          <!-- Pulsante "Listino Fruttivendolo" -->
-          <button onclick="openFruitVendorModal()" class="inline-flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-xl border border-lime-300 bg-lime-50 hover:bg-lime-100 active:scale-95 text-lime-900 font-semibold text-xs transition shadow-2xs shrink-0 relative" title="Importa listino WhatsApp del fruttivendolo (+50% priorità ricette)">
-            <i data-lucide="store" class="w-3.5 h-3.5 text-lime-700"></i>
-            <span class="hidden md:inline">Listino Fruttivendolo</span>
-            <span class="md:hidden">Listino</span>
-            <span id="fruit-vendor-header-dot" class="w-2 h-2 rounded-full bg-lime-600 hidden animate-pulse"></span>
+            <span class="sm:hidden">Guida</span>
           </button>
 
           <button onclick="openManageRecipesModal()" class="hidden lg:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-100 active:scale-95 text-slate-600 font-semibold text-xs transition" title="Gestisci archivio ricette">
@@ -137,17 +237,11 @@
           </button>
 
           <!-- Pulsante "Spazio Casa / Coppia" (Sincronizzazione Realtime Firebase) -->
-          <button type="button" onclick="openSyncHouseModal()" id="btn-header-house-sync" class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-indigo-50/50 hover:border-indigo-200 active:scale-95 text-slate-700 font-semibold text-xs transition shadow-2xs shrink-0 relative" title="Sincronizzazione Realtime Spazio Casa / Coppia">
+          <button type="button" onclick="openSyncHouseModal()" id="house-code-badge" data-btn-header-house-sync="true" class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-indigo-50/50 hover:border-indigo-200 active:scale-95 text-slate-700 font-semibold text-xs transition shadow-2xs shrink-0 relative" title="Sincronizzazione Realtime Spazio Casa / Coppia">
             <i data-lucide="home" class="w-3.5 h-3.5 text-indigo-600"></i>
             <span class="hidden xl:inline">Spazio Casa</span>
             <span id="house-sync-header-badge" class="hidden text-[10px] font-extrabold text-indigo-700 bg-indigo-50 border border-indigo-200 px-1.5 py-0.2 rounded-md"></span>
             <span id="house-sync-header-dot" class="w-2 h-2 rounded-full bg-emerald-500 hidden animate-pulse"></span>
-          </button>
-
-          <!-- Pulsante "Obiettivi" (con icona slider/filtri) -->
-          <button onclick="openGoalsModal()" class="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 active:scale-95 text-slate-700 font-bold text-xs transition shadow-2xs shrink-0" title="Personalizza obiettivi e regole nutrizionali">
-            <i data-lucide="sliders" class="w-3.5 h-3.5 text-emerald-600"></i>
-            <span>Obiettivi</span>
           </button>
 
           <!-- Pulsante "Genera" (in evidenza, compatto, che non esce dai margini) -->
@@ -227,13 +321,13 @@
             <!-- Controlli Intervallo Date Settimana & Navigazione -->
             <div class="flex items-center gap-1.5 flex-wrap">
               <div class="flex items-center gap-0.5 sm:gap-1 bg-slate-100/90 text-slate-800 px-2 sm:px-2.5 py-1 rounded-xl border border-slate-200 shadow-xs max-w-full">
-                <button onclick="changeWeekOffset(-1)" class="w-6 h-6 rounded-lg hover:bg-white text-slate-600 hover:text-slate-900 flex items-center justify-center transition active:scale-95 shrink-0" title="Settimana precedente">
+                <button id="btn-week-prev" onclick="changeWeekOffset(-1)" disabled class="w-6 h-6 rounded-lg opacity-30 cursor-not-allowed pointer-events-none disabled text-slate-400 flex items-center justify-center transition active:scale-95 shrink-0" title="Non è possibile visualizzare settimane passate">
                   <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
                 </button>
                 <span id="planner-week-range" class="font-bold text-[11px] sm:text-xs text-slate-800 px-1 whitespace-nowrap select-none">
                   21 Set – 27 Set 2026
                 </span>
-                <button onclick="changeWeekOffset(1)" class="w-6 h-6 rounded-lg hover:bg-white text-slate-600 hover:text-slate-900 flex items-center justify-center transition active:scale-95 shrink-0" title="Settimana successiva">
+                <button id="btn-week-next" onclick="changeWeekOffset(1)" class="w-6 h-6 rounded-lg hover:bg-white text-slate-600 hover:text-slate-900 flex items-center justify-center transition active:scale-95 shrink-0" title="Settimana successiva">
                   <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
                 </button>
                 <button id="btn-week-reset" onclick="changeWeekOffset(0, true)" class="hidden ml-1 px-1.5 py-0.5 text-[10px] font-bold rounded-md bg-emerald-100 text-emerald-800 hover:bg-emerald-200 transition shrink-0" title="Torna alla settimana corrente">
@@ -241,7 +335,7 @@
                 </button>
               </div>
 
-              <!-- Badge Commensali Indipendenti per Settimana -->
+              <!-- Badge Commensali Globali per Settimana -->
               <div id="planner-week-servings-badge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200/80 text-[11px] sm:text-xs font-bold shrink-0 shadow-2xs">
                 <i data-lucide="users" class="w-3.5 h-3.5 text-emerald-600"></i>
                 <span id="planner-week-servings-text">Dosi per: 1 persona</span>
@@ -251,17 +345,13 @@
         </div>
 
         <div class="flex items-center gap-1.5 sm:gap-2 no-print w-full sm:w-auto justify-end">
-          <button onclick="openGoalsModal()" class="px-2.5 sm:px-3 py-1.5 rounded-lg border border-slate-300 hover:bg-slate-100 text-slate-700 text-xs font-semibold flex items-center gap-1 transition">
+          <button onclick="openGoalsModal()" class="px-2.5 sm:px-3 py-1.5 rounded-lg border border-slate-300 hover:bg-slate-100 text-slate-700 text-xs font-semibold flex items-center gap-1 transition active:scale-95" title="Personalizza preferenze e regole nutrizionali">
             <i data-lucide="sliders" class="w-3.5 h-3.5 text-emerald-600"></i>
-            <span>Obiettivi</span>
+            <span>Preferenze</span>
           </button>
           <button onclick="shareWeeklyPlan()" class="px-2.5 sm:px-3 py-1.5 rounded-lg border border-slate-300 hover:bg-slate-100 text-slate-700 text-xs font-semibold flex items-center gap-1.5 transition active:scale-95" title="Condividi il piano pasti settimanale su WhatsApp o altre app">
             <i data-lucide="share-2" class="w-3.5 h-3.5 text-emerald-600"></i>
             <span>Condividi</span>
-          </button>
-          <button onclick="switchTab('shopping')" class="px-2.5 sm:px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center gap-1 transition shadow-xs">
-            <i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i>
-            <span>Spesa</span>
           </button>
         </div>
       </div>
@@ -359,7 +449,11 @@
               <i data-lucide="shopping-cart" class="w-5 h-5 sm:w-6 sm:h-6"></i>
             </span>
             <div>
-              <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">Lista della Spesa</h2>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">Lista della Spesa</h2>
+                <span id="shopping-week-tag" class="hidden text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200"></span>
+                <button id="shopping-week-reset-btn" onclick="changeWeekOffset(0, true);" class="hidden text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 transition" title="Torna alla settimana corrente">Torna a Oggi</button>
+              </div>
               <p id="shopping-period-subtitle" class="text-xs text-slate-500 mt-0.5">Calcolata sui pasti pianificati della settimana</p>
             </div>
           </div>
@@ -375,6 +469,13 @@
                 Prossime 2 Settimane
               </button>
             </div>
+
+            <!-- Pulsante Listino Fruttivendolo (Spostato qui nel reparto spesa) -->
+            <button onclick="openFruitVendorModal()" id="btn-fruit-vendor-shopping" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl border border-lime-300 bg-lime-50 hover:bg-lime-100 active:scale-95 text-lime-900 font-bold text-xs sm:text-sm transition shadow-2xs relative" title="Importa o consulta il listino WhatsApp del fruttivendolo (+50% priorità ricette)">
+              <i data-lucide="store" class="w-4 h-4 text-lime-700"></i>
+              <span>Listino Fruttivendolo</span>
+              <span id="fruit-vendor-header-dot" class="w-2.5 h-2.5 rounded-full bg-lime-600 hidden animate-pulse"></span>
+            </button>
 
             <!-- Pulsanti Condivisione Spesa -->
             <button onclick="copyForWhatsApp()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm transition" title="Copia l'intera lista della spesa per WhatsApp">
@@ -437,26 +538,49 @@
 
     <!-- ========== TAB 3: RECIPES ARCHIVE ========== -->
     <div id="view-recipes" class="tab-view hidden fade-in">
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6 mb-6">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
-              <i data-lucide="book-open" class="w-5 h-5 text-emerald-600"></i>
-              <span id="recipe-catalog-title">Archivio Ricette</span>
-            </h2>
-            <p class="text-xs text-slate-500 mt-1">
-              Calibrate per 1 persona con contorni saporiti. Puoi creare nuove ricette o eliminare quelle presenti.
-            </p>
+      <!-- Header Sezione Ricettario (Titolo, Descrizione e Azione Aggiungi) -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <i data-lucide="book-open" class="w-5 h-5 text-emerald-600"></i>
+            <span id="recipe-catalog-title">Archivio Ricette</span>
+          </h2>
+          <p class="text-xs text-slate-500 mt-1">
+            Calibrate per 1 persona con contorni saporiti. Puoi creare nuove ricette o eliminare quelle presenti.
+          </p>
+        </div>
+        <button onclick="openManageRecipesModal()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm transition shrink-0 self-start sm:self-auto">
+          <i data-lucide="plus-circle" class="w-4 h-4"></i>
+          <span>Gestisci Archivio / Aggiungi</span>
+        </button>
+      </div>
+
+      <!-- Barra Controlli Sticky (Ricerca per Nome in tempo reale + Filtro Categorie + Pillole Preferenze) -->
+      <div id="recipe-sticky-controls-bar" class="recipe-controls-sticky mb-6 rounded-2xl border border-slate-200/90 shadow-md">
+        <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-2.5">
+          
+          <!-- Campo di Ricerca Testuale per Nome (con Icona Lente, Debounce 150ms e Pulsante Reset '✕') -->
+          <div class="relative flex-1 min-w-[200px]">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            <input 
+              type="text" 
+              id="recipe-search-input" 
+              oninput="onRecipeSearchInput(event)" 
+              placeholder="🔍 Cerca ricetta per nome..." 
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-8 py-2 text-xs font-semibold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition shadow-2xs"
+            >
+            <button 
+              type="button" 
+              id="recipe-search-clear" 
+              onclick="clearRecipeSearch()" 
+              class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-600 flex items-center justify-center text-[10px] font-bold transition" 
+              title="Cancella testo di ricerca"
+            >✕</button>
           </div>
 
-          <!-- Actions & Filters -->
-          <div class="flex flex-wrap items-center gap-2">
-            <button onclick="openManageRecipesModal()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm transition">
-              <i data-lucide="plus-circle" class="w-4 h-4"></i>
-              <span>Gestisci Archivio / Aggiungi</span>
-            </button>
-
-            <select id="recipe-filter-category" onchange="renderRecipeArchive()" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          <!-- Filtri Rapidi: Categoria & Pillole Stato -->
+          <div class="flex flex-wrap sm:flex-nowrap items-center gap-2">
+            <select id="recipe-filter-category" onchange="renderRecipeArchive()" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition shadow-2xs w-full sm:w-auto">
               <option value="ALL">Tutte le Categorie</option>
               <option value="Colazione">Colazione</option>
               <option value="Primi">Primi</option>
@@ -468,11 +592,12 @@
             </select>
 
             <!-- Pillole Filtro Stato Ricetta -->
-            <div class="flex items-center bg-slate-100 p-1 rounded-xl gap-1 border border-slate-200 text-xs font-semibold" id="recipe-status-pills">
-              <button type="button" onclick="setRecipeStatusFilter('ALL')" data-status="ALL" class="recipe-status-pill px-2.5 py-1.5 rounded-lg transition bg-white text-slate-800 shadow-xs font-bold">Tutte</button>
-              <button type="button" onclick="setRecipeStatusFilter('Abituale')" data-status="Abituale" class="recipe-status-pill px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 font-medium">Abituali</button>
-              <button type="button" onclick="setRecipeStatusFilter('Da provare')" data-status="Da provare" class="recipe-status-pill px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 font-medium">Da provare</button>
-              <button type="button" onclick="setRecipeStatusFilter('Saltuaria')" data-status="Saltuaria" class="recipe-status-pill px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 font-medium">Saltuaria</button>
+            <div class="flex items-center bg-slate-100 p-1 rounded-xl gap-1 border border-slate-200 text-xs font-semibold overflow-x-auto w-full sm:w-auto" id="recipe-status-pills">
+              <button type="button" onclick="setRecipeStatusFilter('ALL')" data-status="ALL" class="recipe-status-pill px-2.5 py-1.5 rounded-lg transition bg-white text-slate-800 shadow-xs font-bold shrink-0">Tutte</button>
+              <button type="button" onclick="setRecipeStatusFilter('Abituale')" data-status="Abituale" class="recipe-status-pill px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 font-medium shrink-0">Abituali</button>
+              <button type="button" onclick="setRecipeStatusFilter('Da provare')" data-status="Da provare" class="recipe-status-pill px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 font-medium shrink-0">Da provare</button>
+              <button type="button" onclick="setRecipeStatusFilter('Saltuaria')" data-status="Saltuaria" class="recipe-status-pill px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 font-medium shrink-0">Saltuaria</button>
+              <button type="button" onclick="setRecipeStatusFilter('Nessuna')" data-status="Nessuna" class="recipe-status-pill px-2 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 font-medium shrink-0">Neutre</button>
             </div>
 
             <select id="recipe-filter-status" onchange="onSelectStatusFilterChange()" class="hidden">
@@ -480,8 +605,10 @@
               <option value="Abituale">Solo Abituali</option>
               <option value="Da provare">Solo Da Provare</option>
               <option value="Saltuaria">Solo Saltuarie</option>
+              <option value="Nessuna">Solo Neutre / Nessuna</option>
             </select>
           </div>
+
         </div>
       </div>
 
@@ -509,7 +636,7 @@
           <i data-lucide="calendar-x" class="w-3.5 h-3.5 text-amber-600"></i>
           <span>Ripristina Solo Settimana Corrente</span>
         </button>
-        <button type="button" onclick="openOnboardingWizard()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-800 text-slate-600 font-semibold transition active:scale-95 shadow-2xs" title="Riapri il wizard di configurazione a 3 passaggi">
+        <button type="button" onclick="openOnboardingWizard()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-800 text-slate-600 font-semibold transition active:scale-95 shadow-2xs" title="Riapri la configurazione guidata a 3 passaggi">
           <i data-lucide="wand-2" class="w-3.5 h-3.5 text-emerald-600"></i>
           <span>Riesegui Configurazione Guidata</span>
         </button>
@@ -523,25 +650,25 @@
 
   <!-- ================= FOOTER ================= -->
   <footer class="mb-6 py-4 text-center text-xs text-slate-400 flex flex-col sm:flex-row items-center justify-between gap-3 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-100">
-    <span>MealPlan Pro • Pianificatore Pasti e Lista Spesa Intelligente</span>
+    <span>MealPlan.io • Pianificatore Pasti e Lista Spesa Intelligente</span>
     <span class="text-slate-400">Versione 2.0 • Offline Ready</span>
   </footer>
 
   <!-- ================= MOBILE FIXED BOTTOM NAVIGATION BAR ================= -->
   <nav id="mobile-bottom-nav" class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 shadow-lg no-print" style="padding-bottom: env(safe-area-inset-bottom, 0px);">
     <div class="grid grid-cols-3 h-16 items-center px-2">
-      <button onclick="switchTab('planner')" id="bottom-tab-planner" class="bottom-tab-btn flex flex-col items-center justify-center gap-1 py-1 text-emerald-700 font-bold transition active:scale-95">
+      <button onclick="switchTab('planner')" id="nav-piano" data-tab="planner" class="bottom-tab-btn flex flex-col items-center justify-center gap-1 py-1 text-emerald-700 font-bold transition active:scale-95">
         <i data-lucide="calendar" class="w-5 h-5"></i>
         <span class="text-[11px] leading-tight">Piano</span>
       </button>
-      <button onclick="switchTab('shopping')" id="bottom-tab-shopping" class="bottom-tab-btn flex flex-col items-center justify-center gap-1 py-1 text-slate-500 font-medium hover:text-slate-800 transition active:scale-95 relative">
+      <button onclick="switchTab('shopping')" id="nav-spesa" data-tab="shopping" class="bottom-tab-btn flex flex-col items-center justify-center gap-1 py-1 text-slate-500 font-medium hover:text-slate-800 transition active:scale-95 relative">
         <div class="relative">
           <i data-lucide="shopping-cart" class="w-5 h-5"></i>
           <span id="shopping-badge-count-mobile" class="absolute -top-1.5 -right-3.5 px-1.5 py-0.2 min-w-[16px] text-center text-[9px] font-bold rounded-full bg-emerald-600 text-white shadow-2xs">0</span>
         </div>
         <span class="text-[11px] leading-tight">Spesa</span>
       </button>
-      <button onclick="switchTab('recipes')" id="bottom-tab-recipes" class="bottom-tab-btn flex flex-col items-center justify-center gap-1 py-1 text-slate-500 font-medium hover:text-slate-800 transition active:scale-95">
+      <button onclick="switchTab('recipes')" id="nav-ricette" data-tab="recipes" class="bottom-tab-btn flex flex-col items-center justify-center gap-1 py-1 text-slate-500 font-medium hover:text-slate-800 transition active:scale-95">
         <i data-lucide="book-open" class="w-5 h-5"></i>
         <span class="text-[11px] leading-tight">Ricette</span>
       </button>
@@ -754,6 +881,23 @@
           </div>
         </div>
 
+        <!-- ================= GUIDA DELL'APP / MINI-TUTORIAL ================= -->
+        <div class="rounded-2xl border border-emerald-200/90 bg-emerald-50/40 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+          <div>
+            <h4 class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+              <i data-lucide="help-circle" class="w-3.5 h-3.5 text-emerald-600"></i>
+              <span>Guida dell'App (Mini-Tutorial)</span>
+            </h4>
+            <p class="text-[11px] text-slate-500 mt-0.5 leading-relaxed">
+              Rivedi la guida visiva alle funzionalità principali: Piano Settimanale, Spesa Intelligente, Ricettario e Spazio Casa.
+            </p>
+          </div>
+          <button type="button" onclick="closeGoalsModal(); openAppTutorial(true);" class="px-3.5 py-2 rounded-xl border border-emerald-300 hover:border-emerald-400 bg-white hover:bg-emerald-50 text-emerald-800 text-xs font-bold transition active:scale-95 flex items-center gap-1.5 shrink-0 shadow-2xs" title="Riapri la guida rapida dell'app">
+            <i data-lucide="book-open" class="w-3.5 h-3.5 text-emerald-600"></i>
+            <span>📖 Guida Rapida</span>
+          </button>
+        </div>
+
         <!-- ================= RIPRISTINO DATI DELL'APP ================= -->
         <div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
           <div>
@@ -774,9 +918,14 @@
 
       <!-- Modal Footer -->
       <div class="px-6 py-3.5 border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-3 flex-wrap">
-        <button type="button" onclick="closeGoalsModal(); openOnboardingModal(true);" class="text-xs font-semibold text-slate-500 hover:text-emerald-700 underline flex items-center gap-1.5 transition" title="Riapri il wizard di personalizzazione dei pasti abituali">
-          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-600"></i> Riesegui configurazione iniziale
-        </button>
+        <div class="flex items-center gap-4 flex-wrap">
+          <button type="button" onclick="closeGoalsModal(); openAppTutorial(true);" class="text-xs font-semibold text-slate-500 hover:text-emerald-700 underline flex items-center gap-1.5 transition" title="Rivedi il tutorial introduttivo dell'app">
+            <i data-lucide="help-circle" class="w-3.5 h-3.5 text-emerald-600"></i> 📖 Guida Rapida
+          </button>
+          <button type="button" onclick="closeGoalsModal(); openOnboardingModal(true);" class="text-xs font-semibold text-slate-500 hover:text-emerald-700 underline flex items-center gap-1.5 transition" title="Riapri la configurazione guidata dei pasti abituali">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-600"></i> Riesegui configurazione iniziale
+          </button>
+        </div>
         <div class="flex items-center gap-2">
           <button onclick="closeGoalsModal()" class="px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-white transition">
             Annulla
@@ -830,6 +979,37 @@
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- ================= MODAL: AVVISO RIDUZIONE COMMENSALI ================= -->
+  <div id="reduce-guests-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl overflow-hidden fade-in border border-slate-200">
+      <div class="p-6 text-center flex flex-col items-center">
+        <!-- Icona Avviso -->
+        <div class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center mb-4 shadow-inner">
+          <i data-lucide="alert-triangle" class="w-7 h-7"></i>
+        </div>
+
+        <h3 class="text-lg sm:text-xl font-extrabold text-slate-900 mb-2 leading-tight">
+          Riduzione Commensali
+        </h3>
+        
+        <p id="reduce-guests-warning-text" class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-sm mb-6">
+          Attenzione: stai riducendo i commensali a <span id="reduce-guests-target-num" class="font-bold text-slate-900">1</span>. Le porzioni delle settimane già pianificate verranno ricalcolate per <span id="reduce-guests-target-text" class="font-bold text-slate-900">1 persona</span> e le eventuali differenziazioni verranno resettate. Vuoi continuare?
+        </p>
+
+        <!-- Bottoni Azione -->
+        <div class="flex flex-col sm:flex-row gap-2.5 w-full">
+          <button type="button" onclick="cancelReduceGuests()" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-100 active:scale-95 text-slate-700 font-bold text-xs sm:text-sm transition flex items-center justify-center">
+            Annulla
+          </button>
+          <button type="button" onclick="confirmReduceGuests()" class="w-full px-4 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 active:scale-95 text-white font-bold text-xs sm:text-sm shadow-md shadow-amber-600/20 transition flex items-center justify-center gap-1.5">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>Continua</span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -905,7 +1085,7 @@
         <div>
           <div class="flex items-center justify-between mb-2">
             <span class="text-xs font-bold text-slate-700">Ingredienti Riconosciuti Attivi:</span>
-            <span id="fruit-vendor-count-badge" class="text-[11px] font-semibold text-lime-800 bg-lime-100 px-2 py-0.5 rounded-full">0 prodotti</span>
+            <span id="fruit-vendor-count-badge" class="text-[11px] font-semibold text-lime-800 bg-lime-100 px-2 py-0.5 rounded-full">0 categorie riconosciute attive</span>
           </div>
           <div id="fruit-vendor-tags-container" class="min-h-[50px] p-3 rounded-2xl border border-dashed border-slate-200 bg-slate-50 flex flex-wrap gap-1.5 items-center">
             <span class="text-xs text-slate-400 italic">Nessun listino memorizzato. Incolla il testo sopra e premi "Analizza Disponibilità".</span>
@@ -1049,6 +1229,186 @@
     </div>
   </div>
 
+  <!-- ================= MODAL: MINI-TUTORIAL INTRODUTTIVO ================= -->
+  <div id="app-tutorial-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[10000] hidden flex items-center justify-center p-3 sm:p-4">
+    <div id="app-tutorial-card-wrapper" class="relative max-w-md w-full flex flex-col items-center">
+      
+      <!-- Freccia Direzionale Dinamica (Floating Indicator con Bounce) -->
+      <div id="tutorial-arrow-indicator" class="pointer-events-none absolute z-[10002] transition-all duration-300 hidden" aria-hidden="true">
+        <div id="tutorial-arrow-bounce" class="tutorial-arrow-bounce flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-600 text-white text-xs font-black shadow-xl shadow-emerald-500/50 border-2 border-white select-none whitespace-nowrap">
+          <span id="tutorial-arrow-text">Piano Settimanale</span>
+          <svg id="tutorial-arrow-svg" class="w-4 h-4 text-white stroke-[3] transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="4" x2="12" y2="20"></line>
+            <polyline points="19 13 12 20 5 13"></polyline>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Scheda del Tutorial -->
+      <div id="app-tutorial-card" class="bg-white rounded-3xl w-full shadow-2xl overflow-hidden border border-slate-200/80 flex flex-col relative transition-all duration-300 max-h-[calc(100vh-160px)]">
+      
+      <!-- Barra Superiore: Badge Step + Tasto Salta -->
+      <div class="px-5 pt-4 pb-1 flex items-center justify-between shrink-0">
+        <span id="tutorial-step-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+          Guida Rapida • 1 di 4
+        </span>
+        <button type="button" onclick="skipAppTutorial()" class="text-xs font-bold text-slate-400 hover:text-slate-700 px-2.5 py-1 rounded-full hover:bg-slate-100 transition" title="Salta la guida e configura le ricette">
+          Salta
+        </button>
+      </div>
+
+      <!-- Contenuto delle Slide -->
+      <div id="tutorial-slides-container" class="px-5 sm:px-6 py-2.5 sm:py-3 flex-1 flex flex-col items-center text-center select-none overflow-y-auto min-h-[290px] sm:min-h-[340px] justify-between">
+        
+        <!-- SLIDE 1: Il Tuo Piano Settimanale -->
+        <div id="tutorial-slide-1" class="tutorial-slide flex flex-col items-center text-center transition-all duration-300 w-full">
+          <div class="relative mb-3 sm:mb-4 mt-1 sm:mt-2">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-white shadow-xl shadow-emerald-500/25 flex items-center justify-center transform transition-transform hover:scale-105">
+              <i data-lucide="calendar" class="w-8 h-8 sm:w-10 sm:h-10 stroke-[2.2]"></i>
+            </div>
+            <div class="absolute -bottom-1 -right-1 sm:-bottom-1.5 sm:-right-1.5 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-amber-400 text-amber-950 flex items-center justify-center shadow-md border-2 border-white">
+              <i data-lucide="sparkles" class="w-3 h-3 sm:w-3.5 sm:h-3.5"></i>
+            </div>
+          </div>
+
+          <h3 class="text-lg sm:text-2xl font-black text-slate-900 tracking-tight mb-1.5 sm:mb-2">
+            📅 Il Tuo Piano Settimanale
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-sm mb-3 sm:mb-4">
+            Pianifica in un attimo i pasti della settimana. Genera un menu bilanciato, scambia le ricette o differenzia i piatti per chi ha gusti diversi in famiglia.
+          </p>
+
+          <div class="grid grid-cols-2 gap-2 w-full max-w-xs text-left">
+            <div class="p-2 sm:p-2.5 rounded-xl bg-emerald-50/70 border border-emerald-100 flex items-center gap-1.5 sm:gap-2">
+              <i data-lucide="shuffle" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600 shrink-0"></i>
+              <span class="text-[10px] sm:text-[11px] font-bold text-slate-800 leading-tight">Generazione Bilanciata</span>
+            </div>
+            <div class="p-2 sm:p-2.5 rounded-xl bg-emerald-50/70 border border-emerald-100 flex items-center gap-1.5 sm:gap-2">
+              <i data-lucide="split" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600 shrink-0"></i>
+              <span class="text-[10px] sm:text-[11px] font-bold text-slate-800 leading-tight">Piatti Differenziati</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 2: Spesa Intelligente -->
+        <div id="tutorial-slide-2" class="tutorial-slide hidden flex flex-col items-center text-center transition-all duration-300 w-full">
+          <div class="relative mb-3 sm:mb-4 mt-1 sm:mt-2">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-gradient-to-tr from-indigo-600 to-sky-400 text-white shadow-xl shadow-indigo-500/25 flex items-center justify-center transform transition-transform hover:scale-105">
+              <i data-lucide="shopping-cart" class="w-8 h-8 sm:w-10 sm:h-10 stroke-[2.2]"></i>
+            </div>
+            <div class="absolute -bottom-1 -right-1 sm:-bottom-1.5 sm:-right-1.5 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-md border-2 border-white">
+              <i data-lucide="check" class="w-3 h-3 sm:w-3.5 sm:h-3.5 stroke-[3]"></i>
+            </div>
+          </div>
+
+          <h3 class="text-lg sm:text-2xl font-black text-slate-900 tracking-tight mb-1.5 sm:mb-2">
+            🛒 Spesa Intelligente
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-sm mb-3 sm:mb-4">
+            Gli ingredienti si sommano automaticamente in base alle persone e sono divisi per reparto. Spunta cosa hai già in dispensa e fai la spesa in tempo reale.
+          </p>
+
+          <div class="grid grid-cols-2 gap-2 w-full max-w-xs text-left">
+            <div class="p-2 sm:p-2.5 rounded-xl bg-indigo-50/70 border border-indigo-100 flex items-center gap-1.5 sm:gap-2">
+              <i data-lucide="scale" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-indigo-600 shrink-0"></i>
+              <span class="text-[10px] sm:text-[11px] font-bold text-slate-800 leading-tight">Dosi per Persona</span>
+            </div>
+            <div class="p-2 sm:p-2.5 rounded-xl bg-indigo-50/70 border border-indigo-100 flex items-center gap-1.5 sm:gap-2">
+              <i data-lucide="layers" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-indigo-600 shrink-0"></i>
+              <span class="text-[10px] sm:text-[11px] font-bold text-slate-800 leading-tight">Dispensa & Reparti</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 3: Il Tuo Ricettario -->
+        <div id="tutorial-slide-3" class="tutorial-slide hidden flex flex-col items-center text-center transition-all duration-300 w-full">
+          <div class="relative mb-3 sm:mb-4 mt-1 sm:mt-2">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-gradient-to-tr from-amber-500 to-rose-500 text-white shadow-xl shadow-rose-500/25 flex items-center justify-center transform transition-transform hover:scale-105">
+              <i data-lucide="book-open" class="w-8 h-8 sm:w-10 sm:h-10 stroke-[2.2]"></i>
+            </div>
+            <div class="absolute -bottom-1 -right-1 sm:-bottom-1.5 sm:-right-1.5 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-rose-500 text-white flex items-center justify-center shadow-md border-2 border-white">
+              <i data-lucide="heart" class="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current"></i>
+            </div>
+          </div>
+
+          <h3 class="text-lg sm:text-2xl font-black text-slate-900 tracking-tight mb-1.5 sm:mb-2">
+            📖 Il Tuo Ricettario
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-sm mb-3 sm:mb-4">
+            Un catalogo ricco con dosi a persona e categorie chiare. Personalizza i tuoi piatti abituali per generare menu sempre su misura per te.
+          </p>
+
+          <div class="grid grid-cols-2 gap-2 w-full max-w-xs text-left">
+            <div class="p-2 sm:p-2.5 rounded-xl bg-amber-50/70 border border-amber-100 flex items-center gap-1.5 sm:gap-2">
+              <i data-lucide="utensils" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-600 shrink-0"></i>
+              <span class="text-[10px] sm:text-[11px] font-bold text-slate-800 leading-tight">Abituali & Da Provare</span>
+            </div>
+            <div class="p-2 sm:p-2.5 rounded-xl bg-amber-50/70 border border-amber-100 flex items-center gap-1.5 sm:gap-2">
+              <i data-lucide="mic" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-600 shrink-0"></i>
+              <span class="text-[10px] sm:text-[11px] font-bold text-slate-800 leading-tight">Dettatura Vocale AI</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 4: Spazio Casa / Condivisione -->
+        <div id="tutorial-slide-4" class="tutorial-slide hidden flex flex-col items-center text-center transition-all duration-300 w-full">
+          <div class="relative mb-3 sm:mb-4 mt-1 sm:mt-2">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-gradient-to-tr from-violet-600 to-indigo-500 text-white shadow-xl shadow-violet-500/25 flex items-center justify-center transform transition-transform hover:scale-105">
+              <i data-lucide="home" class="w-8 h-8 sm:w-10 sm:h-10 stroke-[2.2]"></i>
+            </div>
+            <div class="absolute -bottom-1 -right-1 sm:-bottom-1.5 sm:-right-1.5 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-md border-2 border-white">
+              <i data-lucide="wifi" class="w-3.5 h-3.5 stroke-[2.5]"></i>
+            </div>
+          </div>
+
+          <h3 class="text-lg sm:text-2xl font-black text-slate-900 tracking-tight mb-1.5 sm:mb-2">
+            🏠 Spazio Casa / Condivisione
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-sm mb-3 sm:mb-4">
+            Condividi ricettario, menu e lista della spesa con chi vuoi in tempo reale. Crea il tuo codice casa o inseriscine uno esistente per essere sempre allineati.
+          </p>
+
+          <div class="grid grid-cols-2 gap-2 w-full max-w-xs text-left">
+            <div class="p-2 sm:p-2.5 rounded-xl bg-violet-50/70 border border-violet-100 flex items-center gap-1.5 sm:gap-2">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-violet-600 shrink-0"></i>
+              <span class="text-[10px] sm:text-[11px] font-bold text-slate-800 leading-tight">Sincronizzazione Live</span>
+            </div>
+            <div class="p-2 sm:p-2.5 rounded-xl bg-violet-50/70 border border-violet-100 flex items-center gap-1.5 sm:gap-2">
+              <i data-lucide="key-round" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-violet-600 shrink-0"></i>
+              <span class="text-[10px] sm:text-[11px] font-bold text-slate-800 leading-tight">Codice Casa Condiviso</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Barra Inferiore: Indicatori a pallini + Bottoni Navigazione -->
+      <div class="px-6 py-3 sm:py-4 border-t border-slate-100 bg-slate-50/80 flex items-center justify-between gap-3 shrink-0">
+        <!-- Dot Indicators (Cliccabili) -->
+        <div class="flex items-center gap-1.5" id="tutorial-dots">
+          <button type="button" onclick="goToTutorialSlide(1)" class="tutorial-dot w-6 h-2 rounded-full bg-emerald-600 transition-all duration-300" title="Slide 1"></button>
+          <button type="button" onclick="goToTutorialSlide(2)" class="tutorial-dot w-2 h-2 rounded-full bg-slate-300 hover:bg-slate-400 transition-all duration-300" title="Slide 2"></button>
+          <button type="button" onclick="goToTutorialSlide(3)" class="tutorial-dot w-2 h-2 rounded-full bg-slate-300 hover:bg-slate-400 transition-all duration-300" title="Slide 3"></button>
+          <button type="button" onclick="goToTutorialSlide(4)" class="tutorial-dot w-2 h-2 rounded-full bg-slate-300 hover:bg-slate-400 transition-all duration-300" title="Slide 4"></button>
+        </div>
+
+        <!-- Bottoni Azione -->
+        <div class="flex items-center gap-2">
+          <button type="button" id="tutorial-btn-prev" onclick="prevAppTutorialSlide()" class="hidden px-3.5 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 active:scale-95 text-slate-600 text-xs font-bold transition flex items-center gap-1">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+            <span>Indietro</span>
+          </button>
+          <button type="button" id="tutorial-btn-next" onclick="nextAppTutorialSlide()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs sm:text-sm shadow-md shadow-emerald-600/20 transition flex items-center gap-1.5">
+            <span id="tutorial-btn-next-label">Avanti</span>
+            <i id="tutorial-btn-next-icon" data-lucide="arrow-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      </div>
+    </div>
+  </div>
+
   <!-- ================= MODAL: ONBOARDING / WIZARD A 3 SCHERMATE ================= -->
   <div id="onboarding-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden fade-in border border-slate-200">
@@ -1125,46 +1485,13 @@
             <!-- Popolato da JS -->
           </div>
 
-          <!-- Sezione Collassabile: Aggiungi un tuo piatto personalizzato -->
-          <details class="rounded-2xl border border-slate-200 bg-slate-50/70 p-3.5 group">
-            <summary class="text-xs font-bold text-slate-800 flex items-center justify-between cursor-pointer select-none">
-              <span class="flex items-center gap-2">
-                <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-600"></i>
-                <span>Hai un piatto personalizzato da aggiungere subito? (Opzionale)</span>
-              </span>
-              <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform"></i>
-            </summary>
-
-            <div class="pt-3 space-y-3">
-              <form id="onboarding-add-recipe-form" onsubmit="handleOnboardingCreateRecipe(event)" class="space-y-3">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  <div>
-                    <label class="block text-[11px] font-bold text-slate-700 mb-1">Nome del Piatto *</label>
-                    <input type="text" id="onboarding-new-rec-name" placeholder="Es. Pollo al forno con patate" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                  </div>
-                  <div>
-                    <label class="block text-[11px] font-bold text-slate-700 mb-1">Categoria *</label>
-                    <select id="onboarding-new-rec-cat" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                      <option value="Colazione">Colazione</option>
-                      <option value="Primi" selected>Primi</option>
-                      <option value="Secondi Carne Bianca/Pollame">Secondi Carne Bianca</option>
-                      <option value="Secondi Carne Rossa">Secondi Carne Rossa</option>
-                      <option value="Secondi Pesce">Secondi Pesce</option>
-                      <option value="Secondi Uova/Vegetariani">Secondi Uova / Vegetariani</option>
-                      <option value="Piatti Unici / Legumi / Speciali">Piatti Unici / Legumi</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="flex justify-end pt-1">
-                  <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition active:scale-95 flex items-center gap-1.5">
-                    <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-                    <span>Aggiungi ai Miei Piatti</span>
-                  </button>
-                </div>
-              </form>
-            </div>
-          </details>
+          <!-- Pulsante Primario: Aggiungi Nuova Ricetta Personalizzata -->
+          <div class="pt-2 flex justify-start">
+            <button type="button" onclick="openCreateRecipeFromWizard()" class="px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-sm shadow-emerald-600/25 transition">
+              <i data-lucide="plus-circle" class="w-4 h-4"></i>
+              <span>+ Aggiungi Nuova Ricetta Personalizzata</span>
+            </button>
+          </div>
         </div>
 
         <!-- SCHERMATA 2: PIATTI SALTUARI -->
@@ -1196,6 +1523,14 @@
           <div id="wizard-grid-step-2" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 max-h-72 overflow-y-auto pr-1">
             <!-- Popolato da JS -->
           </div>
+
+          <!-- Pulsante Primario: Aggiungi Nuova Ricetta Personalizzata -->
+          <div class="pt-2 flex justify-start">
+            <button type="button" onclick="openCreateRecipeFromWizard()" class="px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-sm shadow-emerald-600/25 transition">
+              <i data-lucide="plus-circle" class="w-4 h-4"></i>
+              <span>+ Aggiungi Nuova Ricetta Personalizzata</span>
+            </button>
+          </div>
         </div>
 
         <!-- SCHERMATA 3: PIATTI DA PROVARE -->
@@ -1226,6 +1561,14 @@
           <div id="wizard-grid-step-3" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 max-h-72 overflow-y-auto pr-1">
             <!-- Popolato da JS -->
           </div>
+
+          <!-- Pulsante Primario: Aggiungi Nuova Ricetta Personalizzata -->
+          <div class="pt-2 flex justify-start">
+            <button type="button" onclick="openCreateRecipeFromWizard()" class="px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-sm shadow-emerald-600/25 transition">
+              <i data-lucide="plus-circle" class="w-4 h-4"></i>
+              <span>+ Aggiungi Nuova Ricetta Personalizzata</span>
+            </button>
+          </div>
         </div>
 
       </div>
@@ -1251,7 +1594,7 @@
   </div>
 
   <!-- ================= MODAL: GESTISCI ARCHIVIO RICETTE ================= -->
-  <div id="manage-recipes-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4">
+  <div id="manage-recipes-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden fade-in border border-slate-200">
       
       <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
@@ -1363,13 +1706,30 @@
                 </select>
               </div>
 
-              <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Stato *</label>
-                <select id="new-rec-status" required class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                  <option value="Abituale" selected>Abituale</option>
-                  <option value="Da provare">Da provare</option>
-                  <option value="Saltuaria">Saltuaria (occasionale/speciale)</option>
-                </select>
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
+                  <span>Categoria Preferenza (Scelta Singola) *</span>
+                  <span class="text-[10px] text-slate-400 font-normal">Mutuamente esclusiva</span>
+                </label>
+                <input type="hidden" id="new-rec-status" value="Abituale">
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 p-1 bg-white border border-slate-300 rounded-2xl text-xs font-bold" id="form-preference-segmented">
+                  <button type="button" onclick="setFormRecipePreference('Abituale')" data-pref="Abituale" class="pref-btn py-2 px-2.5 rounded-xl transition text-center flex items-center justify-center gap-1.5 border border-emerald-400 bg-emerald-50 text-emerald-800 font-bold shadow-2xs">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span>Abituale</span>
+                  </button>
+                  <button type="button" onclick="setFormRecipePreference('Saltuaria')" data-pref="Saltuaria" class="pref-btn py-2 px-2.5 rounded-xl transition text-center flex items-center justify-center gap-1.5 border border-slate-200 bg-slate-50 text-slate-500 hover:bg-slate-100 font-semibold">
+                    <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                    <span>Saltuaria</span>
+                  </button>
+                  <button type="button" onclick="setFormRecipePreference('Da provare')" data-pref="Da provare" class="pref-btn py-2 px-2.5 rounded-xl transition text-center flex items-center justify-center gap-1.5 border border-slate-200 bg-slate-50 text-slate-500 hover:bg-slate-100 font-semibold">
+                    <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+                    <span>Da provare</span>
+                  </button>
+                  <button type="button" onclick="setFormRecipePreference('Nessuna')" data-pref="Nessuna" class="pref-btn py-2 px-2.5 rounded-xl transition text-center flex items-center justify-center gap-1.5 border border-slate-200 bg-slate-50 text-slate-500 hover:bg-slate-100 font-semibold">
+                    <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+                    <span>Nessuna</span>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -1557,11 +1917,19 @@
       </div>
 
       <div class="p-6 overflow-y-auto space-y-4">
-        <div class="flex items-center gap-2">
-          <span id="detail-status-badge" class="text-xs font-semibold px-2.5 py-0.5 rounded-full">Stato</span>
-          <span class="text-xs text-slate-500 flex items-center gap-1">
-            <i data-lucide="clock" class="w-3.5 h-3.5"></i> Calibrato per 1 persona
-          </span>
+        <!-- Segmented Control Scelta Singola Preferenza -->
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-2xl space-y-2">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-bold text-slate-700 flex items-center gap-1.5">
+              <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 text-emerald-600"></i>
+              <span>Categoria Preferenza:</span>
+            </span>
+            <span id="detail-status-current-label" class="text-[11px] font-bold px-2 py-0.5 rounded-md bg-white border border-slate-200 text-slate-700">Abituale</span>
+          </div>
+          <div id="detail-preference-segmented" class="grid grid-cols-4 gap-1 p-1 bg-white rounded-xl border border-slate-200 text-xs font-semibold">
+            <!-- Rendered dynamically by updateRecipeDetailModalPreference -->
+          </div>
+          <p class="text-[10px] text-slate-500">Stato unico e mutuamente esclusivo: selezionare una voce disattiva immediatamente qualsiasi altra etichetta precedente.</p>
         </div>
 
         <!-- Link Video / Reel Opzionale -->
@@ -2677,37 +3045,228 @@
     const STORAGE_KEY_GOALS = "mealplan_pro_goals_v3";
     const STORAGE_KEY_FRUIT_VENDOR = "fruit_vendor_inventory";
     const STORAGE_KEY_HOUSE_CODE = "shared_house_code";
+    const STORAGE_KEY_GLOBAL_GUESTS = "mealplan_global_guests";
 
-    const FRUIT_VENDOR_CATALOG = [
-      { label: "Zucchine", pattern: /\b(zucchin[ae]|courgette)\b/i, terms: ["zucchina", "zucchine"] },
-      { label: "Zucca", pattern: /\b(zucc[ah]|delica|butternut|mantovana)\b/i, terms: ["zucca"] },
-      { label: "Pomodori", pattern: /\b(pomodor[io]|pomodorin[io]|ciliegin[io]|datterin[io]|piccadilly|casalin[io]|san marzano)\b/i, terms: ["pomodor", "ciliegin", "datterin"] },
-      { label: "Spinaci", pattern: /\b(spinac[ie]|spinacino)\b/i, terms: ["spinac"] },
-      { label: "Broccoli", pattern: /\b(broccol[io]|broccolett[io]|cime di rapa)\b/i, terms: ["broccol", "cime di rapa"] },
-      { label: "Funghi", pattern: /\b(fungh[io]|porcin[io]|champignon|pleurotus|chiodin[io])\b/i, terms: ["fungh", "porcin", "champignon"] },
-      { label: "Carote", pattern: /\b(carot[ae])\b/i, terms: ["carot"] },
-      { label: "Peperoni", pattern: /\b(peperon[ie])\b/i, terms: ["peperon"] },
-      { label: "Melanzane", pattern: /\b(melanzan[ae])\b/i, terms: ["melanzan"] },
-      { label: "Patate", pattern: /\b(patat[ae]|novelle)\b/i, terms: ["patat"] },
-      { label: "Fagiolini", pattern: /\b(fagiolin[io]|cornett[io]|tegoline)\b/i, terms: ["fagiolin", "cornett"] },
-      { label: "Finocchi", pattern: /\b(finocch[io])\b/i, terms: ["finocch"] },
-      { label: "Cetrioli", pattern: /\b(cetriol[io])\b/i, terms: ["cetriol"] },
-      { label: "Insalata", pattern: /\b(insalat[ae]|lattug[ah]|canasta|gentilina|misticanza|valeriana|songino)\b/i, terms: ["insalat", "lattug", "canasta", "misticanza", "songino", "valeriana"] },
-      { label: "Rucola", pattern: /\b(rucol[ah])\b/i, terms: ["rucol"] },
-      { label: "Piselli", pattern: /\b(pisell[io]|taccol[ae])\b/i, terms: ["pisell", "taccol"] },
-      { label: "Cipolle", pattern: /\b(cipoll[ae]|cipollott[io]|scagno|scalogno)\b/i, terms: ["cipoll", "scalogno"] },
-      { label: "Sedano", pattern: /\b(sedan[io])\b/i, terms: ["sedan"] },
-      { label: "Mele", pattern: /\b(mel[ae]|fuji|golden|stark|annurca|renetta)\b/i, terms: ["mel"] },
-      { label: "Arance", pattern: /\b(aranc[ie]|tarocco|moro|navel)\b/i, terms: ["aranc"] },
-      { label: "Limoni", pattern: /\b(limon[ie])\b/i, terms: ["limon"] },
-      { label: "Banane", pattern: /\b(banan[ae])\b/i, terms: ["banan"] },
-      { label: "Frutti di bosco", pattern: /\b(frutti di bosco|mirtill[io]|lampon[ie]|fragol[ae]|more)\b/i, terms: ["frutti di bosco", "mirtill", "lampon", "fragol", "more"] },
-      { label: "Basilico", pattern: /\b(basilico)\b/i, terms: ["basilico"] },
-      { label: "Rosmarino", pattern: /\b(rosmarino)\b/i, terms: ["rosmarino"] },
-      { label: "Carciofi", pattern: /\b(carciof[io])\b/i, terms: ["carciof"] },
-      { label: "Asparagi", pattern: /\b(asparag[io])\b/i, terms: ["asparag"] },
-      { label: "Cavoli / Verze", pattern: /\b(cavol[io]|cavolfior[ie]|verz[ae]|cavolo nero)\b/i, terms: ["cavol", "verz"] }
-    ];
+    const PRODUCE_DICTIONARY = {
+      // ==================== ORTAGGI A FOGLIA E INSALATE ====================
+      "Insalata": [
+        "insalata", "insalate", "lattuga", "lattughe", "iceberg", "canasta", "gentilina",
+        "gentile", "trocadero", "romana", "cappuccia", "songino", "valeriana", "valerianella",
+        "misticanza", "rucola", "rughetta", "indivia", "riccia", "scarola", "manigotto",
+        "lollo", "lollo bionda", "lollo rossa"
+      ],
+
+      "Radicchio": [
+        "radicchio", "radicchi", "trevigiano", "treviso", "chioggia", "castelfranco",
+        "variegato", "tardivo", "precoce", "rosa di gorizia", "radicchio rosso"
+      ],
+
+      "Spinaci ed Erbette": [
+        "spinaci", "spinacio", "spinacino", "erbette", "erbetta"
+      ],
+
+      "Bietole e Coste": [
+        "costine", "costina", "coste", "costa", "bietola", "bietole", "bieta", "biete",
+        "bietola da coste", "bietola da taglio"
+      ],
+
+      // ==================== CRUCIFERE / CAVOLI ====================
+      "Broccoli": [
+        "broccoli", "broccolo", "cime di rapa", "cima di rapa", "friarielli", "friariello",
+        "broccoletti", "broccoletto", "calabrese", "broccolo ramoso"
+      ],
+
+      "Cavolfiore": [
+        "cavolfiore", "cavolfiori", "cimone", "cavolfiore bianco", "cavolfiore violetto",
+        "cavolfiore arancione", "romanesco", "broccolo romanesco"
+      ],
+
+      "Cavoli e Verze": [
+        "cavolo", "cavoli", "verza", "verze", "cavolo nero", "cavolo verza",
+        "cavolo cappuccio", "cappuccio", "cavolini", "cavoletti", "cavoletti di bruxelles",
+        "cavolo rosso", "crauto", "crauti", "kohlrabi", "cavolo rapa"
+      ],
+
+      // ==================== SOLANACEE ====================
+      "Pomodori": [
+        "pomodoro", "pomodori", "datterino", "datterini", "ciliegino", "ciliegini",
+        "cherry", "cuore di bue", "san marzano", "marzanino", "piccadilly", "grappolo",
+        "costoluto", "torpedino", "camone", "oxheart", "pachino", "perino", "pomodorini",
+        "datterini gialli"
+      ],
+
+      "Zucchine": [
+        "zucchina", "zucchine", "zucchino", "zucchini", "trombetta", "romanesca",
+        "romanesche", "zucchine tonde", "zucchine chiare", "zucchine scure", "fiori di zucca",
+        "fiore di zucca", "fiorilli"
+      ],
+
+      "Melanzane": [
+        "melanzana", "melanzane", "seta", "setosa", "viola", "tonda", "lunga", "perlina",
+        "prosperosa", "nera", "striata"
+      ],
+
+      "Peperoni": [
+        "peperone", "peperoni", "friggitelli", "friggitello", "carmagnola", "quadrato",
+        "corno", "corno di bue", "crusco", "papaccella", "topepo"
+      ],
+
+      // ==================== ZUCCHE E CETRIOLI ====================
+      "Zucca": [
+        "zucca", "zucche", "delica", "butternut", "violina", "mantovana", "hokkaido",
+        "marina di chioggia", "moscata", "berrettina"
+      ],
+
+      "Cetrioli": [
+        "cetriolo", "cetrioli", "cetriolino", "cetriolini", "carosello", "barattiere"
+      ],
+
+      // ==================== RADICI, TUBERI E BULBI ====================
+      "Patate": [
+        "patata", "patate", "novella", "novelle", "polignano", "montagna", "pasta gialla",
+        "pasta bianca", "rosse", "patate dolci", "patata dolce", "batata", "batate",
+        "vitelotte"
+      ],
+
+      "Carote": [
+        "carota", "carote", "cristallina", "cristalline", "carote viola", "carote gialle",
+        "baby carote"
+      ],
+
+      "Cipolle e Porri": [
+        "cipolla", "cipolle", "bionda", "bionde", "bianca", "bianche", "rossa", "rosse",
+        "tropea", "ramata", "borettana", "cipollotto", "cipollotti", "scalogno", "scalogni",
+        "porro", "porri"
+      ],
+
+      "Aglio": [
+        "aglio", "agli", "aglio rosso", "aglio bianco", "aglio nero", "aglio orsino"
+      ],
+
+      "Finocchi": [
+        "finocchio", "finocchi", "finocchietto"
+      ],
+
+      "Sedano": [
+        "sedano", "sedano verde", "sedano bianco", "sedano rapa"
+      ],
+
+      "Altre Radici": [
+        "ravanello", "ravanelli", "rapa", "rape", "barbabietola", "barbabietole",
+        "rapa rossa", "topinambur", "zenzero", "daikon", "pastinaca"
+      ],
+
+      // ==================== LEGUMI FRESCHI ====================
+      "Legumi Freschi": [
+        "fagiolini", "fagiolino", "cornetti", "cornetto", "fagioli", "fagiolo", "borlotti",
+        "borlotto", "cannellini", "cannellino", "fave", "fava", "piselli", "pisello",
+        "taccole", "taccola", "piattoni", "piattone", "ceci", "lenticchie"
+      ],
+
+      // ==================== FUNGHI ====================
+      "Funghi": [
+        "fungo", "funghi", "porcino", "porcini", "champignon", "prataiolo", "prataioli",
+        "pioppino", "pioppini", "chiodino", "chiodini", "pleurotus", "orecchione",
+        "cardoncello", "cardoncelli", "finferlo", "finferli", "gallinaccio", "gallinacci",
+        "cantarello", "ovulo", "ovuli"
+      ],
+
+      // ==================== FRUTTA A POMO E DRUPACEE ====================
+      "Mele": [
+        "mela", "mele", "golden", "golden delicious", "royal gala", "gala", "samboa",
+        "fuji", "stark", "starking", "renetta", "renette", "granny smith", "annurca",
+        "annurche", "pink lady", "crimson snow", "morgenduft", "kanzi"
+      ],
+
+      "Pere": [
+        "pera", "pere", "nashi", "williams", "abate", "abate fetel", "kaiser", "conference",
+        "decana", "coscia", "santa maria", "passacrassana"
+      ],
+
+      "Pesche e Nettarine": [
+        "pesca", "pesche", "pasta gialla", "pasta bianca", "pesca noce", "pesche noci",
+        "nettarina", "nettarine", "tabacchiera", "tabacchiere", "saturnina", "saturnine",
+        "percoca", "percoche"
+      ],
+
+      "Albicocche": [
+        "albicocca", "albicocche", "pellecchiella", "reale d'imola"
+      ],
+
+      "Prugne e Susine": [
+        "prugna", "prugne", "susina", "susine", "s. clara", "santa clara", "claudia",
+        "regina claudia", "goccia d'oro", "stanley", "angeleno", "sangue di drago"
+      ],
+
+      "Ciliegie": [
+        "ciliegia", "ciliegie", "ciliege", "durone", "duroni", "ferrovia", "amarena",
+        "amarene"
+      ],
+
+      // ==================== AGRUMI ====================
+      "Arance": [
+        "arancia", "arance", "navel", "tarocco", "moro", "sanguinello", "valencia",
+        "belladonna", "washington navel", "cara cara"
+      ],
+
+      "Limoni": [
+        "limone", "limoni", "femminello", "sorrento", "sfusato", "monachello",
+        "interdonato"
+      ],
+
+      "Mandarini e Clementine": [
+        "mandarino", "mandarini", "clementina", "clementine", "mandarancio",
+        "tardivo di ciaciulli", "satsuma", "miyakawa"
+      ],
+
+      "Pompelmi e Altri Agrumi": [
+        "pompelmo", "pompelmi", "rosa", "ruby", "bergamotto", "cedro", "lime", "chinotto",
+        "kumquat"
+      ],
+
+      // ==================== FRUTTA ESTIVA, BACCHE ED ESOTICI ====================
+      "Uva": [
+        "uva", "uve", "uva bianca", "uva nera", "uva rossa", "pizzutella", "senza semi",
+        "apirena", "italia", "red globe", "moscato", "reggiana", "vittoria", "crimson"
+      ],
+
+      "Melone": [
+        "melone", "meloni", "gialletto", "cantalupo", "retato", "charentais", "invernale"
+      ],
+
+      "Anguria": [
+        "anguria", "angurie", "cocomero", "cocomeri", "baby", "senza semi"
+      ],
+
+      "Fichi": [
+        "fico", "fichi", "fico d'india", "fichi d'india", "fioroni", "dottato", "brogiotto"
+      ],
+
+      "Frutti di Bosco": [
+        "fragola", "fragole", "fragoline", "mirtillo", "mirtilli", "lampone", "lamponi",
+        "mora", "more", "ribes", "ribes rosso", "ribes nero", "uva spina"
+      ],
+
+      "Frutta Esotica": [
+        "ananas", "banana", "banane", "chiquita", "avocado", "hass", "fuerte", "kiwi",
+        "zespri", "kiwi gold", "kiwi verde", "hayward", "mango", "papaya", "maracuja",
+        "passion fruit", "cocco", "noce di cocco", "litchi", "lime", "melograno", "melagrana",
+        "kaki", "cachi", "loti", "persimmon"
+      ],
+
+      "Frutta Autunnale e Secca": [
+        "castagna", "castagne", "marroni", "marrone", "noce", "noci", "grenoble",
+        "macadamia", "mandorla", "mandorle", "nocciola", "nocciole", "pistacchio",
+        "pistacchi", "arachidi", "anacardi", "pinoli"
+      ],
+
+      // ==================== ERBE AROMATICHE FRESCHE ====================
+      "Aromatiche Fresche": [
+        "basilico", "prezzemolo", "rosmarino", "salvia", "alloro", "timo", "origano",
+        "maggiorana", "erba cipollina", "menta", "mentuccia", "coriandolo", "aneto"
+      ]
+    };
+    window.PRODUCE_DICTIONARY = PRODUCE_DICTIONARY;
 
     function getWeekMonday(baseDate = new Date(), offsetWeeks = 0) {
       const d = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate());
@@ -2787,6 +3346,7 @@
               }
             });
 
+            sanitizeAllRecipePreferences(false);
             if (addedNewDefaults) {
               saveRecipesToStorage();
             }
@@ -2797,7 +3357,7 @@
         console.warn("Errore caricamento ricette:", e);
       }
       AppState.recipes = JSON.parse(JSON.stringify(DEFAULT_RECIPES));
-      saveRecipesToStorage();
+      sanitizeAllRecipePreferences(true);
     }
 
     function saveRecipesToStorage() {
@@ -2863,9 +3423,10 @@
     }
 
     function saveToStorage() {
-      // Salva esclusivamente per la settimana attualmente visualizzata
+      // Salva per la settimana attualmente visualizzata e persiste i commensali globali
       const key = getWeekKey(AppState.weekOffset || 0);
       try {
+        localStorage.setItem(STORAGE_KEY_GLOBAL_GUESTS, String(AppState.globalGuests || 1));
         localStorage.setItem(`${key}_guests`, String(AppState.globalGuests || 1));
         if (!AppState.plan || AppState.plan.length === 0) return;
         const payload = {
@@ -2884,13 +3445,22 @@
     }
 
     function loadWeekPlan(offsetWeeks = (AppState.weekOffset || 0)) {
+      // Protezione: impedisci l'accesso a settimane passate (minimo offset 0)
+      if (typeof offsetWeeks !== "number" || isNaN(offsetWeeks) || offsetWeeks < 0) {
+        offsetWeeks = 0;
+        AppState.weekOffset = 0;
+      }
       const key = getWeekKey(offsetWeeks);
+      // I commensali sono un vincolo globale: leggiamo l'autorità master mealplan_global_guests
+      const savedGlobalGuests = localStorage.getItem(STORAGE_KEY_GLOBAL_GUESTS);
+      if (savedGlobalGuests) {
+        AppState.globalGuests = Math.max(1, parseInt(savedGlobalGuests, 10));
+      }
       try {
         const raw = localStorage.getItem(key);
         if (raw) {
           const parsed = JSON.parse(raw);
           if (parsed) {
-            AppState.globalGuests = parsed.globalGuests || parsed.servings || (localStorage.getItem(`${key}_guests`) ? parseInt(localStorage.getItem(`${key}_guests`), 10) : 1);
             AppState.checkedGroceries = parsed.checkedGroceries || {};
             AppState.pantryGroceries = parsed.pantryGroceries || {};
             AppState.plan = (Array.isArray(parsed.plan) && parsed.plan.length === 7) ? parsed.plan : null;
@@ -2903,7 +3473,6 @@
           if (legacyRaw) {
             const legacyParsed = JSON.parse(legacyRaw);
             if (legacyParsed && Array.isArray(legacyParsed.plan) && legacyParsed.plan.length === 7) {
-              AppState.globalGuests = legacyParsed.globalGuests || legacyParsed.servings || 1;
               AppState.plan = legacyParsed.plan;
               AppState.checkedGroceries = legacyParsed.checkedGroceries || {};
               AppState.pantryGroceries = legacyParsed.pantryGroceries || {};
@@ -2919,8 +3488,6 @@
       AppState.plan = null;
       AppState.checkedGroceries = {};
       AppState.pantryGroceries = {};
-      const savedGuestsRaw = localStorage.getItem(`${key}_guests`);
-      AppState.globalGuests = savedGuestsRaw ? Math.max(1, parseInt(savedGuestsRaw, 10)) : 1;
       updateGlobalGuestsUI(AppState.globalGuests);
       return false;
     }
@@ -2978,6 +3545,14 @@
       // Se siamo nella settimana corrente (weekOffset === 0), pianifichiamo da oggi a domenica.
       // Se siamo in una settimana futura (weekOffset > 0) o passata (< 0), pianifichiamo tutti i 7 giorni.
       const currentOffset = AppState.weekOffset || 0;
+      if (currentOffset > 2) {
+        showToast("Limite Raggiunto", "Puoi pianificare fino a un massimo di 2 settimane successive a quella corrente (3 settimane in totale).");
+        return;
+      }
+      if (currentOffset < -2) {
+        showToast("Limite Raggiunto", "Non puoi pianificare per settimane passate.");
+        return;
+      }
       let startDayIdx = 0;
       if (currentOffset === 0) {
         startDayIdx = getDayOfWeekIndex(new Date());
@@ -3631,17 +4206,198 @@
     }
     window.updateGlobalGuestsUI = updateGlobalGuestsUI;
 
+    let pendingGlobalGuests = null;
+
+    function hasMealsExceedingGuestsOrDifferentiated(targetVal) {
+      // 1. Controlla il piano in memoria (settimana corrente visualizzata)
+      if (AppState.plan && Array.isArray(AppState.plan) && AppState.plan.length > 0) {
+        for (const day of AppState.plan) {
+          if (!day || !day.meals) continue;
+          for (const slotKey of Object.keys(day.meals)) {
+            const meal = day.meals[slotKey];
+            if (!meal || meal.isFreeMeal || meal.recipeId === "pasto-libero") continue;
+            if (meal.assignments && Array.isArray(meal.assignments) && meal.assignments.length > 1) {
+              return true; // Differenziazione presente
+            }
+            if (meal.assignments && Array.isArray(meal.assignments) && meal.assignments.length === 1) {
+              if ((Number(meal.assignments[0].portions) || 0) > targetVal) return true;
+            } else if ((Number(meal.guests) || AppState.globalGuests || 1) > targetVal) {
+              return true;
+            }
+          }
+        }
+      }
+
+      // 2. Controlla tutte le settimane salvate in LocalStorage
+      try {
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && key.startsWith("mealplan_week_") && !key.endsWith("_guests")) {
+            const raw = localStorage.getItem(key);
+            if (!raw) continue;
+            const parsed = JSON.parse(raw);
+            if (parsed && Array.isArray(parsed.plan)) {
+              for (const day of parsed.plan) {
+                if (!day || !day.meals) continue;
+                for (const slotKey of Object.keys(day.meals)) {
+                  const meal = day.meals[slotKey];
+                  if (!meal || meal.isFreeMeal || meal.recipeId === "pasto-libero") continue;
+                  if (meal.assignments && Array.isArray(meal.assignments) && meal.assignments.length > 1) {
+                    return true;
+                  }
+                  if (meal.assignments && Array.isArray(meal.assignments) && meal.assignments.length === 1) {
+                    if ((Number(meal.assignments[0].portions) || 0) > targetVal) return true;
+                  } else if ((Number(meal.guests) || parsed.globalGuests || 1) > targetVal) {
+                    return true;
+                  }
+                }
+              }
+            }
+          }
+        }
+      } catch (e) {
+        console.warn("Errore controllo settimane salvate:", e);
+      }
+
+      return false;
+    }
+
     function updateGlobalGuests(delta) {
-      const newVal = Math.max(1, Math.min(20, AppState.globalGuests + delta));
-      if (newVal === AppState.globalGuests) return;
+      const currentVal = AppState.globalGuests || 1;
+      const newVal = Math.max(1, Math.min(20, currentVal + delta));
+      if (newVal === currentVal) return;
+
+      if (newVal < currentVal) {
+        // Controllo di sicurezza su riduzione: se ci sono pasti pianificati per più persone o differenziati
+        if (hasMealsExceedingGuestsOrDifferentiated(newVal)) {
+          pendingGlobalGuests = newVal;
+          const numEl = document.getElementById("reduce-guests-target-num");
+          const textEl = document.getElementById("reduce-guests-target-text");
+          if (numEl) numEl.innerText = String(newVal);
+          if (textEl) textEl.innerText = `${newVal} ${newVal === 1 ? 'persona' : 'persone'}`;
+          const modal = document.getElementById("reduce-guests-modal");
+          if (modal) {
+            modal.classList.remove("hidden");
+            lucide.createIcons();
+          }
+          return;
+        }
+      }
+
+      applyGlobalGuestsChange(newVal);
+    }
+
+    function cancelReduceGuests() {
+      pendingGlobalGuests = null;
+      const modal = document.getElementById("reduce-guests-modal");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    function confirmReduceGuests() {
+      const target = pendingGlobalGuests;
+      const modal = document.getElementById("reduce-guests-modal");
+      if (modal) modal.classList.add("hidden");
+      pendingGlobalGuests = null;
+      if (target && target >= 1) {
+        applyGlobalGuestsChange(target);
+      }
+    }
+
+    function applyGlobalGuestsChange(newVal) {
+      const isReduction = (newVal < (AppState.globalGuests || 1));
       AppState.globalGuests = newVal;
-      updateGlobalGuestsUI(newVal);
-      
+      localStorage.setItem(STORAGE_KEY_GLOBAL_GUESTS, String(newVal));
+
+      // 1. Aggiorna il piano corrente in memoria
+      if (AppState.plan && Array.isArray(AppState.plan)) {
+        AppState.plan.forEach(d => {
+          if (!d || !d.meals) return;
+          Object.keys(d.meals).forEach(slotKey => {
+            const meal = d.meals[slotKey];
+            if (!meal || meal.isFreeMeal || meal.recipeId === "pasto-libero") return;
+            meal.guests = newVal;
+            if (isReduction) {
+              const primaryRecipeId = (meal.assignments && meal.assignments[0] && meal.assignments[0].recipeId) || meal.recipeId;
+              if (primaryRecipeId) {
+                meal.recipeId = primaryRecipeId;
+                meal.assignments = [{ recipeId: primaryRecipeId, portions: newVal }];
+              }
+            } else {
+              if (meal.assignments && Array.isArray(meal.assignments)) {
+                if (meal.assignments.length === 1) {
+                  meal.assignments[0].portions = newVal;
+                }
+              } else if (meal.recipeId) {
+                meal.assignments = [{ recipeId: meal.recipeId, portions: newVal }];
+              }
+            }
+          });
+        });
+      }
+
+      // 2. Aggiorna tutte le altre settimane salvate in LocalStorage
+      try {
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (!key) continue;
+          if (key.startsWith("mealplan_week_") && key.endsWith("_guests")) {
+            localStorage.setItem(key, String(newVal));
+          } else if (key.startsWith("mealplan_week_") && !key.endsWith("_guests")) {
+            const raw = localStorage.getItem(key);
+            if (raw) {
+              const parsed = JSON.parse(raw);
+              if (parsed) {
+                parsed.globalGuests = newVal;
+                parsed.servings = newVal;
+                if (parsed.plan && Array.isArray(parsed.plan)) {
+                  parsed.plan.forEach(d => {
+                    if (!d || !d.meals) return;
+                    Object.keys(d.meals).forEach(slotKey => {
+                      const meal = d.meals[slotKey];
+                      if (!meal || meal.isFreeMeal || meal.recipeId === "pasto-libero") return;
+                      meal.guests = newVal;
+                      if (isReduction) {
+                        const primaryRecipeId = (meal.assignments && meal.assignments[0] && meal.assignments[0].recipeId) || meal.recipeId;
+                        if (primaryRecipeId) {
+                          meal.recipeId = primaryRecipeId;
+                          meal.assignments = [{ recipeId: primaryRecipeId, portions: newVal }];
+                        }
+                      } else {
+                        if (meal.assignments && Array.isArray(meal.assignments)) {
+                          if (meal.assignments.length === 1) {
+                            meal.assignments[0].portions = newVal;
+                          }
+                        } else if (meal.recipeId) {
+                          meal.assignments = [{ recipeId: meal.recipeId, portions: newVal }];
+                        }
+                      }
+                    });
+                  });
+                }
+                localStorage.setItem(key, JSON.stringify(parsed));
+                localStorage.setItem(`${key}_guests`, String(newVal));
+              }
+            }
+          }
+        }
+      } catch (e) {
+        console.warn("Errore aggiornamento globale settimane:", e);
+      }
+
       saveToStorage();
+      updateGlobalGuestsUI(newVal);
       renderWeeklyGrid();
       renderShoppingList();
-      showToast("Commensali aggiornati", `Base impostata a ${newVal} ${newVal === 1 ? 'persona' : 'persone'}`);
+      updateConstraintsStats();
+      triggerCloudSync();
+      showToast("Commensali aggiornati", `Base impostata a ${newVal} ${newVal === 1 ? 'persona' : 'persone'} per tutte le settimane`);
     }
+
+    window.updateGlobalGuests = updateGlobalGuests;
+    window.cancelReduceGuests = cancelReduceGuests;
+    window.confirmReduceGuests = confirmReduceGuests;
+    window.applyGlobalGuestsChange = applyGlobalGuestsChange;
+    window.hasMealsExceedingGuestsOrDifferentiated = hasMealsExceedingGuestsOrDifferentiated;
 
     function getEffectiveGuestsForMeal(dayIndex, slotKey) {
       const meal = AppState.plan[dayIndex]?.meals[slotKey];
@@ -3662,6 +4418,9 @@
     }
 
     function updateWeeklyHeaderDates() {
+      if ((AppState.weekOffset || 0) < 0) {
+        AppState.weekOffset = 0;
+      }
       const offset = AppState.weekOffset || 0;
       const monday = getWeekMonday(new Date(), offset);
       const sunday = new Date(monday);
@@ -3704,6 +4463,33 @@
         }
       }
 
+      // Disabilita freccia sinistra se si è alla settimana corrente (offset <= 0)
+      const prevBtn = document.getElementById("btn-week-prev");
+      if (prevBtn) {
+        if (offset <= 0) {
+          prevBtn.classList.add("opacity-30", "cursor-not-allowed", "pointer-events-none", "disabled");
+          prevBtn.setAttribute("disabled", "true");
+          prevBtn.title = "Non è possibile visualizzare settimane passate";
+        } else {
+          prevBtn.classList.remove("opacity-30", "cursor-not-allowed", "pointer-events-none", "disabled");
+          prevBtn.removeAttribute("disabled");
+          prevBtn.title = "Settimana precedente";
+        }
+      }
+
+      const nextBtn = document.getElementById("btn-week-next");
+      if (nextBtn) {
+        if (offset >= 2) {
+          nextBtn.classList.add("opacity-30", "cursor-not-allowed", "pointer-events-none");
+          nextBtn.setAttribute("disabled", "true");
+          nextBtn.title = "Limite massimo di 3 settimane raggiunto";
+        } else {
+          nextBtn.classList.remove("opacity-30", "cursor-not-allowed", "pointer-events-none");
+          nextBtn.removeAttribute("disabled");
+          nextBtn.title = "Settimana successiva";
+        }
+      }
+
       // Rimuove/nasconde il vecchio paragrafo sottotitolo se ancora presente
       const subTitleEl = document.getElementById("planner-week-subtitle");
       if (subTitleEl) {
@@ -3715,7 +4501,18 @@
       if (isReset) {
         AppState.weekOffset = 0;
       } else {
-        AppState.weekOffset = (AppState.weekOffset || 0) + delta;
+        const current = Math.max(0, AppState.weekOffset || 0);
+        const next = current + delta;
+        if (next < 0) {
+          AppState.weekOffset = 0;
+          updateWeeklyHeaderDates();
+          return;
+        }
+        if (next > 2) {
+          showToast("Limite Raggiunto", "Puoi pianificare fino a un massimo di 2 settimane successive a quella corrente (3 settimane in totale).");
+          return;
+        }
+        AppState.weekOffset = next;
       }
       loadWeekPlan(AppState.weekOffset);
       renderWeeklyGrid();
@@ -3726,6 +4523,9 @@
       const container = document.getElementById("days-container");
       container.innerHTML = "";
 
+      if ((AppState.weekOffset || 0) < 0) {
+        AppState.weekOffset = 0;
+      }
       const offset = AppState.weekOffset || 0;
       const monday = getWeekMonday(new Date(), offset);
       const todayDate = new Date();
@@ -3914,7 +4714,13 @@
       const effectiveGuests = getEffectiveGuestsForMeal(dayIdx, slotKey);
 
       if (meal.assignments && Array.isArray(meal.assignments) && meal.assignments.length > 0) {
-        return meal.assignments.filter(a => a && a.recipeId);
+        const valid = meal.assignments.filter(a => a && a.recipeId);
+        if (valid.length > 0) {
+          if (valid.length === 1 && valid[0].portions !== effectiveGuests) {
+            valid[0].portions = effectiveGuests;
+          }
+          return valid;
+        }
       }
 
       if (meal.isFreeMeal || meal.recipeId === "pasto-libero") {
@@ -3939,6 +4745,8 @@
         } else {
           meal.assignments = [];
         }
+      } else if (meal.assignments.length === 1) {
+        meal.assignments[0].portions = effectiveGuests;
       }
       return meal.assignments;
     }
@@ -3949,20 +4757,41 @@
       const guests = getEffectiveGuestsForMeal(dayIdx, slotKey);
       const assignments = ensureMealAssignments(dayIdx, slotKey);
 
+      if (guests < 2) {
+        showToast("Commensale Singolo", "Imposta almeno 2 commensali per differenziare i piatti.");
+        return;
+      }
+
+      if (assignments.length >= guests) {
+        showToast("Limite Raggiunto", `Hai già differenziato per tutti i ${guests} commensali.`);
+        return;
+      }
+
       const slotDef = MEAL_SLOTS.find(s => s.key === slotKey);
       const allowedCats = slotDef ? slotDef.allowedCats : [];
 
-      let currentAllocated = assignments.reduce((sum, a) => sum + (Number(a.portions) || 0), 0);
+      const currentAllocated = assignments.reduce((sum, a) => sum + (Number(a.portions) || 0), 0);
       let newPortions = 1;
 
       if (currentAllocated < guests) {
-        newPortions = Math.max(1, guests - currentAllocated);
+        newPortions = 1;
       } else {
-        const donor = assignments.find(a => a.portions > 1);
-        if (donor) {
+        // Cerca il piatto con il maggior numero di porzioni (deve essere >= 2) per cedere 1 porzione
+        let donor = null;
+        let maxPortions = 1;
+        assignments.forEach(a => {
+          const p = Number(a.portions) || 0;
+          if (p > maxPortions) {
+            maxPortions = p;
+            donor = a;
+          }
+        });
+
+        if (donor && donor.portions >= 2) {
           donor.portions -= 1;
-        } else if (assignments.length > 0) {
-          showToast("Commensali Esauriti", `Hai ${guests} commensali totali. Per aggiungere un'altra ricetta devi aumentare il numero di persone.`);
+          newPortions = 1;
+        } else {
+          showToast("Commensali Esauriti", `Tutti i piatti hanno già 1 sola porzione per commensale.`);
           return;
         }
       }
@@ -4007,24 +4836,17 @@
 
       if (delta > 0) {
         const totalAllocated = assignments.reduce((s, a) => s + (Number(a.portions) || 0), 0);
-        if (totalAllocated < guests) {
-          target.portions += 1;
-        } else {
-          const donor = assignments.find((a, i) => i !== assignIdx && a.portions > 1);
-          if (donor) {
-            donor.portions -= 1;
-            target.portions += 1;
-          } else {
-            showToast("Tutti Assegnati", `Tutte le ${guests} porzioni dei commensali sono già assegnate.`);
-            return;
-          }
+        if (totalAllocated >= guests) {
+          showToast("Tutti Assegnati", `Tutte le ${guests} porzioni dei commensali sono già assegnate.`);
+          return;
         }
+        target.portions = (Number(target.portions) || 0) + 1;
       } else if (delta < 0) {
-        if (target.portions > 1) {
-          target.portions -= 1;
-          const receiver = assignments.find((a, i) => i !== assignIdx);
-          if (receiver) receiver.portions += 1;
+        const curPortions = Number(target.portions) || 1;
+        if (curPortions > 1) {
+          target.portions = curPortions - 1;
         } else {
+          // Porzioni scendono a zero: auto-rimozione immediata del ramo
           removeMealAssignment(dayIdx, slotKey, assignIdx);
           return;
         }
@@ -4039,19 +4861,29 @@
     function removeMealAssignment(dayIdx, slotKey, assignIdx) {
       const meal = AppState.plan[dayIdx]?.meals[slotKey];
       if (!meal || !meal.assignments || !meal.assignments[assignIdx]) return;
+      const guests = getEffectiveGuestsForMeal(dayIdx, slotKey);
       const removed = meal.assignments.splice(assignIdx, 1)[0];
-      
-      if (meal.assignments.length > 0) {
-        meal.assignments[0].portions += (removed.portions || 1);
+      const removedRecipe = removed ? AppState.recipes.find(r => r.id === removed.recipeId) : null;
+
+      if (meal.assignments.length === 1) {
+        // Se dopo la rimozione rimane un solo ramo attivo:
+        // Riassegna automaticamente a questo unico ramo tutte le N porzioni
+        // e ripristina la visualizzazione standard non differenziata
+        meal.assignments[0].portions = guests;
         meal.recipeId = meal.assignments[0].recipeId;
+        const recName = AppState.recipes.find(r => r.id === meal.assignments[0].recipeId)?.nome || "Piatto unico";
+        showToast("Pasto Unico Ripristinato", `Tutte le ${guests} porzioni assegnate a "${recName}".`);
+      } else if (meal.assignments.length > 1) {
+        meal.recipeId = meal.assignments[0]?.recipeId || null;
+        showToast("Piatto Rimosso", `${removedRecipe ? removedRecipe.nome : "Piatto"} rimosso.`);
       } else {
         meal.recipeId = null;
+        meal.assignments = [];
       }
 
       saveToStorage();
       renderWeeklyGrid();
       renderShoppingList();
-      showToast("Piatto Rimosso", "Le porzioni sono state riassegnate all'altra ricetta.");
     }
 
     function quickSwapSingleAssignment(dayIdx, slotKey, assignIdx) {
@@ -4117,6 +4949,8 @@
       const isTrial = recipe.stato === "Da provare";
       const isSaltuaria = recipe.stato === "Saltuaria";
       const portions = Number(as.portions) || 1;
+      const totalAllocated = assignments.reduce((s, a) => s + (Number(a.portions) || 0), 0);
+      const isPlusDisabled = totalAllocated >= totalGuests;
 
       let shortCat = recipe.categoria;
       if (recipe.categoria === 'Secondi Carne Bianca/Pollame') shortCat = 'Carne Bianca';
@@ -4149,13 +4983,13 @@
           </div>
 
           <div class="flex items-center gap-1 shrink-0">
-            <!-- Stepper porzioni -->
+            <!-- Stepper porzioni con vincolo somma <= N -->
             <div class="flex items-center gap-0.5 bg-slate-100 px-1 py-0.5 rounded-lg border border-slate-200 text-[10px] font-bold">
-              <button type="button" onclick="adjustAssignmentPortions(${dayIdx}, '${slotKey}', ${aIdx}, -1)" class="w-4 h-4 rounded hover:bg-white text-slate-600 flex items-center justify-center transition active:scale-95" title="Diminuisci porzione">
+              <button type="button" onclick="adjustAssignmentPortions(${dayIdx}, '${slotKey}', ${aIdx}, -1)" class="w-4 h-4 rounded hover:bg-white text-slate-600 flex items-center justify-center transition active:scale-95" title="${portions <= 1 ? 'Rimuovi piatto (0 porzioni)' : 'Diminuisci porzione'}">
                 <i data-lucide="minus" class="w-2.5 h-2.5"></i>
               </button>
               <span class="w-3.5 text-center text-slate-800 font-extrabold text-[11px]">${portions}</span>
-              <button type="button" onclick="adjustAssignmentPortions(${dayIdx}, '${slotKey}', ${aIdx}, 1)" class="w-4 h-4 rounded hover:bg-white text-slate-600 flex items-center justify-center transition active:scale-95" title="Aumenta porzione">
+              <button type="button" onclick="adjustAssignmentPortions(${dayIdx}, '${slotKey}', ${aIdx}, 1)" ${isPlusDisabled ? 'disabled' : ''} class="w-4 h-4 rounded hover:bg-white text-slate-600 flex items-center justify-center transition active:scale-95 ${isPlusDisabled ? 'opacity-30 cursor-not-allowed pointer-events-none' : ''}" title="${isPlusDisabled ? `Tutte le ${totalGuests} porzioni sono già assegnate` : 'Aumenta porzione'}">
                 <i data-lucide="plus" class="w-2.5 h-2.5"></i>
               </button>
             </div>
@@ -4170,9 +5004,9 @@
               <i data-lucide="edit-3" class="w-3 h-3"></i>
             </button>
 
-            <!-- Rimuovi piatto se > 1 -->
+            <!-- Rimuovi piatto se > 1 ramo -->
             ${assignments.length > 1 ? `
-              <button type="button" onclick="removeMealAssignment(${dayIdx}, '${slotKey}', ${aIdx})" class="p-1 rounded text-slate-300 hover:text-rose-600 hover:bg-rose-50 transition" title="Rimuovi e unisci porzioni">
+              <button type="button" onclick="removeMealAssignment(${dayIdx}, '${slotKey}', ${aIdx})" class="p-1 rounded text-slate-300 hover:text-rose-600 hover:bg-rose-50 transition" title="Rimuovi piatto">
                 <i data-lucide="x" class="w-3 h-3"></i>
               </button>
             ` : ''}
@@ -4261,9 +5095,10 @@
         `;
       }
 
-      // --- CASO PASTI DIFFERENZIATI (COMMENSALI >= 2 E MULTIPLE RICETTE O COPERTURA PARZIALE) ---
+      // --- CASO PASTI DIFFERENZIATI (COMMENSALI >= 2 E MULTIPLE RICETTE) ---
       const totalAllocated = assignments.reduce((s, a) => s + (Number(a.portions) || 0), 0);
-      const isDifferentiated = (assignments.length > 1 || (guests >= 2 && totalAllocated < guests));
+      const isDifferentiated = assignments.length > 1;
+      const canDifferentiate = (guests >= 2) && (assignments.length < guests) && (assignments.some(a => (Number(a.portions) || 0) > 1) || totalAllocated < guests);
 
       if (isDifferentiated) {
         return `
@@ -4284,9 +5119,11 @@
                   <i data-lucide="users" class="w-2.5 h-2.5"></i>
                   <span>${guests}</span>
                 </button>
-                ${totalAllocated < guests ? `
-                  <button type="button" onclick="addMealAlternative(${dayIdx}, '${slotKey}')" class="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-emerald-100 text-emerald-800 hover:bg-emerald-200 transition flex items-center gap-0.5 active:scale-95" title="Aggiungi alternativa per i commensali rimanenti (${guests - totalAllocated} mancanti)">
-                    <i data-lucide="plus" class="w-2.5 h-2.5"></i> Alt
+                ${canDifferentiate ? `
+                  <button type="button" onclick="addMealAlternative(${dayIdx}, '${slotKey}')" class="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-indigo-100 text-indigo-800 hover:bg-indigo-200 border border-indigo-200 flex items-center gap-0.5 transition active:scale-95" title="Aggiungi piatto differenziato per un commensale">
+                    <i data-lucide="split" class="w-2.5 h-2.5"></i>
+                    <span class="hidden sm:inline">Differenzia</span>
+                    <span class="sm:hidden">+ Alt</span>
                   </button>
                 ` : ''}
                 <button onclick="toggleFreeMeal(${dayIdx}, '${slotKey}')" class="p-1 rounded text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition" title="Segna tutti come Pasto Fuori">
@@ -4351,8 +5188,8 @@
                 <span>${guests}</span>
               </button>
 
-              <!-- Bottone Differenzia Pasto (quando commensali >= 2) -->
-              ${guests >= 2 ? `
+              <!-- Bottone Differenzia Pasto (quando commensali >= 2 e differenziabile) -->
+              ${canDifferentiate ? `
                 <button type="button" onclick="addMealAlternative(${dayIdx}, '${slotKey}')" class="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200/80 flex items-center gap-0.5 transition active:scale-95" title="Scegli un piatto alternativo per uno dei commensali">
                   <i data-lucide="split" class="w-2.5 h-2.5"></i>
                   <span class="hidden sm:inline">Differenzia</span>
@@ -4371,6 +5208,7 @@
               </button>
             </div>
           </div>
+
 
           <!-- Riga 2: Nome Ricetta con link al dettaglio e video reel se presente -->
           <div class="pt-0.5 flex items-center justify-between gap-1">
@@ -4395,6 +5233,10 @@
     function setShoppingScope(scope) {
       if (scope === "2weeks") {
         const nextOffset = (AppState.weekOffset || 0) + 1;
+        if (nextOffset > 2) {
+          showToast("Limite Raggiunto", "Puoi aggregare fino a un massimo di 2 settimane successive a quella corrente (3 settimane in totale).");
+          return;
+        }
         if (!hasWeekPlan(nextOffset)) {
           openMissingSecondWeekModal();
           return;
@@ -4427,9 +5269,14 @@
       closeMissingSecondWeekModal();
       AppState.pendingTwoWeekOrigin = AppState.weekOffset || 0;
       AppState.shoppingScope = "2weeks";
+      const nextOffset = (AppState.weekOffset || 0) + 1;
+      if (nextOffset > 2) {
+        showToast("Limite Raggiunto", "Hai raggiunto il limite massimo di 3 settimane.");
+        return;
+      }
       changeWeekOffset(1);
       switchTab("planner");
-      showToast("Settimana Successiva", "Fai clic su 'Genera Piano per questa Settimana' per completare la spesa.");
+      showToast("Settimana Successiva", "Pianifica questa settimana per completare la spesa a 2 settimane.");
     }
 
     function getShoppingPeriodLabel(weeksIncluded = 1) {
@@ -4560,8 +5407,7 @@
             const nextData = JSON.parse(nextRaw);
             if (nextData && Array.isArray(nextData.plan)) {
               weeksIncluded = 2;
-              const nextStoredGuests = localStorage.getItem(`${nextKey}_guests`);
-              const nextGuestsDefault = nextData.globalGuests || nextData.servings || (nextStoredGuests ? parseInt(nextStoredGuests, 10) : 1);
+              const nextGuestsDefault = AppState.globalGuests || 1;
               week2Guests = nextGuestsDefault;
               nextData.plan.forEach((dayData, dayIdx) => {
                 Object.entries(dayData.meals).forEach(([slotKey, meal]) => {
@@ -4635,10 +5481,25 @@
       const container = document.getElementById("shopping-departments-container");
       container.innerHTML = "";
 
+      const offset = AppState.weekOffset || 0;
+      const weekTag = document.getElementById("shopping-week-tag");
+      const weekReset = document.getElementById("shopping-week-reset-btn");
+      if (weekTag && weekReset) {
+        if (offset === 0) {
+          weekTag.classList.add("hidden");
+          weekReset.classList.add("hidden");
+        } else {
+          weekTag.classList.remove("hidden");
+          weekReset.classList.remove("hidden");
+          weekTag.innerText = offset > 0 ? `Settimana +${offset}` : `Settimana ${offset}`;
+        }
+      }
+
       if (!AppState.plan || AppState.plan.length === 0 || totalMealsProcessed === 0) {
         const subTitleEl = document.getElementById("shopping-period-subtitle");
         if (subTitleEl) {
-          subTitleEl.innerText = "Calcolata sui pasti pianificati della settimana";
+          const periodLabel = getShoppingPeriodLabel(weeksIncluded);
+          subTitleEl.innerText = `Nessun pasto valido per ${periodLabel}`;
         }
         container.innerHTML = `
           <div class="col-span-full bg-white rounded-3xl border-2 border-dashed border-slate-200 p-8 sm:p-12 text-center flex flex-col items-center justify-center gap-3">
@@ -4664,27 +5525,59 @@
         return;
       }
 
-      // Aggiornamento sottotitolo periodo spesa
+      // Aggiornamento sottotitolo periodo spesa con etichetta temporale esatta
       const subTitleEl = document.getElementById("shopping-period-subtitle");
       if (subTitleEl) {
         const periodLabel = getShoppingPeriodLabel(weeksIncluded);
-        if (weeksIncluded === 2) {
-          subTitleEl.innerText = `Spesa per 2 settimane (Settimana 1: ${week1Guests} ${week1Guests === 1 ? 'persona' : 'persone'} • Settimana 2: ${week2Guests} ${week2Guests === 1 ? 'persona' : 'persone'})`;
+        let weekBadgeInfo = "";
+        if (offset === 0) {
+          weekBadgeInfo = "Settimana Corrente";
+        } else if (offset === 1) {
+          weekBadgeInfo = "Prossima Settimana (+1)";
+        } else if (offset === 2) {
+          weekBadgeInfo = "Seconda Settimana (+2)";
         } else {
-          subTitleEl.innerText = `Spesa per 1 settimana (${periodLabel} • ${week1Guests} ${week1Guests === 1 ? 'persona' : 'persone'})`;
+          weekBadgeInfo = `Settimana ${offset}`;
+        }
+
+        if (weeksIncluded === 2) {
+          subTitleEl.innerText = `Spesa per 2 settimane [${weekBadgeInfo} e succ.] (${periodLabel} • Settimana 1: ${week1Guests} ${week1Guests === 1 ? 'persona' : 'persone'} • Settimana 2: ${week2Guests} ${week2Guests === 1 ? 'persona' : 'persone'})`;
+        } else {
+          subTitleEl.innerText = `Spesa per 1 settimana [${weekBadgeInfo}] (${periodLabel} • ${week1Guests} ${week1Guests === 1 ? 'persona' : 'persone'})`;
         }
       }
 
-      // Aggiorna lo stato visivo dei pulsanti orizzonte spesa (1 settimana vs 2 settimane)
+      // Aggiorna lo stato visivo e testi dei pulsanti orizzonte spesa (1 settimana vs 2 settimane)
       const btn1w = document.getElementById("scope-btn-1week");
       const btn2w = document.getElementById("scope-btn-2weeks");
       if (btn1w && btn2w) {
+        if (offset === 0) {
+          btn1w.innerText = "Settimana Corrente";
+          btn2w.innerText = "Prossime 2 Settimane";
+          btn2w.disabled = false;
+        } else if (offset === 1) {
+          btn1w.innerText = "Settimana +1";
+          btn2w.innerText = "2 Settimane (+1 e +2)";
+          btn2w.disabled = false;
+        } else if (offset >= 2) {
+          btn1w.innerText = "Settimana +2 (Massima)";
+          btn2w.innerText = "2 Settimane (N/D)";
+          btn2w.disabled = true;
+          if (AppState.shoppingScope === "2weeks") {
+            AppState.shoppingScope = "1week";
+          }
+        } else {
+          btn1w.innerText = `Settimana (${offset})`;
+          btn2w.innerText = "2 Settimane";
+          btn2w.disabled = false;
+        }
+
         if (AppState.shoppingScope === "2weeks") {
           btn2w.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition bg-white text-emerald-800 shadow-xs border border-slate-200/80";
           btn1w.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition";
         } else {
           btn1w.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition bg-white text-emerald-800 shadow-xs border border-slate-200/80";
-          btn2w.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition";
+          btn2w.className = `px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition ${offset >= 2 ? 'opacity-40 cursor-not-allowed' : ''}`;
         }
       }
 
@@ -4792,6 +5685,13 @@
           }
         });
 
+        const vendorBadge = (dep.key === "Ortofrutta") ? `
+          <button type="button" onclick="openFruitVendorModal()" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl border border-lime-300 bg-lime-50 hover:bg-lime-100 active:scale-95 text-lime-900 font-bold text-xs transition shadow-2xs ml-auto" title="Gestisci listino WhatsApp del fruttivendolo">
+            <i data-lucide="store" class="w-3.5 h-3.5 text-lime-700"></i>
+            <span>Listino ${AppState.fruitVendorInventory && AppState.fruitVendorInventory.length > 0 ? `(${AppState.fruitVendorInventory.length})` : ''}</span>
+          </button>
+        ` : '';
+
         depCard.innerHTML = `
           <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
             <div class="flex items-center gap-2">
@@ -4806,6 +5706,7 @@
                 <p class="text-[11px] text-slate-400">${items.length} ingredienti</p>
               </div>
             </div>
+            ${vendorBadge}
           </div>
           <div class="space-y-1 flex-1">
             ${itemsHtml}
@@ -5302,9 +6203,236 @@
     window.shareWeeklyPlan = shareWeeklyPlan;
 
     /* ==========================================================================
+       10-B. GESTIONE STATO UNICO & MUTUA ESCLUSIVITÀ PREFERENZE RICETTE
+       ========================================================================== */
+    function setRecipePreference(recipe, pref) {
+      if (!recipe || typeof recipe !== "object") return "Nessuna";
+
+      let normalized = "Nessuna";
+      const p = (pref || "").toString().toLowerCase().trim();
+      if (p === "abituale" || p === "habitual") {
+        normalized = "Abituale";
+      } else if (p === "saltuaria" || p === "saltuario" || p === "occasional") {
+        normalized = "Saltuaria";
+      } else if (p === "da provare" || p === "da_provare" || p === "trial" || p === "to_try") {
+        normalized = "Da provare";
+      } else {
+        normalized = "Nessuna";
+      }
+
+      recipe.stato = normalized;
+      recipe.preference = normalized === "Nessuna" ? null : (
+        normalized === "Abituale" ? "abituale" : (normalized === "Saltuaria" ? "saltuaria" : "da_provare")
+      );
+
+      // Flag booleani mutuamente esclusivi rigorosi
+      recipe.isHabitual = (normalized === "Abituale");
+      recipe.isOccasional = (normalized === "Saltuaria");
+      recipe.isToTry = (normalized === "Da provare");
+
+      // Rimozione sicura di vecchi flag disgiunti o spuri
+      delete recipe.abituale;
+      delete recipe.saltuario;
+      delete recipe.saltuaria;
+      delete recipe.da_provare;
+      delete recipe.daProvare;
+
+      return normalized;
+    }
+    window.setRecipePreference = setRecipePreference;
+
+    function sanitizeRecipe(recipe) {
+      if (!recipe || typeof recipe !== "object") return;
+
+      const hasHabitual = !!(
+        recipe.isHabitual === true ||
+        recipe.abituale === true ||
+        recipe.preference === "abituale" ||
+        (typeof recipe.stato === "string" && recipe.stato.toLowerCase() === "abituale")
+      );
+
+      const hasOccasional = !!(
+        recipe.isOccasional === true ||
+        recipe.saltuario === true ||
+        recipe.saltuaria === true ||
+        recipe.preference === "saltuaria" ||
+        recipe.preference === "saltuario" ||
+        (typeof recipe.stato === "string" && recipe.stato.toLowerCase() === "saltuaria")
+      );
+
+      const hasToTry = !!(
+        recipe.isToTry === true ||
+        recipe.da_provare === true ||
+        recipe.daProvare === true ||
+        recipe.preference === "da_provare" ||
+        (typeof recipe.stato === "string" && (recipe.stato.toLowerCase() === "da provare" || recipe.stato.toLowerCase() === "da_provare"))
+      );
+
+      // Risoluzione gerarchica: Abituale > Saltuaria > Da provare > Nessuna
+      let finalPref = "Nessuna";
+      if (hasHabitual) {
+        finalPref = "Abituale";
+      } else if (hasOccasional) {
+        finalPref = "Saltuaria";
+      } else if (hasToTry) {
+        finalPref = "Da provare";
+      } else {
+        if (recipe.stato === "Abituale" || recipe.stato === "Saltuaria" || recipe.stato === "Da provare") {
+          finalPref = recipe.stato;
+        } else {
+          finalPref = "Nessuna";
+        }
+      }
+
+      setRecipePreference(recipe, finalPref);
+    }
+    window.sanitizeRecipe = sanitizeRecipe;
+
+    function sanitizeAllRecipePreferences(triggerSync = true) {
+      if (!Array.isArray(AppState.recipes)) return false;
+
+      let anyModified = false;
+      AppState.recipes.forEach(rec => {
+        const prevStato = rec.stato;
+        const prevHabitual = rec.isHabitual;
+        const prevOccasional = rec.isOccasional;
+        const prevToTry = rec.isToTry;
+        const prevPreference = rec.preference;
+
+        sanitizeRecipe(rec);
+
+        if (
+          rec.stato !== prevStato ||
+          rec.isHabitual !== prevHabitual ||
+          rec.isOccasional !== prevOccasional ||
+          rec.isToTry !== prevToTry ||
+          rec.preference !== prevPreference
+        ) {
+          anyModified = true;
+        }
+      });
+
+      if (anyModified || triggerSync) {
+        saveRecipesToStorage();
+      }
+
+      return anyModified;
+    }
+    window.sanitizeAllRecipePreferences = sanitizeAllRecipePreferences;
+
+    function changeRecipePreference(recipeId, newPref) {
+      const rec = AppState.recipes.find(r => r.id === recipeId);
+      if (!rec) return;
+
+      const normalized = setRecipePreference(rec, newPref);
+      saveRecipesToStorage();
+
+      const detailModal = document.getElementById("recipe-detail-modal");
+      if (detailModal && !detailModal.classList.contains("hidden") && detailModal.dataset.recipeId === recipeId) {
+        updateRecipeDetailModalPreference(rec);
+      }
+
+      renderRecipeArchive();
+      renderManageRecipesModal();
+      renderWeeklyGrid();
+
+      const label = normalized === "Nessuna" ? "Neutro (Nessuna)" : normalized;
+      showToast("Preferenza Aggiornata", `"${rec.nome}" impostata come: ${label}.`);
+    }
+    window.changeRecipePreference = changeRecipePreference;
+
+    function setFormRecipePreference(pref) {
+      const statusInput = document.getElementById("new-rec-status");
+      if (statusInput) statusInput.value = pref;
+
+      const buttons = document.querySelectorAll("#form-preference-segmented .pref-btn");
+      buttons.forEach(btn => {
+        const btnPref = btn.getAttribute("data-pref");
+        const isActive = (btnPref === pref);
+        if (isActive) {
+          if (pref === "Abituale") {
+            btn.className = "pref-btn py-2 px-2.5 rounded-xl transition text-center flex items-center justify-center gap-1.5 border border-emerald-400 bg-emerald-50 text-emerald-800 font-bold shadow-2xs";
+          } else if (pref === "Saltuaria") {
+            btn.className = "pref-btn py-2 px-2.5 rounded-xl transition text-center flex items-center justify-center gap-1.5 border border-amber-400 bg-amber-50 text-amber-800 font-bold shadow-2xs";
+          } else if (pref === "Da provare") {
+            btn.className = "pref-btn py-2 px-2.5 rounded-xl transition text-center flex items-center justify-center gap-1.5 border border-purple-400 bg-purple-50 text-purple-800 font-bold shadow-2xs";
+          } else {
+            btn.className = "pref-btn py-2 px-2.5 rounded-xl transition text-center flex items-center justify-center gap-1.5 border border-slate-400 bg-slate-100 text-slate-800 font-bold shadow-2xs";
+          }
+        } else {
+          btn.className = "pref-btn py-2 px-2.5 rounded-xl transition text-center flex items-center justify-center gap-1.5 border border-slate-200 bg-slate-50 text-slate-500 hover:bg-slate-100 font-semibold";
+        }
+      });
+    }
+    window.setFormRecipePreference = setFormRecipePreference;
+
+    /* ==========================================================================
+       10-C. GESTIONE RICERCA TESTUALE & HEADER STICKY RICETTARIO
+       ========================================================================== */
+    function updateAppHeaderHeight() {
+      const header = document.getElementById("app-header");
+      if (header) {
+        document.documentElement.style.setProperty("--app-header-height", `${header.offsetHeight}px`);
+      }
+    }
+    window.updateAppHeaderHeight = updateAppHeaderHeight;
+    window.addEventListener("resize", updateAppHeaderHeight);
+    window.addEventListener("orientationchange", updateAppHeaderHeight);
+
+    function normalizeSearchText(str) {
+      if (!str) return "";
+      return str.toString()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .trim();
+    }
+    window.normalizeSearchText = normalizeSearchText;
+
+    let recipeSearchDebounceTimer = null;
+    function onRecipeSearchInput(event) {
+      const input = event ? event.target : document.getElementById("recipe-search-input");
+      const val = input ? input.value : "";
+      const clearBtn = document.getElementById("recipe-search-clear");
+      if (clearBtn) {
+        if (val && val.trim().length > 0) {
+          clearBtn.classList.remove("hidden");
+        } else {
+          clearBtn.classList.add("hidden");
+        }
+      }
+
+      if (recipeSearchDebounceTimer) clearTimeout(recipeSearchDebounceTimer);
+      recipeSearchDebounceTimer = setTimeout(() => {
+        renderRecipeArchive();
+      }, 150);
+    }
+    window.onRecipeSearchInput = onRecipeSearchInput;
+
+    function clearRecipeSearch() {
+      const input = document.getElementById("recipe-search-input");
+      if (input) {
+        input.value = "";
+        input.focus();
+      }
+      const clearBtn = document.getElementById("recipe-search-clear");
+      if (clearBtn) clearBtn.classList.add("hidden");
+      renderRecipeArchive();
+    }
+    window.clearRecipeSearch = clearRecipeSearch;
+
+    function resetRecipeFiltersAndSearch() {
+      clearRecipeSearch();
+      const catSelect = document.getElementById("recipe-filter-category");
+      if (catSelect) catSelect.value = "ALL";
+      setRecipeStatusFilter("ALL");
+    }
+    window.resetRecipeFiltersAndSearch = resetRecipeFiltersAndSearch;
+
+    /* ==========================================================================
        11. ARCHIVIO RICETTE (TAB 3 & CRUD)
        ========================================================================== */
-        function setRecipeStatusFilter(statusVal) {
+    function setRecipeStatusFilter(statusVal) {
       const select = document.getElementById("recipe-filter-status");
       if (select) select.value = statusVal;
       document.querySelectorAll(".recipe-status-pill").forEach(btn => {
@@ -5316,6 +6444,8 @@
             btn.className = "recipe-status-pill px-2.5 py-1.5 rounded-lg transition bg-purple-600 text-white font-bold shadow-xs";
           } else if (statusVal === "Abituale") {
             btn.className = "recipe-status-pill px-2.5 py-1.5 rounded-lg transition bg-emerald-600 text-white font-bold shadow-xs";
+          } else if (statusVal === "Nessuna") {
+            btn.className = "recipe-status-pill px-2.5 py-1.5 rounded-lg transition bg-slate-700 text-white font-bold shadow-xs";
           } else {
             btn.className = "recipe-status-pill px-2.5 py-1.5 rounded-lg transition bg-white text-slate-800 shadow-xs font-bold";
           }
@@ -5335,33 +6465,73 @@
 
     function renderRecipeArchive() {
       const container = document.getElementById("recipes-archive-grid");
-      const catFilter = document.getElementById("recipe-filter-category").value;
-      const statusFilter = document.getElementById("recipe-filter-status").value;
+      const catSelect = document.getElementById("recipe-filter-category");
+      const statusSelect = document.getElementById("recipe-filter-status");
+      const catFilter = catSelect ? catSelect.value : "ALL";
+      const statusFilter = statusSelect ? statusSelect.value : "ALL";
+
+      const searchInput = document.getElementById("recipe-search-input");
+      const searchQuery = normalizeSearchText(searchInput ? searchInput.value : "");
 
       container.innerHTML = "";
 
       const filtered = AppState.recipes.filter(r => {
+        // 1. Filtro Categoria
         if (catFilter !== "ALL" && r.categoria !== catFilter) return false;
-        if (statusFilter !== "ALL" && r.stato !== statusFilter) return false;
+
+        // 2. Filtro Stato / Preferenza
+        if (statusFilter !== "ALL") {
+          if (statusFilter === "Nessuna") {
+            if (r.stato && r.stato !== "Nessuna") return false;
+          } else if (r.stato !== statusFilter) {
+            return false;
+          }
+        }
+
+        // 3. Ricerca Testuale per Nome (case-insensitive, senza accenti, in logica AND)
+        if (searchQuery) {
+          const normName = normalizeSearchText(r.nome || "");
+          if (!normName.includes(searchQuery)) return false;
+        }
+
         return true;
       });
+
+      // Stato Vuoto se nessun piatto corrisponde alla ricerca
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-12 px-4 text-center bg-white rounded-3xl border border-dashed border-slate-200 shadow-2xs">
+            <div class="w-12 h-12 mx-auto rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mb-3">
+              <i data-lucide="search-x" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-sm sm:text-base font-bold text-slate-800 mb-1">Nessuna ricetta trovata con questo nome</h3>
+            <p class="text-xs text-slate-500 max-w-sm mx-auto mb-4">
+              Nessun piatto corrisponde ai termini cercati o alla combinazione di filtri attiva. Prova a modificare la ricerca o a ripristinare i filtri.
+            </p>
+            <button type="button" onclick="resetRecipeFiltersAndSearch()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition active:scale-95 shadow-2xs">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+              <span>Azzera Ricerca e Filtri</span>
+            </button>
+          </div>
+        `;
+        updateRecipeCatalogCounts(0);
+        lucide.createIcons();
+        return;
+      }
 
       filtered.forEach(recipe => {
         const catStyle = CATEGORY_STYLES[recipe.categoria] || { bg: "bg-slate-100", text: "text-slate-800" };
 
         const card = document.createElement("div");
-        card.className = "bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between";
+        card.className = "bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between";
 
         card.innerHTML = `
           <div>
-            <div class="flex items-center justify-between gap-2 mb-2">
+            <div class="flex items-center justify-between gap-2 mb-2.5 flex-wrap">
               <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${catStyle.bg} ${catStyle.text}">
                 ${recipe.categoria}
               </span>
               <div class="flex items-center gap-1.5">
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${recipe.stato === 'Saltuaria' ? 'bg-amber-50 text-amber-700 border border-amber-200' : recipe.stato === 'Da provare' ? 'bg-purple-100 text-purple-700 border border-purple-200' : 'bg-slate-100 text-slate-600 border border-slate-200'}">
-                  ${recipe.stato}
-                </span>
                 <button onclick="startEditRecipe('${recipe.id}', true)" class="p-1 rounded-md text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition" title="Modifica ricetta">
                   <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
                 </button>
@@ -5369,6 +6539,14 @@
                   <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                 </button>
               </div>
+            </div>
+
+            <!-- Segmented Control Scelta Singola Preferenza su Card -->
+            <div class="mb-3 p-1 bg-slate-100/90 rounded-xl border border-slate-200/80 grid grid-cols-4 gap-1 text-[10px] sm:text-[11px] font-semibold text-center select-none" role="group">
+              <button type="button" onclick="changeRecipePreference('${recipe.id}', 'Abituale')" class="py-1 px-1 rounded-lg transition ${recipe.stato === 'Abituale' ? 'bg-emerald-600 text-white font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900 bg-transparent'}">Abituale</button>
+              <button type="button" onclick="changeRecipePreference('${recipe.id}', 'Saltuaria')" class="py-1 px-1 rounded-lg transition ${recipe.stato === 'Saltuaria' ? 'bg-amber-500 text-white font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900 bg-transparent'}">Saltuaria</button>
+              <button type="button" onclick="changeRecipePreference('${recipe.id}', 'Da provare')" class="py-1 px-1 rounded-lg transition ${recipe.stato === 'Da provare' ? 'bg-purple-600 text-white font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900 bg-transparent'}">Da provare</button>
+              <button type="button" onclick="changeRecipePreference('${recipe.id}', 'Nessuna')" class="py-1 px-1 rounded-lg transition ${recipe.stato === 'Nessuna' ? 'bg-slate-700 text-white font-bold shadow-xs' : 'text-slate-400 hover:text-slate-600 bg-transparent'}" title="Neutro / Nessuna preferenza">Neutro</button>
             </div>
 
             <h3 class="font-bold text-slate-900 text-base mb-1.5">${recipe.nome}</h3>
@@ -5407,17 +6585,26 @@
         container.appendChild(card);
       });
 
-      updateRecipeCatalogCounts();
+      updateRecipeCatalogCounts(filtered.length);
       lucide.createIcons();
     }
 
-    function updateRecipeCatalogCounts() {
-      const count = AppState.recipes.length;
-      document.getElementById("tab-recipes-label").innerText = `Archivio Ricette (${count})`;
+    function updateRecipeCatalogCounts(visibleCount = null) {
+      const total = AppState.recipes ? AppState.recipes.length : 0;
+      const currentVisible = (typeof visibleCount === "number") ? visibleCount : total;
+
       const catTitle = document.getElementById("recipe-catalog-title");
-      if (catTitle) catTitle.innerText = `Archivio Ricette (${count})`;
+      if (catTitle) {
+        catTitle.innerText = `Archivio Ricette (${currentVisible})`;
+      }
+
+      const tabLabel = document.getElementById("tab-recipes-label");
+      if (tabLabel) {
+        tabLabel.innerText = `Archivio Ricette (${total})`;
+      }
+
       const mgCount = document.getElementById("manage-recipes-count");
-      if (mgCount) mgCount.innerText = count;
+      if (mgCount) mgCount.innerText = total;
     }
 
     function confirmResetDefaultRecipes() {
@@ -5451,6 +6638,16 @@
       AppState.recipes = AppState.recipes.filter(r => r.id !== recipeId);
       saveRecipesToStorage();
 
+      if (typeof wizardState !== "undefined") {
+        wizardState.selectedHabituals.delete(recipeId);
+        wizardState.selectedOccasionals.delete(recipeId);
+        wizardState.selectedTrials.delete(recipeId);
+        if (wizardState.currentStep) {
+          renderWizardDishes(wizardState.currentStep);
+          updateWizardCounters();
+        }
+      }
+
       sanitizePlanRecipes();
       saveToStorage();
       renderWeeklyGrid();
@@ -5481,6 +6678,8 @@
     /* ==========================================================================
        12. MODALE GESTIONE ARCHIVIO & EDIT MODE
        ========================================================================== */
+    let wizardAddRecipeStep = null;
+
     function openManageRecipesModal() {
       stopVoiceRecipeDictation();
       const panel = document.getElementById("quick-input-panel");
@@ -5496,9 +6695,40 @@
       lucide.createIcons();
     }
 
+    function openCreateRecipeFromWizard() {
+      wizardAddRecipeStep = (typeof wizardState !== "undefined" && wizardState.currentStep) ? wizardState.currentStep : 1;
+      openManageRecipesModal();
+
+      // Pre-imposta automaticamente la preferenza della nuova ricetta in base allo step corrente:
+      // Passo 1 -> "Abituale"
+      // Passo 2 -> "Saltuaria"
+      // Passo 3 -> "Da provare"
+      let defaultPref = "Abituale";
+      if (wizardAddRecipeStep === 2) defaultPref = "Saltuaria";
+      else if (wizardAddRecipeStep === 3) defaultPref = "Da provare";
+
+      setFormRecipePreference(defaultPref);
+
+      const titleText = document.getElementById("form-recipe-section-title-text");
+      if (titleText) {
+        titleText.innerText = `Crea Nuova Ricetta Personalizzata (${defaultPref})`;
+      }
+
+      // Scrolla in cima alla modale e metti a fuoco il nome
+      const modalScroll = document.querySelector("#manage-recipes-modal .overflow-y-auto");
+      if (modalScroll) modalScroll.scrollTop = 0;
+
+      setTimeout(() => {
+        const nameInput = document.getElementById("new-rec-name");
+        if (nameInput) nameInput.focus();
+      }, 120);
+    }
+    window.openCreateRecipeFromWizard = openCreateRecipeFromWizard;
+
     function closeManageRecipesModal() {
       stopVoiceRecipeDictation();
       cancelRecipeEdit();
+      wizardAddRecipeStep = null;
       document.getElementById("manage-recipes-modal").classList.add("hidden");
     }
 
@@ -5524,7 +6754,7 @@
       const videoInput = document.getElementById("new-rec-video");
       if (videoInput) videoInput.value = rec.videoUrl || "";
       document.getElementById("new-rec-cat").value = rec.categoria;
-      document.getElementById("new-rec-status").value = rec.stato || "Abituale";
+      setFormRecipePreference(rec.stato || "Abituale");
 
       const badge = document.getElementById("form-recipe-edit-badge");
       if (badge) badge.classList.remove("hidden");
@@ -5562,8 +6792,7 @@
       if (videoInput) videoInput.value = "";
       const catInput = document.getElementById("new-rec-cat");
       if (catInput) catInput.value = "Secondi Carne Bianca/Pollame";
-      const statusInput = document.getElementById("new-rec-status");
-      if (statusInput) statusInput.value = "Abituale";
+      setFormRecipePreference("Abituale");
 
       const badge = document.getElementById("form-recipe-edit-badge");
       if (badge) badge.classList.add("hidden");
@@ -5775,15 +7004,16 @@
         const existingIdx = AppState.recipes.findIndex(r => r.id === editId);
         if (existingIdx !== -1) {
           const oldRec = AppState.recipes[existingIdx];
-          AppState.recipes[existingIdx] = {
+          const updatedRec = {
             ...oldRec,
             nome: name,
             categoria: categoria,
-            stato: stato,
             videoUrl: videoUrl,
             descrizione: oldRec.descrizione || `Piatto salvato in archivio con ${ingredienti.length} ingredienti.`,
             ingredienti: ingredienti
           };
+          setRecipePreference(updatedRec, stato);
+          AppState.recipes[existingIdx] = updatedRec;
           saveRecipesToStorage();
           cancelRecipeEdit();
           renderRecipeArchive();
@@ -5791,6 +7021,15 @@
           renderWeeklyGrid();
           renderShoppingList();
           updateConstraintsStats();
+          if (wizardAddRecipeStep) {
+            const step = wizardAddRecipeStep;
+            renderWizardDishes(step);
+            updateWizardCounters();
+            closeManageRecipesModal();
+            showToast("Ricetta Modificata!", `"${name}" è stata aggiornata con successo.`);
+            return;
+          }
+
           showToast("Ricetta Modificata!", `"${name}" è stata aggiornata con successo.`);
           return;
         }
@@ -5800,11 +7039,11 @@
         id: `custom_${Date.now()}`,
         nome: name,
         categoria: categoria,
-        stato: stato,
         videoUrl: videoUrl,
         descrizione: `Piatto personalizzato salvato in archivio con ${ingredienti.length} ingredienti.`,
         ingredienti: ingredienti
       };
+      setRecipePreference(newRecipe, stato);
 
       AppState.recipes.push(newRecipe);
       saveRecipesToStorage();
@@ -5820,6 +7059,47 @@
       stopVoiceRecipeDictation();
 
       cancelRecipeEdit();
+
+      if (wizardAddRecipeStep) {
+        const step = wizardAddRecipeStep;
+
+        // Seleziona la nuova ricetta nello step corrispondente alla preferenza impostata
+        if (newRecipe.isHabitual || newRecipe.preference === "abituale" || newRecipe.stato === "Abituale") {
+          wizardState.selectedHabituals.add(newRecipe.id);
+          wizardState.selectedOccasionals.delete(newRecipe.id);
+          wizardState.selectedTrials.delete(newRecipe.id);
+        } else if (newRecipe.isOccasional || newRecipe.preference === "saltuaria" || newRecipe.stato === "Saltuaria") {
+          wizardState.selectedOccasionals.add(newRecipe.id);
+          wizardState.selectedHabituals.delete(newRecipe.id);
+          wizardState.selectedTrials.delete(newRecipe.id);
+        } else if (newRecipe.isToTry || newRecipe.preference === "da_provare" || newRecipe.stato === "Da provare") {
+          wizardState.selectedTrials.add(newRecipe.id);
+          wizardState.selectedHabituals.delete(newRecipe.id);
+          wizardState.selectedOccasionals.delete(newRecipe.id);
+        } else {
+          if (step === 1) wizardState.selectedHabituals.add(newRecipe.id);
+          else if (step === 2) wizardState.selectedOccasionals.add(newRecipe.id);
+          else if (step === 3) wizardState.selectedTrials.add(newRecipe.id);
+        }
+
+        // Resetta il filtro a 'all' per visualizzare subito la ricetta aggiunta nella griglia
+        wizardState.filterCat[step] = "all";
+        renderWizardCategoryFilters(step);
+        renderWizardDishes(step);
+        updateWizardCounters();
+
+        closeManageRecipesModal();
+        showToast("Ricetta Creata!", `"${newRecipe.nome}" è stata aggiunta all'archivio e selezionata.`);
+
+        setTimeout(() => {
+          const card = document.getElementById(`wizard-card-step${step}-${newRecipe.id}`);
+          if (card) {
+            card.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        }, 150);
+
+        return;
+      }
 
       showToast("Ricetta Aggiunta!", `"${newRecipe.nome}" è ora disponibile nel ricettario.`);
     }
@@ -6067,6 +7347,23 @@
             meal.assignments[0].recipeId = selectedRecipeId;
             if (meal.assignments.length === 1) {
               meal.assignments[0].portions = tempGuests;
+            } else {
+              while (meal.assignments.length > tempGuests && meal.assignments.length > 1) {
+                meal.assignments.pop();
+              }
+              let allocated = meal.assignments.reduce((s, a) => s + (Number(a.portions) || 0), 0);
+              while (allocated > tempGuests) {
+                const donor = meal.assignments.reduce((max, a) => (a.portions > (max ? max.portions : 1) ? a : max), null);
+                if (donor && donor.portions > 1) {
+                  donor.portions -= 1;
+                  allocated--;
+                } else {
+                  break;
+                }
+              }
+              if (meal.assignments.length === 1) {
+                meal.assignments[0].portions = tempGuests;
+              }
             }
           }
         }
@@ -6232,16 +7529,52 @@
       showToast(`${DAYS_OF_WEEK[dayIdx]} Rigenerato`, "I pasti cucinati e la spesa sono stati aggiornati.");
     }
 
+    function updateRecipeDetailModalPreference(recipe) {
+      const container = document.getElementById("detail-preference-segmented");
+      const currentLabel = document.getElementById("detail-status-current-label");
+      if (currentLabel) {
+        currentLabel.innerText = recipe.stato || "Nessuna";
+        currentLabel.className = `text-[11px] font-bold px-2 py-0.5 rounded-md border ${
+          recipe.stato === 'Abituale' ? 'bg-emerald-50 text-emerald-800 border-emerald-300' :
+          recipe.stato === 'Saltuaria' ? 'bg-amber-50 text-amber-800 border-amber-300' :
+          recipe.stato === 'Da provare' ? 'bg-purple-50 text-purple-800 border-purple-300' :
+          'bg-slate-100 text-slate-600 border-slate-200'
+        }`;
+      }
+
+      if (container) {
+        const prefs = [
+          { key: "Abituale", label: "Abituale", activeClass: "bg-emerald-600 text-white shadow-xs font-bold" },
+          { key: "Saltuaria", label: "Saltuaria", activeClass: "bg-amber-500 text-white shadow-xs font-bold" },
+          { key: "Da provare", label: "Da provare", activeClass: "bg-purple-600 text-white shadow-xs font-bold" },
+          { key: "Nessuna", label: "Nessuna", activeClass: "bg-slate-700 text-white shadow-xs font-bold" }
+        ];
+
+        container.innerHTML = prefs.map(p => {
+          const isActive = (recipe.stato === p.key);
+          return `
+            <button type="button" onclick="changeRecipePreference('${recipe.id}', '${p.key}')" class="py-1.5 px-1 rounded-lg transition text-center ${
+              isActive ? p.activeClass : 'text-slate-600 hover:text-slate-900 bg-transparent'
+            }">
+              ${p.label}
+            </button>
+          `;
+        }).join('');
+      }
+    }
+    window.updateRecipeDetailModalPreference = updateRecipeDetailModalPreference;
+
     function openRecipeDetailModal(recipeId) {
       const recipe = AppState.recipes.find(r => r.id === recipeId);
       if (!recipe) return;
 
+      const modal = document.getElementById("recipe-detail-modal");
+      if (modal) modal.dataset.recipeId = recipe.id;
+
       document.getElementById("detail-recipe-title").innerText = recipe.nome;
       document.getElementById("detail-category-badge").innerText = recipe.categoria;
       
-      const statusBadge = document.getElementById("detail-status-badge");
-      statusBadge.innerText = recipe.stato;
-      statusBadge.className = `text-xs font-semibold px-2.5 py-0.5 rounded-full ${recipe.stato === 'Saltuaria' ? 'bg-amber-50 text-amber-700 border border-amber-200' : recipe.stato === 'Da provare' ? 'bg-purple-100 text-purple-700 border border-purple-200' : 'bg-slate-100 text-slate-700 border border-slate-200'}`;
+      updateRecipeDetailModalPreference(recipe);
 
       const videoContainer = document.getElementById("detail-video-container");
       const videoLink = document.getElementById("detail-video-link");
@@ -6281,6 +7614,7 @@
        ========================================================================== */
     function switchTab(tabId) {
       document.querySelectorAll(".tab-view").forEach(el => el.classList.add("hidden"));
+      setTimeout(updateAppHeaderHeight, 50);
       
       // Desktop header tabs
       document.querySelectorAll(".tab-btn").forEach(el => {
@@ -6898,8 +8232,14 @@
 
       // 4. Popolamento Form
       if (!target) {
-        const obModal = document.getElementById("onboarding-modal");
-        target = (obModal && !obModal.classList.contains("hidden")) ? "onboarding" : "standard";
+        const manageModal = document.getElementById("manage-recipes-modal");
+        const isManageOpen = manageModal && !manageModal.classList.contains("hidden");
+        if (isManageOpen) {
+          target = "standard";
+        } else {
+          const obModal = document.getElementById("onboarding-modal");
+          target = (obModal && !obModal.classList.contains("hidden")) ? "onboarding" : "standard";
+        }
       }
 
       const isOb = (target === "onboarding");
@@ -6947,6 +8287,261 @@
     window.parseRecipeTextToForm = parseRecipeTextToForm;
 
     /* ==========================================================================
+       15-B. MINI-TUTORIAL INTRODUTTIVO GUIDATO (SPOTLIGHT & FRECCIA DINAMICA)
+       ========================================================================== */
+    let currentTutorialSlide = 1;
+    let isManualTutorial = false;
+    let currentSpotlightTargetEl = null;
+
+    const TUTORIAL_SLIDE_TARGETS = {
+      1: () => document.getElementById("nav-piano") || document.getElementById("bottom-tab-planner"),
+      2: () => document.getElementById("nav-spesa") || document.getElementById("bottom-tab-shopping"),
+      3: () => document.getElementById("nav-ricette") || document.getElementById("bottom-tab-recipes"),
+      4: () => document.getElementById("house-code-badge") || document.getElementById("btn-header-house-sync")
+    };
+
+    const TUTORIAL_ARROW_CONFIG = {
+      1: {
+        // Slide 1: nav-piano (bottom bar, bottom-left) -> freccia inclinata verso basso-sinistra (↙)
+        style: "bottom: -20px; left: 24px; right: auto; top: auto; transform: none;",
+        bounceClass: "tutorial-bounce-down-left",
+        rotation: "rotate(45deg)",
+        text: "Piano Settimanale"
+      },
+      2: {
+        // Slide 2: nav-spesa (bottom bar, centro) -> freccia rivolta verso il basso (↓)
+        style: "bottom: -20px; left: 50%; right: auto; top: auto; transform: translateX(-50%);",
+        bounceClass: "tutorial-bounce-down",
+        rotation: "rotate(0deg)",
+        text: "Lista Spesa"
+      },
+      3: {
+        // Slide 3: nav-ricette (bottom bar, bottom-right) -> freccia inclinata verso basso-destra (↘)
+        style: "bottom: -20px; right: 24px; left: auto; top: auto; transform: none;",
+        bounceClass: "tutorial-bounce-down-right",
+        rotation: "rotate(-45deg)",
+        text: "Ricettario"
+      },
+      4: {
+        // Slide 4: house-code-badge (top bar, alto a destra) -> freccia rivolta verso l'alto (↑)
+        style: "top: -20px; right: 24px; left: auto; bottom: auto; transform: none;",
+        bounceClass: "tutorial-bounce-up",
+        rotation: "rotate(180deg)",
+        text: "Spazio Casa"
+      }
+    };
+
+    function handleSpotlightTargetClick(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+      }
+      nextAppTutorialSlide();
+    }
+
+    function clearTutorialSpotlight() {
+      if (currentSpotlightTargetEl) {
+        currentSpotlightTargetEl.removeEventListener("click", handleSpotlightTargetClick, true);
+        currentSpotlightTargetEl.classList.remove("tutorial-spotlight-target");
+        currentSpotlightTargetEl = null;
+      }
+      const arrowEl = document.getElementById("tutorial-arrow-indicator");
+      if (arrowEl) arrowEl.classList.add("hidden");
+    }
+
+    function openAppTutorial(isManual = false) {
+      isManualTutorial = isManual;
+      currentTutorialSlide = 1;
+      document.body.classList.add("tutorial-active");
+      const modal = document.getElementById("app-tutorial-modal");
+      if (modal) {
+        modal.classList.remove("hidden");
+      }
+      updateTutorialSlideUI();
+      initAppTutorialGestures();
+      lucide.createIcons();
+    }
+
+    function closeAppTutorial() {
+      clearTutorialSpotlight();
+      document.body.classList.remove("tutorial-active");
+      const modal = document.getElementById("app-tutorial-modal");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    function goToTutorialSlide(slideIndex) {
+      currentTutorialSlide = Math.max(1, Math.min(4, slideIndex));
+      updateTutorialSlideUI();
+    }
+
+    function nextAppTutorialSlide() {
+      if (currentTutorialSlide < 4) {
+        currentTutorialSlide++;
+        updateTutorialSlideUI();
+      } else {
+        finishAppTutorial();
+      }
+    }
+
+    function prevAppTutorialSlide() {
+      if (currentTutorialSlide > 1) {
+        currentTutorialSlide--;
+        updateTutorialSlideUI();
+      }
+    }
+
+    function updateTutorialSlideUI() {
+      // 1. Visibilità delle slide (1..4)
+      [1, 2, 3, 4].forEach(idx => {
+        const slideEl = document.getElementById(`tutorial-slide-${idx}`);
+        if (slideEl) {
+          if (idx === currentTutorialSlide) {
+            slideEl.classList.remove("hidden");
+          } else {
+            slideEl.classList.add("hidden");
+          }
+        }
+      });
+
+      // 2. Aggiornamento Badge Step
+      const badgeEl = document.getElementById("tutorial-step-badge");
+      if (badgeEl) {
+        badgeEl.innerText = `Guida Rapida • ${currentTutorialSlide} di 4`;
+      }
+
+      // 3. Aggiornamento Indicatori a Pallini
+      const dots = document.querySelectorAll(".tutorial-dot");
+      dots.forEach((dot, idx) => {
+        if (idx + 1 === currentTutorialSlide) {
+          dot.className = "tutorial-dot w-6 h-2 rounded-full bg-emerald-600 transition-all duration-300";
+        } else {
+          dot.className = "tutorial-dot w-2 h-2 rounded-full bg-slate-300 hover:bg-slate-400 transition-all duration-300";
+        }
+      });
+
+      // 4. Aggiornamento Bottoni Navigazione
+      const prevBtn = document.getElementById("tutorial-btn-prev");
+      if (prevBtn) {
+        if (currentTutorialSlide > 1) prevBtn.classList.remove("hidden");
+        else prevBtn.classList.add("hidden");
+      }
+
+      const nextLabel = document.getElementById("tutorial-btn-next-label");
+      const nextIcon = document.getElementById("tutorial-btn-next-icon");
+      if (nextLabel) {
+        if (currentTutorialSlide === 4) {
+          nextLabel.innerText = "Inizia";
+          if (nextIcon) nextIcon.setAttribute("data-lucide", "sparkles");
+        } else {
+          nextLabel.innerText = "Avanti";
+          if (nextIcon) nextIcon.setAttribute("data-lucide", "arrow-right");
+        }
+      }
+
+      // 5. Gestione Spotlight Target su Elemento Reale
+      if (currentSpotlightTargetEl) {
+        currentSpotlightTargetEl.removeEventListener("click", handleSpotlightTargetClick, true);
+        currentSpotlightTargetEl.classList.remove("tutorial-spotlight-target");
+        currentSpotlightTargetEl = null;
+      }
+
+      const targetResolver = TUTORIAL_SLIDE_TARGETS[currentTutorialSlide];
+      const targetEl = targetResolver ? targetResolver() : null;
+      if (targetEl) {
+        currentSpotlightTargetEl = targetEl;
+        targetEl.classList.add("tutorial-spotlight-target");
+        targetEl.addEventListener("click", handleSpotlightTargetClick, true);
+      }
+
+      // 6. Dynamic Directional Bounce Arrow
+      const arrowEl = document.getElementById("tutorial-arrow-indicator");
+      const arrowBounce = document.getElementById("tutorial-arrow-bounce");
+      const arrowSvg = document.getElementById("tutorial-arrow-svg");
+      const arrowText = document.getElementById("tutorial-arrow-text");
+      const config = TUTORIAL_ARROW_CONFIG[currentTutorialSlide];
+
+      if (arrowEl && config) {
+        arrowEl.style.cssText = config.style;
+        if (arrowBounce) {
+          arrowBounce.className = `tutorial-arrow-bounce flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-600 text-white text-xs font-black shadow-xl shadow-emerald-500/50 border-2 border-white select-none whitespace-nowrap ${config.bounceClass}`;
+        }
+        if (arrowSvg) {
+          arrowSvg.style.transform = config.rotation;
+        }
+        if (arrowText) {
+          arrowText.innerText = config.text || "Tocca qui";
+        }
+        arrowEl.classList.remove("hidden");
+      }
+
+      lucide.createIcons();
+    }
+
+    function initAppTutorialGestures() {
+      const container = document.getElementById("tutorial-slides-container");
+      if (!container || container.dataset.gesturesInit) return;
+      container.dataset.gesturesInit = "true";
+
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      container.addEventListener("touchstart", (e) => {
+        if (e.changedTouches && e.changedTouches[0]) {
+          touchStartX = e.changedTouches[0].screenX;
+        }
+      }, { passive: true });
+
+      container.addEventListener("touchend", (e) => {
+        if (e.changedTouches && e.changedTouches[0]) {
+          touchEndX = e.changedTouches[0].screenX;
+          const diff = touchEndX - touchStartX;
+          if (Math.abs(diff) > 45) {
+            if (diff < 0) {
+              if (currentTutorialSlide < 4) nextAppTutorialSlide();
+            } else {
+              if (currentTutorialSlide > 1) prevAppTutorialSlide();
+            }
+          }
+        }
+      }, { passive: true });
+    }
+
+    function skipAppTutorial() {
+      localStorage.setItem('tutorial_completed', 'true');
+      closeAppTutorial();
+      if (!isManualTutorial) {
+        const isOnboarded = (localStorage.getItem('mealplan_onboarding_completed') === 'true' || localStorage.getItem('mealplan_onboarded') === 'true');
+        if (!isOnboarded) {
+          openOnboardingWizard(false);
+        }
+      } else {
+        showToast("Guida Chiusa", "Puoi riaprire la guida in ogni momento dalle Impostazioni.");
+      }
+    }
+
+    function finishAppTutorial() {
+      localStorage.setItem('tutorial_completed', 'true');
+      closeAppTutorial();
+      if (!isManualTutorial) {
+        const isOnboarded = (localStorage.getItem('mealplan_onboarding_completed') === 'true' || localStorage.getItem('mealplan_onboarded') === 'true');
+        if (!isOnboarded) {
+          openOnboardingWizard(false);
+        }
+      } else {
+        showToast("Guida Completata", "Hai completato la panoramica dell'applicazione.");
+      }
+    }
+
+    window.openAppTutorial = openAppTutorial;
+    window.closeAppTutorial = closeAppTutorial;
+    window.goToTutorialSlide = goToTutorialSlide;
+    window.nextAppTutorialSlide = nextAppTutorialSlide;
+    window.prevAppTutorialSlide = prevAppTutorialSlide;
+    window.skipAppTutorial = skipAppTutorial;
+    window.finishAppTutorial = finishAppTutorial;
+
+    /* ==========================================================================
        15-C. WIZARD ONBOARDING A 3 SCHERMATE & CATALOGO ESTESO
        ========================================================================== */
     const wizardState = {
@@ -6962,25 +8557,23 @@
       wizardState.selectedOccasionals.clear();
       wizardState.selectedTrials.clear();
 
-      const habitualsInApp = AppState.recipes.filter(r => r.stato === "Abituale").map(r => r.id);
-      if (habitualsInApp.length > 0) {
-        habitualsInApp.forEach(id => wizardState.selectedHabituals.add(id));
-      } else {
-        DEFAULT_RECIPES.filter(r => r.stato === "Abituale").forEach(r => wizardState.selectedHabituals.add(r.id));
-      }
+      AppState.recipes.forEach(r => {
+        // Applica gerarchia rigorosa (Abituale > Saltuaria > Da provare) in fase di inizializzazione
+        if (r.isHabitual || r.preference === "abituale" || r.stato === "Abituale") {
+          wizardState.selectedHabituals.add(r.id);
+        } else if (r.isOccasional || r.preference === "saltuaria" || r.stato === "Saltuaria") {
+          wizardState.selectedOccasionals.add(r.id);
+        } else if (r.isToTry || r.preference === "da_provare" || r.stato === "Da provare") {
+          wizardState.selectedTrials.add(r.id);
+        }
+      });
 
-      const occasionalsInApp = AppState.recipes.filter(r => r.stato === "Saltuaria").map(r => r.id);
-      if (occasionalsInApp.length > 0) {
-        occasionalsInApp.forEach(id => wizardState.selectedOccasionals.add(id));
-      } else {
-        DEFAULT_RECIPES.filter(r => r.stato === "Saltuaria").forEach(r => wizardState.selectedOccasionals.add(r.id));
-      }
-
-      const trialsInApp = AppState.recipes.filter(r => r.stato === "Da provare").map(r => r.id);
-      if (trialsInApp.length > 0) {
-        trialsInApp.forEach(id => wizardState.selectedTrials.add(id));
-      } else {
-        DEFAULT_RECIPES.filter(r => r.stato === "Da provare").forEach(r => wizardState.selectedTrials.add(r.id));
+      if (wizardState.selectedHabituals.size === 0 && wizardState.selectedOccasionals.size === 0 && wizardState.selectedTrials.size === 0) {
+        DEFAULT_RECIPES.forEach(r => {
+          if (r.stato === "Abituale") wizardState.selectedHabituals.add(r.id);
+          else if (r.stato === "Saltuaria") wizardState.selectedOccasionals.add(r.id);
+          else if (r.stato === "Da provare") wizardState.selectedTrials.add(r.id);
+        });
       }
     }
 
@@ -7090,15 +8683,8 @@
     }
 
     function getWizardCandidateRecipes(step) {
-      if (step === 1) {
-        return AppState.recipes;
-      }
-      if (step === 2) {
-        return AppState.recipes.filter(r => !wizardState.selectedHabituals.has(r.id));
-      }
-      if (step === 3) {
-        return AppState.recipes.filter(r => !wizardState.selectedHabituals.has(r.id) && !wizardState.selectedOccasionals.has(r.id));
-      }
+      // Tutte le ricette sono disponibili per essere selezionate in qualsiasi step,
+      // garantendo che la selezione in uno step revochi istantaneamente la selezione dagli altri
       return AppState.recipes;
     }
 
@@ -7176,11 +8762,23 @@
         const catStyle = CATEGORY_STYLES[rec.categoria] || { bg: "bg-slate-100", text: "text-slate-800", border: "border-slate-200" };
         const seasonInfo = getSeasonDisplay(rec.stagione);
 
+        // Indicatore se già assegnato a un altro step
+        let otherStepBadge = "";
+        if (!isChecked) {
+          if (step !== 1 && wizardState.selectedHabituals.has(rec.id)) {
+            otherStepBadge = `<span class="text-[9px] font-bold px-1.5 py-0.2 rounded-md bg-emerald-100 text-emerald-800 border border-emerald-200">Abituale</span>`;
+          } else if (step !== 2 && wizardState.selectedOccasionals.has(rec.id)) {
+            otherStepBadge = `<span class="text-[9px] font-bold px-1.5 py-0.2 rounded-md bg-amber-100 text-amber-800 border border-amber-200">Saltuaria</span>`;
+          } else if (step !== 3 && wizardState.selectedTrials.has(rec.id)) {
+            otherStepBadge = `<span class="text-[9px] font-bold px-1.5 py-0.2 rounded-md bg-purple-100 text-purple-800 border border-purple-200">Da provare</span>`;
+          }
+        }
+
         const card = document.createElement("div");
         card.id = `wizard-card-step${step}-${rec.id}`;
         card.className = `p-3 rounded-2xl border transition cursor-pointer select-none flex items-start gap-3 ${
           isChecked 
-            ? (step === 1 ? 'bg-emerald-50/60 border-emerald-300 ring-1 ring-emerald-400' : (step === 2 ? 'bg-amber-50/60 border-amber-300 ring-1 ring-amber-400' : 'bg-indigo-50/60 border-indigo-300 ring-1 ring-indigo-400'))
+            ? (step === 1 ? 'bg-emerald-50/60 border-emerald-300 ring-1 ring-emerald-400' : (step === 2 ? 'bg-amber-50/60 border-amber-300 ring-1 ring-amber-400' : 'bg-purple-50/60 border-purple-300 ring-1 ring-purple-400'))
             : 'bg-white border-slate-200 hover:border-slate-300'
         }`;
 
@@ -7200,6 +8798,7 @@
                 ${rec.categoria.replace("/Speciali", "").replace("/Pollame", "").replace("/Vegetariani", "")}
               </span>
               ${rec.stagione && rec.stagione !== "annuale" ? `<span class="text-[10px] font-semibold px-1.5 py-0.5 rounded-md ${seasonInfo.color} border">${seasonInfo.emoji} ${seasonInfo.label}</span>` : ''}
+              ${otherStepBadge}
               <span class="font-bold text-xs text-slate-900 truncate">${rec.nome}</span>
             </div>
             <p class="text-[11px] text-slate-500 truncate" title="${ingSummary}">${ingSummary || rec.descrizione || ''}</p>
@@ -7219,22 +8818,20 @@
         activeSet.delete(recipeId);
       } else {
         activeSet.add(recipeId);
+        // Revoca immediata della selezione dagli altri step (Mutua Esclusività)
+        if (step === 1) {
+          wizardState.selectedOccasionals.delete(recipeId);
+          wizardState.selectedTrials.delete(recipeId);
+        } else if (step === 2) {
+          wizardState.selectedHabituals.delete(recipeId);
+          wizardState.selectedTrials.delete(recipeId);
+        } else if (step === 3) {
+          wizardState.selectedHabituals.delete(recipeId);
+          wizardState.selectedOccasionals.delete(recipeId);
+        }
       }
 
-      // Aggiorna stile card
-      const cb = document.getElementById(`chk-wizard-step${step}-${recipeId}`);
-      if (cb) cb.checked = activeSet.has(recipeId);
-
-      const card = document.getElementById(`wizard-card-step${step}-${recipeId}`);
-      if (card) {
-        const isChecked = activeSet.has(recipeId);
-        card.className = `p-3 rounded-2xl border transition cursor-pointer select-none flex items-start gap-3 ${
-          isChecked 
-            ? (step === 1 ? 'bg-emerald-50/60 border-emerald-300 ring-1 ring-emerald-400' : (step === 2 ? 'bg-amber-50/60 border-amber-300 ring-1 ring-amber-400' : 'bg-indigo-50/60 border-indigo-300 ring-1 ring-indigo-400'))
-            : 'bg-white border-slate-200 hover:border-slate-300'
-        }`;
-      }
-
+      renderWizardDishes(step);
       updateWizardCounters();
     }
 
@@ -7256,16 +8853,40 @@
         : (step === 2 ? wizardState.selectedOccasionals : wizardState.selectedTrials);
 
       if (mode === "all") {
-        candidates.forEach(r => activeSet.add(r.id));
+        candidates.forEach(r => {
+          activeSet.add(r.id);
+          if (step === 1) {
+            wizardState.selectedOccasionals.delete(r.id);
+            wizardState.selectedTrials.delete(r.id);
+          } else if (step === 2) {
+            wizardState.selectedHabituals.delete(r.id);
+            wizardState.selectedTrials.delete(r.id);
+          } else if (step === 3) {
+            wizardState.selectedHabituals.delete(r.id);
+            wizardState.selectedOccasionals.delete(r.id);
+          }
+        });
       } else if (mode === "none") {
         activeSet.clear();
       } else if (mode === "recommended") {
         activeSet.clear();
         if (step === 1) {
-          DEFAULT_RECIPES.filter(r => r.stato === "Abituale").forEach(r => activeSet.add(r.id));
+          DEFAULT_RECIPES.filter(r => r.stato === "Abituale").forEach(r => {
+            activeSet.add(r.id);
+            wizardState.selectedOccasionals.delete(r.id);
+            wizardState.selectedTrials.delete(r.id);
+          });
         } else if (step === 2) {
           DEFAULT_RECIPES.filter(r => r.stato === "Saltuaria").forEach(r => {
-            if (!wizardState.selectedHabituals.has(r.id)) activeSet.add(r.id);
+            activeSet.add(r.id);
+            wizardState.selectedHabituals.delete(r.id);
+            wizardState.selectedTrials.delete(r.id);
+          });
+        } else if (step === 3) {
+          DEFAULT_RECIPES.filter(r => r.stato === "Da provare").forEach(r => {
+            activeSet.add(r.id);
+            wizardState.selectedHabituals.delete(r.id);
+            wizardState.selectedOccasionals.delete(r.id);
           });
         }
       }
@@ -7304,16 +8925,16 @@
         showToast("Ottimizzazione Varietà", "Hai selezionato pochi piatti abituali per garantire varietà: abbiamo integrato automaticamente i piatti essenziali di base!");
       }
 
-      // Assegna gli stati definitivi a ciascuna ricetta
+      // Assegna gli stati definitivi a ciascuna ricetta in modo mutuamente esclusivo
       AppState.recipes.forEach(rec => {
         if (wizardState.selectedHabituals.has(rec.id)) {
-          rec.stato = "Abituale";
+          setRecipePreference(rec, "Abituale");
         } else if (wizardState.selectedOccasionals.has(rec.id)) {
-          rec.stato = "Saltuaria";
+          setRecipePreference(rec, "Saltuaria");
         } else if (wizardState.selectedTrials.has(rec.id)) {
-          rec.stato = "Da provare";
+          setRecipePreference(rec, "Da provare");
         } else {
-          rec.stato = "Da provare";
+          setRecipePreference(rec, "Nessuna");
         }
       });
 
@@ -7347,41 +8968,7 @@
 
     function handleOnboardingCreateRecipe(event) {
       if (event) event.preventDefault();
-
-      const nameInput = document.getElementById("onboarding-new-rec-name");
-      const name = nameInput ? nameInput.value.trim() : "";
-      const catSelect = document.getElementById("onboarding-new-rec-cat");
-      const categoria = catSelect ? catSelect.value : "Primi";
-
-      if (!name) {
-        showToast("Dato Mancante", "Inserisci il nome del piatto.");
-        if (nameInput) nameInput.focus();
-        return;
-      }
-
-      const newRecipe = {
-        id: `custom_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
-        nome: name,
-        categoria: categoria,
-        stato: "Abituale",
-        stagione: "annuale",
-        descrizione: `Piatto personalizzato inserito durante la configurazione guidata.`,
-        ingredienti: [
-          { nome: name, quantita: 100, unita: "g", reparto: "Pasta, Cereali e Legumi" }
-        ]
-      };
-
-      AppState.recipes.push(newRecipe);
-      wizardState.selectedHabituals.add(newRecipe.id);
-      saveRecipesToStorage();
-
-      if (nameInput) nameInput.value = "";
-      renderWizardDishes(1);
-      updateWizardCounters();
-      renderRecipeArchive();
-      renderManageRecipesModal();
-
-      showToast("Ricetta Aggiunta!", `"${newRecipe.nome}" è stata aggiunta ai tuoi piatti abituali.`);
+      openCreateRecipeFromWizard();
     }
 
     window.openOnboardingWizard = openOnboardingWizard;
@@ -7396,6 +8983,7 @@
     window.saveOnboardingAndStart = finishOnboardingWizard;
     window.skipOnboarding = skipOnboarding;
     window.handleOnboardingCreateRecipe = handleOnboardingCreateRecipe;
+    window.openCreateRecipeFromWizard = openCreateRecipeFromWizard;
 
     /* ==========================================================================
        15-C. LISTINO FRUTTIVENDOLO (WHATSAPP) & GESTIONE DISPONIBILITÀ
@@ -7405,18 +8993,21 @@
         return false;
       }
       const activeTerms = [];
-      inventory.forEach(label => {
-        const catEntry = FRUIT_VENDOR_CATALOG.find(c => c.label.toLowerCase() === label.toLowerCase());
-        if (catEntry && catEntry.terms) {
-          activeTerms.push(...catEntry.terms);
+      inventory.forEach(category => {
+        if (typeof PRODUCE_DICTIONARY !== "undefined" && PRODUCE_DICTIONARY[category]) {
+          activeTerms.push(...PRODUCE_DICTIONARY[category]);
         } else {
-          activeTerms.push(label.toLowerCase());
+          activeTerms.push(category.toLowerCase());
         }
       });
 
       return recipe.ingredienti.some(ing => {
-        const name = (ing.nome || "").toLowerCase();
-        return activeTerms.some(term => name.includes(term));
+        const name = (typeof ing === "string" ? ing : (ing && ing.nome ? ing.nome : "")).toLowerCase();
+        if (!name) return false;
+        return activeTerms.some(term => {
+          const t = term.toLowerCase();
+          return name.includes(t);
+        });
       });
     }
     window.doesRecipeMatchVendorInventory = doesRecipeMatchVendorInventory;
@@ -7456,7 +9047,7 @@
       // Badge conteggio
       const countBadge = document.getElementById("fruit-vendor-count-badge");
       if (countBadge) {
-        countBadge.innerText = `${inventory.length} ${inventory.length === 1 ? 'prodotto' : 'prodotti'}`;
+        countBadge.innerText = `${inventory.length} categorie riconosciute attive`;
       }
 
       // Container tag
@@ -7477,41 +9068,93 @@
     }
     window.updateFruitVendorUI = updateFruitVendorUI;
 
-    function parseFruitVendorMessage() {
-      const input = document.getElementById("fruit-vendor-input");
-      const text = input ? input.value.trim() : "";
-      if (!text) {
-        showToast("Inserisci il messaggio", "Incolla il testo del messaggio WhatsApp inviato dal fruttivendolo.");
-        if (input) input.focus();
-        return;
+    function parseFruitVendorMessage(rawText) {
+      let isInteractive = false;
+      let text = rawText;
+      if (typeof text !== "string") {
+        isInteractive = true;
+        const input = document.getElementById("fruit-vendor-input");
+        text = input ? input.value : "";
       }
 
-      // Rimozione prezzi, valute e unità comuni
-      const cleaned = text.replace(/\d+([.,]\d+)?\s*(€|euro|\/kg|al kg|kg|etto|etti|gr|g|pz)\b/gi, " ");
+      if (!text || !text.trim()) {
+        if (isInteractive) {
+          showToast("Inserisci il messaggio", "Incolla il testo del messaggio WhatsApp inviato dal fruttivendolo.");
+          const input = document.getElementById("fruit-vendor-input");
+          if (input) input.focus();
+        }
+        return [];
+      }
 
-      const recognized = [];
-      FRUIT_VENDOR_CATALOG.forEach(entry => {
-        if (entry.pattern.test(cleaned)) {
-          if (!recognized.includes(entry.label)) {
-            recognized.push(entry.label);
+      const recognizedCategories = new Set();
+      const lines = text.split('\n');
+
+      // Regex per isolare e rimuovere prezzi, valute, unità di misura e simboli di elenco
+      const priceRegex = /(?:€\s*\d+(?:[.,]\d+)?|\d+(?:[.,]\d+)?\s*€|\d+(?:[.,]\d+)?\s*(?:kg|al kg|kilo|al kilo|cad|al mazzo|l|hg))/gi;
+      const bulletRegex = /^[\s\-*•–—\d\.\)\(]+/g;
+      // Parole accessorie frequenti (geografie, convenevoli, formati) da non confondere
+      const fillerRegex = /\b(buonasera|buongiorno|ciao|grazie|disponibile|disponibili|ordine|ritiro|banco|chiarimento|frutta|verdura|selezione|raccolto|fresco|freschi|origine|cat|categoria|extra|italia|sicilia|piemonte|puglia|campania|trentino|romagna|nuova zelanda|costa rica|spagna|chiquita|satispay|bancomat|kg|kilo|cad|al|di|del|della|da|con|e|o|senza)\b/gi;
+
+      lines.forEach(rawLine => {
+        let line = rawLine.toLowerCase();
+
+        // Scarta righe discorsive o convenevoli
+        if (
+          line.includes('grazie') ||
+          line.includes('satispay') ||
+          line.includes('bancomat') ||
+          line.includes('ritiro') ||
+          line.includes('buonasera') ||
+          line.includes('esaurimento scorte')
+        ) {
+          return;
+        }
+
+        // Pulisci riga da prezzi, elenchi e parole superflue
+        line = line.replace(priceRegex, ' ')
+                   .replace(bulletRegex, ' ')
+                   .replace(/[.,;:!?\(\)\[\]]/g, ' ')
+                   .trim();
+
+        if (!line) return;
+
+        // Confronta con il dizionario
+        for (const [category, synonyms] of Object.entries(PRODUCE_DICTIONARY)) {
+          const match = synonyms.some(synonym => {
+            const syn = synonym.toLowerCase().replace(/[.,;:!?\(\)\[\]]/g, ' ').trim();
+            // Cerca la parola intera con confine di parola
+            const escaped = syn.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const regex = new RegExp(`(^|\\s)${escaped}($|\\s)`, 'i');
+            return regex.test(line);
+          });
+
+          if (match) {
+            recognizedCategories.add(category);
           }
         }
       });
 
-      if (recognized.length === 0) {
-        showToast("Nessun prodotto trovato", "Non è stato possibile identificare prodotti ortofrutticoli noti nel messaggio.");
-        return;
+      const recognized = Array.from(recognizedCategories).sort();
+
+      if (isInteractive) {
+        if (recognized.length === 0) {
+          showToast("Nessun prodotto trovato", "Non è stato possibile identificare prodotti ortofrutticoli noti nel messaggio.");
+          return [];
+        }
+
+        AppState.fruitVendorInventory = recognized;
+        try {
+          localStorage.setItem(STORAGE_KEY_FRUIT_VENDOR, JSON.stringify(recognized));
+        } catch (e) {
+          console.warn("Errore salvataggio listino:", e);
+        }
+
+        updateFruitVendorUI();
+        renderShoppingList();
+        showToast("Listino Salvato!", `${recognized.length} categorie riconosciute attive (+50% priorità ricette).`);
       }
 
-      AppState.fruitVendorInventory = recognized;
-      try {
-        localStorage.setItem(STORAGE_KEY_FRUIT_VENDOR, JSON.stringify(recognized));
-      } catch (e) {
-        console.warn("Errore salvataggio listino:", e);
-      }
-
-      updateFruitVendorUI();
-      showToast("Listino Salvato!", `${recognized.length} prodotti riconosciuti attivi (+50% priorità ricette).`);
+      return recognized;
     }
     window.parseFruitVendorMessage = parseFruitVendorMessage;
 
@@ -7525,6 +9168,7 @@
       const input = document.getElementById("fruit-vendor-input");
       if (input) input.value = "";
       updateFruitVendorUI();
+      renderShoppingList();
       showToast("Listino rimosso", "Priorità ortofrutta ripristinata alla stagionalità standard.");
     }
     window.clearFruitVendorInventory = clearFruitVendorInventory;
@@ -7698,7 +9342,8 @@
       try {
         if (Array.isArray(data.recipes) && data.recipes.length > 0) {
           AppState.recipes = data.recipes;
-          try { localStorage.setItem(STORAGE_KEY_RECIPES, JSON.stringify(data.recipes)); } catch (e) {}
+          sanitizeAllRecipePreferences(false);
+          try { localStorage.setItem(STORAGE_KEY_RECIPES, JSON.stringify(AppState.recipes)); } catch (e) {}
         }
 
         if (data.goals && typeof data.goals === "object") {
@@ -7723,6 +9368,16 @@
               } catch (e) {}
             }
           });
+        }
+
+        if (typeof data.weekOffset === "number") {
+          AppState.weekOffset = Math.max(0, Math.min(2, data.weekOffset));
+        }
+        if (typeof data.currentWeekOffset === "number") {
+          AppState.weekOffset = Math.max(0, Math.min(2, data.currentWeekOffset));
+        }
+        if ((AppState.weekOffset || 0) < 0) {
+          AppState.weekOffset = 0;
         }
 
         loadWeekPlan(AppState.weekOffset || 0);
@@ -7923,7 +9578,7 @@
       const houseCode = localStorage.getItem(STORAGE_KEY_HOUSE_CODE);
       const badge = document.getElementById("house-sync-header-badge");
       const dot = document.getElementById("house-sync-header-dot");
-      const headerBtn = document.getElementById("btn-header-house-sync");
+      const headerBtn = document.getElementById("house-code-badge") || document.getElementById("btn-header-house-sync");
 
       if (houseCode) {
         if (badge) {
@@ -7983,14 +9638,17 @@
         }
         keysToRemove.forEach(k => localStorage.removeItem(k));
 
+        localStorage.removeItem("tutorial_completed");
         localStorage.removeItem("mealplan_onboarded");
         localStorage.removeItem("mealplan_onboarding_completed");
         localStorage.removeItem("mealplan_settings");
         localStorage.removeItem("mealplan_pro_goals_v3");
+        localStorage.removeItem(STORAGE_KEY_GLOBAL_GUESTS);
         localStorage.removeItem(STORAGE_KEY_FRUIT_VENDOR);
         localStorage.removeItem(STORAGE_KEY_HOUSE_CODE);
         AppState.fruitVendorInventory = [];
         AppState.houseCode = null;
+        AppState.globalGuests = 1;
         if (unsubscribeHouseListener) {
           unsubscribeHouseListener();
           unsubscribeHouseListener = null;
@@ -8017,6 +9675,12 @@
       AppState.weekOffset = 0;
       AppState.pendingTwoWeekOrigin = null;
       AppState.shoppingScope = "1week";
+
+      const savedGlobalGuests = localStorage.getItem(STORAGE_KEY_GLOBAL_GUESTS);
+      if (savedGlobalGuests) {
+        AppState.globalGuests = Math.max(1, parseInt(savedGlobalGuests, 10));
+      }
+
       loadRecipesFromStorage();
       loadGoalsFromStorage();
       updateGlobalGuestsUI(AppState.globalGuests);
@@ -8047,15 +9711,20 @@
       }
       updateHeaderHouseUI();
 
+      updateAppHeaderHeight();
       renderWeeklyGrid();
       renderShoppingList();
       updateConstraintsStats();
       renderRecipeArchive();
       lucide.createIcons();
 
-      // Controllo onboarding al primo accesso assoluto
-      const isOnboarded = localStorage.getItem('mealplan_onboarding_completed') || localStorage.getItem('mealplan_onboarded');
-      if (isOnboarded !== 'true') {
+      // Controllo Mini-Tutorial e Onboarding al primo accesso assoluto
+      const isTutorialCompleted = (localStorage.getItem('tutorial_completed') === 'true');
+      const isOnboarded = (localStorage.getItem('mealplan_onboarding_completed') === 'true' || localStorage.getItem('mealplan_onboarded') === 'true');
+
+      if (!isTutorialCompleted) {
+        openAppTutorial(false);
+      } else if (!isOnboarded) {
         openOnboardingWizard(false);
       }
     });
