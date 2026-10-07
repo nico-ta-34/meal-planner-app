@@ -243,13 +243,7 @@
             <span id="house-sync-header-badge" class="hidden text-[10px] font-extrabold text-indigo-700 bg-indigo-50 border border-indigo-200 px-1.5 py-0.2 rounded-md"></span>
             <span id="house-sync-header-dot" class="w-2 h-2 rounded-full bg-emerald-500 hidden animate-pulse"></span>
           </button>
-
-          <!-- Pulsante "Genera" (in evidenza, compatto, che non esce dai margini) -->
-          <button onclick="generateWeeklyPlan(true)" class="inline-flex items-center gap-1 sm:gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs shadow-sm shadow-emerald-600/25 transition shrink-0" title="Genera piano settimanale">
-            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-            <span class="hidden sm:inline">Genera Piano</span>
-            <span class="sm:hidden">Genera</span>
-          </button>
+          <!-- Fine controlli header destra -->
         </div>
       </div>
 
@@ -344,7 +338,11 @@
           </div>
         </div>
 
-        <div class="flex items-center gap-1.5 sm:gap-2 no-print w-full sm:w-auto justify-end">
+        <div class="flex items-center gap-1.5 sm:gap-2 no-print w-full sm:w-auto justify-end flex-wrap">
+          <button onclick="requestWeeklyPlanGeneration()" class="px-3 sm:px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs shadow-sm shadow-emerald-600/25 flex items-center gap-1.5 transition" title="Genera o rigenera il menu della settimana">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+            <span>Genera Settimana</span>
+          </button>
           <button onclick="openGoalsModal()" class="px-2.5 sm:px-3 py-1.5 rounded-lg border border-slate-300 hover:bg-slate-100 text-slate-700 text-xs font-semibold flex items-center gap-1 transition active:scale-95" title="Personalizza preferenze e regole nutrizionali">
             <i data-lucide="sliders" class="w-3.5 h-3.5 text-emerald-600"></i>
             <span>Preferenze</span>
@@ -389,7 +387,7 @@
           <div id="stat-red-meat" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-800 border border-slate-700">
             <span id="stat-red-meat-dot" class="w-2 h-2 rounded-full bg-amber-400"></span>
             <span class="text-slate-300">Carne Rossa:</span>
-            <span id="stat-red-meat-val" class="font-bold text-white">0 / 2 max</span>
+            <span id="stat-red-meat-val" class="font-bold text-white">0 / 1 max</span>
           </div>
 
           <!-- Salumi / Affettati Badge -->
@@ -410,14 +408,14 @@
           <div id="stat-white-meat" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-800 border border-slate-700">
             <span id="stat-white-meat-dot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
             <span class="text-slate-300">Carne Bianca:</span>
-            <span id="stat-white-meat-val" class="font-bold text-white">0 / 4</span>
+            <span id="stat-white-meat-val" class="font-bold text-white">0 / 3</span>
           </div>
 
           <!-- Da Provare Badge -->
           <div id="stat-trials" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-800 border border-slate-700">
             <span id="stat-trials-dot" class="w-2 h-2 rounded-full bg-purple-400"></span>
             <span class="text-slate-300">Nuove ('Da provare'):</span>
-            <span id="stat-trials-val" class="font-bold text-white">0 / 2 max</span>
+            <span id="stat-trials-val" class="font-bold text-white">0 / 1 max</span>
           </div>
 
           <!-- Pasti Fuori Badge -->
@@ -583,6 +581,7 @@
             <select id="recipe-filter-category" onchange="renderRecipeArchive()" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition shadow-2xs w-full sm:w-auto">
               <option value="ALL">Tutte le Categorie</option>
               <option value="Colazione">Colazione</option>
+              <option value="Frutta / Merenda">Frutta / Merenda</option>
               <option value="Primi">Primi</option>
               <option value="Secondi Carne Bianca/Pollame">Secondi Carne Bianca</option>
               <option value="Secondi Carne Rossa">Secondi Carne Rossa</option>
@@ -731,13 +730,13 @@
                 <label class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
                   <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Carne Rossa
                 </label>
-                <p class="text-[10px] text-slate-500 mt-0.5">Limite max a settimana (default: 2)</p>
+                <p class="text-[10px] text-slate-500 mt-0.5">Limite max a settimana (default: 1)</p>
               </div>
               <div class="flex items-center justify-between mt-3 bg-white rounded-xl p-1 border border-slate-200">
                 <button type="button" onclick="adjustGoalParam('maxRedMeat', -1)" class="w-7 h-7 rounded-lg bg-slate-50 text-slate-700 hover:bg-slate-100 flex items-center justify-center font-bold active:scale-95 transition">
                   <i data-lucide="minus" class="w-3.5 h-3.5"></i>
                 </button>
-                <input type="number" id="input-goal-redmeat" min="0" max="7" value="2" onchange="setGoalParam('maxRedMeat', this.value)" class="w-12 text-center font-extrabold text-sm text-slate-900 bg-transparent border-0 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                <input type="number" id="input-goal-redmeat" min="0" max="7" value="1" onchange="setGoalParam('maxRedMeat', this.value)" class="w-12 text-center font-extrabold text-sm text-slate-900 bg-transparent border-0 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                 <button type="button" onclick="adjustGoalParam('maxRedMeat', 1)" class="w-7 h-7 rounded-lg bg-slate-50 text-slate-700 hover:bg-slate-100 flex items-center justify-center font-bold active:scale-95 transition">
                   <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                 </button>
@@ -788,13 +787,13 @@
                 <label class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
                   <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Carne Bianca
                 </label>
-                <p class="text-[10px] text-slate-500 mt-0.5">Obiettivo cons. a settimana (default: 4)</p>
+                <p class="text-[10px] text-slate-500 mt-0.5">Obiettivo cons. a settimana (default: 3)</p>
               </div>
               <div class="flex items-center justify-between mt-3 bg-white rounded-xl p-1 border border-slate-200">
                 <button type="button" onclick="adjustGoalParam('targetWhiteMeat', -1)" class="w-7 h-7 rounded-lg bg-slate-50 text-slate-700 hover:bg-slate-100 flex items-center justify-center font-bold active:scale-95 transition">
                   <i data-lucide="minus" class="w-3.5 h-3.5"></i>
                 </button>
-                <input type="number" id="input-goal-whitemeat" min="0" max="7" value="4" onchange="setGoalParam('targetWhiteMeat', this.value)" class="w-12 text-center font-extrabold text-sm text-slate-900 bg-transparent border-0 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                <input type="number" id="input-goal-whitemeat" min="0" max="7" value="3" onchange="setGoalParam('targetWhiteMeat', this.value)" class="w-12 text-center font-extrabold text-sm text-slate-900 bg-transparent border-0 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                 <button type="button" onclick="adjustGoalParam('targetWhiteMeat', 1)" class="w-7 h-7 rounded-lg bg-slate-50 text-slate-700 hover:bg-slate-100 flex items-center justify-center font-bold active:scale-95 transition">
                   <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                 </button>
@@ -841,7 +840,7 @@
                   <span class="w-2 h-2 rounded-full bg-purple-500"></span> Nuove Ricette ('Da provare')
                 </label>
                 <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">
-                  Numero massimo di ricette inedite da inserire nel piano.
+                  Numero massimo di ricette inedite da inserire nel piano (default: 1).
                 </p>
               </div>
 
@@ -849,7 +848,7 @@
                 <button type="button" onclick="adjustGoalParam('maxTrials', -1)" class="w-7 h-7 rounded-lg bg-slate-50 text-slate-700 hover:bg-slate-100 flex items-center justify-center font-bold active:scale-95 transition">
                   <i data-lucide="minus" class="w-3.5 h-3.5"></i>
                 </button>
-                <input type="number" id="input-goal-trials" min="0" max="7" value="2" onchange="setGoalParam('maxTrials', this.value)" class="w-12 text-center font-extrabold text-sm text-slate-900 bg-transparent border-0 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                <input type="number" id="input-goal-trials" min="0" max="7" value="1" onchange="setGoalParam('maxTrials', this.value)" class="w-12 text-center font-extrabold text-sm text-slate-900 bg-transparent border-0 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                 <button type="button" onclick="adjustGoalParam('maxTrials', 1)" class="w-7 h-7 rounded-lg bg-slate-50 text-slate-700 hover:bg-slate-100 flex items-center justify-center font-bold active:scale-95 transition">
                   <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                 </button>
@@ -1046,6 +1045,44 @@
     </div>
   </div>
 
+  <!-- ================= MODAL: PROMPT AGGIORNAMENTO LISTINO FRUTTIVENDOLO ================= -->
+  <div id="prompt-fruit-vendor-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl overflow-hidden fade-in border border-slate-200">
+      <div class="px-5 sm:px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-lime-50 via-emerald-50 to-white flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-2xl bg-lime-600 text-white flex items-center justify-center shadow-md shadow-lime-600/20 shrink-0">
+            <i data-lucide="store" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Listino Fruttivendolo</h3>
+            <p class="text-[11px] text-slate-500">Ottimizzazione spesa e freschezza</p>
+          </div>
+        </div>
+        <button type="button" onclick="closePromptFruitVendorModal()" class="w-8 h-8 rounded-full hover:bg-slate-200/60 text-slate-400 hover:text-slate-700 flex items-center justify-center transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="p-5 sm:p-6 space-y-3.5 text-xs sm:text-sm">
+        <p class="text-slate-700 font-semibold leading-relaxed">
+          Vuoi aggiornare il listino del fruttivendolo per questa settimana prima di generare il menu?
+        </p>
+        <div class="bg-lime-50/70 border border-lime-200/70 rounded-2xl p-3 text-lime-950 text-xs flex items-start gap-2">
+          <i data-lucide="sparkles" class="w-4 h-4 text-lime-700 shrink-0 mt-0.5"></i>
+          <span>Incollando il messaggio WhatsApp, il generatore favorirà con priorità (+50%) piatti con verdure e frutta fresca di stagione disponibili dal fruttivendolo.</span>
+        </div>
+      </div>
+      <div class="px-5 sm:px-6 py-3.5 bg-slate-50 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-end gap-2">
+        <button type="button" onclick="confirmGenerateWithoutVendor()" class="w-full sm:w-auto px-4 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-xs transition active:scale-95 text-center">
+          No / Genera Subito
+        </button>
+        <button type="button" onclick="openFruitVendorFromPrompt()" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-lime-600 hover:bg-lime-700 text-white font-bold text-xs transition active:scale-95 shadow-sm shadow-lime-600/20 flex items-center justify-center gap-1.5">
+          <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
+          <span>Sì / Inserisci Listino</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- ================= MODAL: LISTINO FRUTTIVENDOLO (WHATSAPP) ================= -->
   <div id="fruit-vendor-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-3xl max-w-xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden fade-in border border-slate-200">
@@ -1194,9 +1231,9 @@
             
             <div class="flex items-center justify-between bg-white border border-indigo-200/80 rounded-xl p-3 shadow-2xs">
               <span id="house-sync-code-display" class="font-mono font-black text-lg sm:text-xl text-indigo-700 tracking-wider">CASA-XXXX</span>
-              <button type="button" onclick="copyHouseCode()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs transition active:scale-95 border border-indigo-200">
+              <button type="button" onclick="copyHouseCode()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs transition active:scale-95 border border-indigo-200" title="Copia Codice Spazio Casa">
                 <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                <span>Copia</span>
+                <span>Copia Codice</span>
               </button>
             </div>
 
@@ -1695,9 +1732,10 @@
 
               <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Categoria *</label>
-                <select id="new-rec-cat" onchange="updatePastaPlaceholders()" required class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <select id="new-rec-cat" onchange="onRecipeCategoryChange()" required class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                   <option value="Colazione">Colazione</option>
                   <option value="Primi">Primi</option>
+                  <option value="Frutta / Merenda">Frutta / Merenda</option>
                   <option value="Secondi Carne Bianca/Pollame" selected>Secondi Carne Bianca</option>
                   <option value="Secondi Carne Rossa">Secondi Carne Rossa</option>
                   <option value="Secondi Pesce">Secondi Pesce</option>
@@ -1735,6 +1773,24 @@
 
             <!-- Tabella Dinamica Ingredienti -->
             <div class="border border-slate-200 rounded-2xl bg-white p-4">
+              <!-- Box Inserimento Rapido Ingredienti Riga per Riga -->
+              <div class="mb-3 p-3 rounded-2xl bg-slate-50 border border-slate-200/90 space-y-2">
+                <div class="flex items-center justify-between flex-wrap gap-1">
+                  <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                    <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i>
+                    Inserimento Rapido Ingredienti (riga per riga)
+                  </span>
+                  <span class="text-[10px] text-slate-400 font-medium">Es: 120g spaghetti • pomodori 200g • olio evo 10 ml</span>
+                </div>
+                <div class="flex gap-2 items-stretch">
+                  <textarea id="bulk-ingredients-input" rows="2" placeholder="Incolla o scrivi uno o più ingredienti (uno per riga) con dosi prima o dopo..." class="flex-1 text-xs p-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-y font-medium text-slate-800"></textarea>
+                  <button type="button" onclick="parseBulkIngredientsToTable()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs transition shadow-xs flex items-center gap-1 self-end shrink-0" title="Aggiungi automaticamente alla tabella">
+                    <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                    <span>Aggiungi</span>
+                  </button>
+                </div>
+              </div>
+
               <div class="flex items-center justify-between mb-2">
                 <label class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
                   <i data-lucide="layers" class="w-3.5 h-3.5 text-emerald-600"></i> Tabella Ingredienti (Dose per 1 persona)
@@ -1876,6 +1932,7 @@
             <option value="ALL">Tutte</option>
             <option value="Colazione">Colazione</option>
             <option value="Primi">Primi</option>
+            <option value="Frutta / Merenda">Frutta / Merenda</option>
             <option value="Secondi Carne Bianca/Pollame">Carne Bianca</option>
             <option value="Secondi Carne Rossa">Carne Rossa</option>
             <option value="Secondi Pesce">Pesce</option>
@@ -2873,6 +2930,142 @@
       { nome: "Ceci lessati", quantita: 80, unita: "g", reparto: "Pasta/Cereali/Legumi" },
       { nome: "Olio extravergine d'oliva", quantita: 10, unita: "ml", reparto: "Condimenti e Dispensa" }
     ]
+  },
+  // ==========================================
+  // PIATTO SPECIALE MENSA
+  // ==========================================
+  {
+    id: "rec-pasto-mensa",
+    nome: "Pasto in Mensa",
+    categoria: "Piatti Unici / Legumi / Speciali",
+    stato: "Abituale",
+    stagione: "annuale",
+    descrizione: "Pasto consumato in mensa aziendale o universitaria. Escluso al 100% dalla lista della spesa.",
+    ingredienti: []
+  },
+  // ==========================================
+  // FRUTTA / MERENDA E SPUNTINI (11 Ricette per 1 Persona)
+  // ==========================================
+  {
+    id: "rec-frutta-mela",
+    nome: "Mela Golden fresca",
+    categoria: "Frutta / Merenda",
+    stato: "Abituale",
+    stagione: "annuale",
+    descrizione: "Mela Golden fresca e croccante, ricca di fibre e vitamine.",
+    ingredienti: [
+      { nome: "Mela Golden", quantita: 1, unita: "pz", reparto: "Ortofrutta" }
+    ]
+  },
+  {
+    id: "rec-frutta-kiwi",
+    nome: "Kiwi verdi",
+    categoria: "Frutta / Merenda",
+    stato: "Abituale",
+    stagione: "inverno",
+    descrizione: "Kiwi verdi freschi, ricchi di vitamina C e antiossidanti.",
+    ingredienti: [
+      { nome: "Kiwi verdi", quantita: 1, unita: "pz", reparto: "Ortofrutta" }
+    ]
+  },
+  {
+    id: "rec-frutta-banana",
+    nome: "Banana",
+    categoria: "Frutta / Merenda",
+    stato: "Abituale",
+    stagione: "annuale",
+    descrizione: "Banana fresca ricca di potassio ed energia naturale.",
+    ingredienti: [
+      { nome: "Banana", quantita: 1, unita: "pz", reparto: "Ortofrutta" }
+    ]
+  },
+  {
+    id: "rec-frutta-pera",
+    nome: "Pere Williams",
+    categoria: "Frutta / Merenda",
+    stato: "Abituale",
+    stagione: "autunno",
+    descrizione: "Pera Williams dolce e succosa di stagione, ottima a merenda.",
+    ingredienti: [
+      { nome: "Pere Williams", quantita: 1, unita: "pz", reparto: "Ortofrutta" }
+    ]
+  },
+  {
+    id: "rec-frutta-arancia",
+    nome: "Arance Navel bio",
+    categoria: "Frutta / Merenda",
+    stato: "Abituale",
+    stagione: "inverno",
+    descrizione: "Arance Navel succose e profumate ricche di vitamina C.",
+    ingredienti: [
+      { nome: "Arance Navel", quantita: 1, unita: "pz", reparto: "Ortofrutta" }
+    ]
+  },
+  {
+    id: "rec-frutta-macedonia",
+    nome: "Macedonia di stagione",
+    categoria: "Frutta / Merenda",
+    stato: "Abituale",
+    stagione: "annuale",
+    descrizione: "Macedonia fresca con frutta mista di stagione tagliata al naturale.",
+    ingredienti: [
+      { nome: "Macedonia di frutta", quantita: 150, unita: "g", reparto: "Ortofrutta" }
+    ]
+  },
+  {
+    id: "rec-frutta-fragole",
+    nome: "Fragole fresche",
+    categoria: "Frutta / Merenda",
+    stato: "Abituale",
+    stagione: "primavera",
+    descrizione: "Fragole primaverili fresche lavate e pronte al consumo.",
+    ingredienti: [
+      { nome: "Fragole", quantita: 150, unita: "g", reparto: "Ortofrutta" }
+    ]
+  },
+  {
+    id: "rec-frutta-albicocche",
+    nome: "Albicocche o Prugne fresche",
+    categoria: "Frutta / Merenda",
+    stato: "Abituale",
+    stagione: "estate",
+    descrizione: "Frutti estivi dolci e ricchi di minerali.",
+    ingredienti: [
+      { nome: "Albicocche", quantita: 2, unita: "pz", reparto: "Ortofrutta" }
+    ]
+  },
+  {
+    id: "rec-frutta-uva",
+    nome: "Uva da tavola",
+    categoria: "Frutta / Merenda",
+    stato: "Abituale",
+    stagione: "autunno",
+    descrizione: "Uva dolce autunnale a chicchi.",
+    ingredienti: [
+      { nome: "Uva", quantita: 150, unita: "g", reparto: "Ortofrutta" }
+    ]
+  },
+  {
+    id: "rec-frutta-pesca",
+    nome: "Pesca o Nettarina",
+    categoria: "Frutta / Merenda",
+    stato: "Abituale",
+    stagione: "estate",
+    descrizione: "Pesca fresca e vellutata estiva.",
+    ingredienti: [
+      { nome: "Pesche e Nettarine", quantita: 1, unita: "pz", reparto: "Ortofrutta" }
+    ]
+  },
+  {
+    id: "rec-frutta-mirtilli",
+    nome: "Mirtilli freschi",
+    categoria: "Frutta / Merenda",
+    stato: "Abituale",
+    stagione: "estate",
+    descrizione: "Mirtilli freschi ricchi di antiossidanti e fibre.",
+    ingredienti: [
+      { nome: "Mirtilli", quantita: 125, unita: "g", reparto: "Ortofrutta" }
+    ]
   }
 ];
 
@@ -2890,13 +3083,16 @@
     ];
     const MEAL_SLOTS = [
       { key: "colazione", label: "Colazione", icon: "coffee", allowedCats: ["Colazione"] },
-      { key: "pranzo", label: "Pranzo", icon: "sun", allowedCats: ["Primi", "Piatti Unici / Legumi / Speciali", "Secondi Carne / Piatti Unici", "Secondi Carne Bianca/Pollame", "Secondi Pesce", "Secondi Uova/Vegetariani", "Salumi / Affettati"] },
-      { key: "cena", label: "Cena", icon: "moon", allowedCats: ["Secondi Pesce", "Secondi Carne Bianca/Pollame", "Secondi Carne Rossa", "Secondi Uova/Vegetariani", "Piatti Unici / Legumi / Speciali", "Secondi Carne / Piatti Unici", "Salumi / Affettati"] }
+      { key: "pranzo", label: "Pranzo", icon: "sun", allowedCats: ["Primi", "Piatti Unici / Legumi / Speciali"] },
+      { key: "merenda", label: "Merenda", icon: "apple", allowedCats: ["Frutta / Merenda", "Colazione"] },
+      { key: "cena", label: "Cena", icon: "moon", allowedCats: ["Secondi Pesce", "Secondi Carne Bianca/Pollame", "Secondi Carne Rossa", "Secondi Uova/Vegetariani", "Piatti Unici / Legumi / Speciali", "Salumi / Affettati"] }
     ];
 
     const CATEGORY_STYLES = {
       "Colazione": { bg: "bg-amber-100", text: "text-amber-800", border: "border-amber-200", icon: "coffee" },
       "Primi": { bg: "bg-orange-100", text: "text-orange-800", border: "border-orange-200", icon: "wheat" },
+      "Frutta / Merenda": { bg: "bg-lime-100", text: "text-lime-800", border: "border-lime-200", icon: "apple" },
+      "Frutta": { bg: "bg-lime-100", text: "text-lime-800", border: "border-lime-200", icon: "apple" },
       "Secondi Carne Bianca/Pollame": { bg: "bg-emerald-100", text: "text-emerald-800", border: "border-emerald-200", icon: "drumstick" },
       "Secondi Carne Rossa": { bg: "bg-rose-100", text: "text-rose-800", border: "border-rose-200", icon: "beef" },
       "Secondi Pesce": { bg: "bg-sky-100", text: "text-sky-800", border: "border-sky-200", icon: "fish" },
@@ -3010,15 +3206,16 @@
       weekOffset: 0,
       shoppingScope: "1week", // "1week" | "2weeks"
       pendingTwoWeekOrigin: null,
-      // Obiettivi Nutrizionali Flessibili & Sperimentazione
+      // Obiettivi Nutrizionali Flessibili & Sperimentazione (Default: nuove 1, pasti fuori 1, bianca 3, rossa 1, salumi 1, pesce 2)
       goals: {
-        maxRedMeat: 2,
+        maxRedMeat: 1,
         maxCuredMeat: 1,
         minFish: 2,
-        targetWhiteMeat: 4,
+        targetWhiteMeat: 3,
         freeMeals: 1,
-        maxTrials: 2,
-        alternationStyle: "mediterranean" // "mediterranean" | "plant_focused" | "free_variety"
+        maxTrials: 1,
+        alternationStyle: "mediterranean", // "mediterranean" | "plant_focused" | "free_variety"
+        fruitMerendaMode: "combined"
       },
       activeModal: {
         dayIndex: null,
@@ -3046,6 +3243,120 @@
     const STORAGE_KEY_FRUIT_VENDOR = "fruit_vendor_inventory";
     const STORAGE_KEY_HOUSE_CODE = "shared_house_code";
     const STORAGE_KEY_GLOBAL_GUESTS = "mealplan_global_guests";
+    const HOUSE_CODE_STORAGE_KEYS = ["shared_house_code", "house_code", "household_id", "pasti_sync_code"];
+
+    function sanitizeHouseCode(code) {
+      if (!code || typeof code !== "string") return "";
+      return code.trim().toUpperCase().replace(/[^A-Z0-9-]/g, "").replace(/-+/g, "-").replace(/^-|-$/g, "");
+    }
+    window.sanitizeHouseCode = sanitizeHouseCode;
+
+    function getSavedHouseCode() {
+      for (const key of HOUSE_CODE_STORAGE_KEYS) {
+        try {
+          const val = localStorage.getItem(key);
+          if (val && typeof val === "string" && val.trim().length > 0) {
+            const clean = sanitizeHouseCode(val);
+            if (clean) return clean;
+          }
+        } catch (e) {}
+      }
+      return "";
+    }
+    window.getSavedHouseCode = getSavedHouseCode;
+
+    function saveHouseCodeToStorage(code) {
+      const clean = sanitizeHouseCode(code);
+      if (!clean) return;
+      for (const key of HOUSE_CODE_STORAGE_KEYS) {
+        try {
+          localStorage.setItem(key, clean);
+        } catch (e) {}
+      }
+    }
+    window.saveHouseCodeToStorage = saveHouseCodeToStorage;
+
+    function removeHouseCodeFromStorage() {
+      for (const key of HOUSE_CODE_STORAGE_KEYS) {
+        try {
+          localStorage.removeItem(key);
+        } catch (e) {}
+      }
+    }
+    window.removeHouseCodeFromStorage = removeHouseCodeFromStorage;
+
+    // Fallback e ripristino difensivo immediato all'avvio: nessun reset del codice casa
+    const initialSavedHouseCode = getSavedHouseCode();
+    if (initialSavedHouseCode && !AppState.houseCode) {
+      AppState.houseCode = initialSavedHouseCode;
+    }
+
+    const PRODUCE_VARIETY_MAP = [
+      // ==================== FRUTTA SPECIFICA ====================
+      { id: "arance_navel", name: "Arance Navel", family: "Arance", keywords: ["arance navel", "arancia navel", "navel tardive", "navel"] },
+      { id: "limoni", name: "Limoni", family: "Limoni", keywords: ["limoni", "limone"] },
+      { id: "pompelmi", name: "Pompelmi", family: "Pompelmi", keywords: ["pompelmi", "pompelmo"] },
+      { id: "ananas_gold", name: "Ananas Gold", family: "Ananas", keywords: ["ananas", "ananas gold", "ananas selezione gold"] },
+      { id: "melone_gialletto", name: "Melone Gialletto", family: "Melone", keywords: ["melone gialletto", "gialletto"] },
+      { id: "melone_mantovano", name: "Melone Mantovano/Retato", family: "Melone", keywords: ["melone mantovano", "melone retato", "retato mantovano"] },
+      { id: "fichi_india", name: "Fichi d'India", family: "Fichi d'India", keywords: ["fichi d'india", "fico d'india"] },
+      { id: "banane", name: "Banane", family: "Banane", keywords: ["banane", "banana", "chiquita"] },
+      { id: "kiwi_verdi", name: "Kiwi Verdi", family: "Kiwi", keywords: ["kiwi verdi", "kiwi verde"] },
+      { id: "kiwi_gold", name: "Kiwi Gold", family: "Kiwi", keywords: ["kiwi gold"] },
+      { id: "mele_golden", name: "Mele Golden", family: "Mele", keywords: ["mele golden", "mela golden", "golden trentino"] },
+      { id: "mele_royal_gala", name: "Mele Royal Gala", family: "Mele", keywords: ["mele royal gala", "royal gala", "gala"] },
+      { id: "mele_samboa", name: "Mele Samboa", family: "Mele", keywords: ["mele samboa", "samboa"] },
+      { id: "mele_pinklady", name: "Mele Pink Lady", family: "Mele", keywords: ["mele pinklady", "pink lady", "pinklady"] },
+      { id: "pere_nashi", name: "Pere Nashi", family: "Pere", keywords: ["pera nashi", "pere nashi", "nashi"] },
+      { id: "pere_williams", name: "Pere Williams", family: "Pere", keywords: ["pere williams", "pera williams", "williams"] },
+      { id: "prugne_santa_clara", name: "Prugne Santa Clara", family: "Prugne", keywords: ["prugne s. clara", "prugne santa clara", "s. clara"] },
+      { id: "pesche_pasta_gialla", name: "Pesche pasta gialla", family: "Pesche", keywords: ["pesche pasta gialla", "pesche tardive pasta gialla", "pesca pasta gialla"] },
+      { id: "pesche_noci", name: "Pesche Noci / Nettarine", family: "Pesche", keywords: ["pesche noci", "pesca noce", "nettarine"] },
+      { id: "avocado_hass", name: "Avocado Hass", family: "Avocado", keywords: ["avocado hass", "hass", "avocado"] },
+      { id: "uva_italia", name: "Uva Italia", family: "Uva", keywords: ["uva italia"] },
+      { id: "uva_vittoria", name: "Uva Vittoria", family: "Uva", keywords: ["uva vittoria"] },
+      { id: "uva_nera", name: "Uva Nera", family: "Uva", keywords: ["uva nere", "uva nera"] },
+      { id: "uva_pizzutella", name: "Uva Pizzutella", family: "Uva", keywords: ["uva pizzutella", "pizzutella"] },
+      { id: "uva_senza_semi", name: "Uva Senza Semi", family: "Uva", keywords: ["uva senza semi", "senza semi", "apirena"] },
+      { id: "noci_secche", name: "Noci secche", family: "Noci", keywords: ["noci secche"] },
+      { id: "noci_grenoble", name: "Noci di Grenoble", family: "Noci", keywords: ["noci grenoble", "grenoble"] },
+      { id: "noci_macadamia", name: "Noci Macadamia", family: "Noci", keywords: ["noci macadamia", "macadamia"] },
+
+      // ==================== VERDURA, ORTAGGI E FUNGHI ====================
+      { id: "zucchine_bianche", name: "Zucchine bianche", family: "Zucchine", keywords: ["zucchine bianche", "zucchina bianca"] },
+      { id: "zucchine_scure", name: "Zucchine", family: "Zucchine", keywords: ["zucchine", "zucchina"] },
+      { id: "fagiolini", name: "Fagiolini", family: "Fagiolini", keywords: ["fagiolini extra", "fagiolini", "fagiolino"] },
+      { id: "broccoli", name: "Broccoli", family: "Broccoli", keywords: ["broccoli", "broccolo"] },
+      { id: "melanzane_nere", name: "Melanzane nere", family: "Melanzane", keywords: ["melanzane nere", "melanzana nera"] },
+      { id: "melanzane_viola", name: "Melanzane viola", family: "Melanzane", keywords: ["melanzane viola", "melanzana viola"] },
+      { id: "peperoni_carmagnola", name: "Peperoni di Carmagnola", family: "Peperoni", keywords: ["peperoni gialli e rossi carmagnola", "peperoni carmagnola", "peperoni"] },
+      { id: "zucca_delica", name: "Zucca Delica", family: "Zucca", keywords: ["zucca delica", "delica"] },
+      { id: "zucca_standard", name: "Zucca", family: "Zucca", keywords: ["zucca"] },
+      { id: "cavolfiore", name: "Cavolfiore", family: "Cavolfiore", keywords: ["cavolfiore trentino", "cavolfiore"] },
+      { id: "costine_piemonte", name: "Costine / Bietole da costa", family: "Bietole e Coste", keywords: ["costine piemonte", "costine", "coste", "bietole"] },
+      { id: "pomodoro_datterino", name: "Pomodoro Datterino (Giallo/Rosso)", family: "Pomodori", keywords: ["datterino rosso o giallo", "datterino rosso/giallo", "datterino rosso", "datterino", "datterini"] },
+      { id: "pomodoro_cuore_bue", name: "Pomodoro Cuore di Bue", family: "Pomodori", keywords: ["pomodoro cuore di bue", "cuore di bue"] },
+      { id: "pomodoro_butalino", name: "Pomodoro Butalino (da salsa)", family: "Pomodori", keywords: ["pomodoro butalino", "butalino"] },
+      { id: "finocchi", name: "Finocchi", family: "Finocchi", keywords: ["finocchi", "finocchio"] },
+      { id: "cetrioli", name: "Cetrioli", family: "Cetrioli", keywords: ["cetrioli piemonte", "cetrioli", "cetriolo"] },
+      { id: "carote_cristalline", name: "Carote cristalline", family: "Carote", keywords: ["carote cristalline", "carote", "carota"] },
+      { id: "insalata_manigotto", name: "Insalata Manigotto", family: "Insalata", keywords: ["insalata manigotto", "manigotto"] },
+      { id: "insalata_gentilina", name: "Insalata Gentilina", family: "Insalata", keywords: ["insalata gentilina", "gentilina"] },
+      { id: "radicchio", name: "Radicchio", family: "Radicchio", keywords: ["radicchio"] },
+      { id: "sedano", name: "Sedano", family: "Sedano", keywords: ["sedano"] },
+      { id: "patate_novelle", name: "Patate novelle", family: "Patate", keywords: ["patate novelle polignano", "patate novelle", "novelle polignano"] },
+      { id: "patate_montagna", name: "Patate di montagna", family: "Patate", keywords: ["patate di montagna"] },
+      { id: "cipolle_bionde", name: "Cipolle bionde", family: "Cipolle", keywords: ["cipolle bionde", "cipolla bionda"] },
+      { id: "cipolle_bianche", name: "Cipolle bianche", family: "Cipolle", keywords: ["cipolle bianche", "cipolla bianca"] },
+      { id: "cipolle_tropea", name: "Cipolle di Tropea", family: "Cipolle", keywords: ["cipolle di tropea", "cipolla di tropea", "tropea"] },
+      { id: "aglio_rosso", name: "Aglio rosso", family: "Aglio", keywords: ["aglio rosso", "aglio"] },
+      { id: "funghi_champignon", name: "Funghi Champignon", family: "Funghi", keywords: ["champignon"] },
+      { id: "funghi_porcini", name: "Funghi Porcini", family: "Funghi", keywords: ["porcini", "porcino"] },
+      { id: "pannocchie_vapore", name: "Pannocchie al vapore", family: "Pronti / Speciali", keywords: ["pannocchie cotte al vapore", "pannocchie"] },
+      { id: "rapa_cipolla_forno", name: "Rapa e cipolla al forno", family: "Pronti / Speciali", keywords: ["rapa e cipolla cotta al forno", "rapa e cipolla"] },
+      { id: "minestrone_legumi", name: "Minestrone con legumi fresco", family: "Pronti / Speciali", keywords: ["minestroni con legumi", "minestrone"] }
+    ];
+    window.PRODUCE_VARIETY_MAP = PRODUCE_VARIETY_MAP;
 
     const PRODUCE_DICTIONARY = {
       // ==================== ORTAGGI A FOGLIA E INSALATE ====================
@@ -3317,11 +3628,15 @@
             // Integra automaticamente nel catalogo salvato eventuali nuove ricette di default mancanti e aggiorna stati di fabbrica
             let addedNewDefaults = false;
             DEFAULT_RECIPES.forEach(defRec => {
-              const existing = parsed.find(r => r.id === defRec.id || r.nome.toLowerCase() === defRec.nome.toLowerCase());
+              const existing = parsed.find(r => r.id === defRec.id || (r.nome && defRec.nome && r.nome.toLowerCase() === defRec.nome.toLowerCase()));
               if (!existing) {
                 parsed.push(JSON.parse(JSON.stringify(defRec)));
                 addedNewDefaults = true;
               } else {
+                if (defRec.categoria === "Frutta / Merenda" && existing.categoria !== "Frutta / Merenda") {
+                  existing.categoria = "Frutta / Merenda";
+                  addedNewDefaults = true;
+                }
                 if (!existing.stagione) {
                   existing.stagione = defRec.stagione || "annuale";
                   addedNewDefaults = true;
@@ -3376,22 +3691,33 @@
         if (raw) {
           const parsed = JSON.parse(raw);
           if (parsed && typeof parsed === 'object') {
-            let whiteMeatVal = typeof parsed.targetWhiteMeat === 'number' ? Math.max(0, Math.min(7, parsed.targetWhiteMeat)) : 4;
-            // Se nel LocalStorage è presente il vecchio default (3), aggiornalo a 4 come nuovo valore di riferimento
-            if (whiteMeatVal === 3) {
-              whiteMeatVal = 4;
-            }
+            // Migrazione automatica se nel LocalStorage sono presenti i vecchi valori di default
+            let whiteMeatVal = typeof parsed.targetWhiteMeat === 'number' ? Math.max(0, Math.min(7, parsed.targetWhiteMeat)) : 3;
+            if (whiteMeatVal === 4) whiteMeatVal = 3;
+
+            let redMeatVal = typeof parsed.maxRedMeat === 'number' ? Math.max(0, Math.min(7, parsed.maxRedMeat)) : 1;
+            if (redMeatVal === 2) redMeatVal = 1;
+
+            let fishVal = typeof parsed.minFish === 'number' ? Math.max(0, Math.min(7, parsed.minFish)) : 2;
+            if (fishVal === 1) fishVal = 2;
+
+            let trialsVal = typeof parsed.maxTrials === 'number'
+              ? Math.max(0, Math.min(7, parsed.maxTrials))
+              : (typeof parsed.targetTrials === 'number' ? Math.max(0, Math.min(7, parsed.targetTrials)) : 1);
+            if (trialsVal === 2) trialsVal = 1;
+
+            let curedMeatVal = typeof parsed.maxCuredMeat === 'number' ? Math.max(0, Math.min(7, parsed.maxCuredMeat)) : 1;
+            let freeMealsVal = typeof parsed.freeMeals === 'number' ? Math.max(0, Math.min(7, parsed.freeMeals)) : 1;
 
             AppState.goals = {
-              maxRedMeat: typeof parsed.maxRedMeat === 'number' ? Math.max(0, Math.min(7, parsed.maxRedMeat)) : 2,
-              maxCuredMeat: typeof parsed.maxCuredMeat === 'number' ? Math.max(0, Math.min(7, parsed.maxCuredMeat)) : 1,
-              minFish: typeof parsed.minFish === 'number' ? Math.max(0, Math.min(7, parsed.minFish)) : 2,
+              maxRedMeat: redMeatVal,
+              maxCuredMeat: curedMeatVal,
+              minFish: fishVal,
               targetWhiteMeat: whiteMeatVal,
-              freeMeals: typeof parsed.freeMeals === 'number' ? Math.max(0, Math.min(7, parsed.freeMeals)) : 1,
-              maxTrials: typeof parsed.maxTrials === 'number'
-                ? Math.max(0, Math.min(7, parsed.maxTrials))
-                : (typeof parsed.targetTrials === 'number' ? Math.max(0, Math.min(7, parsed.targetTrials)) : 2),
-              alternationStyle: parsed.alternationStyle || "mediterranean"
+              freeMeals: freeMealsVal,
+              maxTrials: trialsVal,
+              alternationStyle: parsed.alternationStyle || "mediterranean",
+              fruitMerendaMode: parsed.fruitMerendaMode || "combined"
             };
             saveGoalsToStorage();
             return;
@@ -3400,15 +3726,16 @@
       } catch (e) {
         console.warn("Errore caricamento obiettivi:", e);
       }
-      // Valori predefiniti
+      // Valori predefiniti ufficiali: nuove 1, pasti fuori 1, carne bianca 3, carne rossa 1, salumi 1, pesce 2
       AppState.goals = {
-        maxRedMeat: 2,
+        maxRedMeat: 1,
         maxCuredMeat: 1,
         minFish: 2,
-        targetWhiteMeat: 4,
+        targetWhiteMeat: 3,
         freeMeals: 1,
-        maxTrials: 2,
-        alternationStyle: "mediterranean"
+        maxTrials: 1,
+        alternationStyle: "mediterranean",
+        fruitMerendaMode: "combined"
       };
       saveGoalsToStorage();
     }
@@ -3464,6 +3791,16 @@
             AppState.checkedGroceries = parsed.checkedGroceries || {};
             AppState.pantryGroceries = parsed.pantryGroceries || {};
             AppState.plan = (Array.isArray(parsed.plan) && parsed.plan.length === 7) ? parsed.plan : null;
+            if (AppState.plan) {
+              AppState.plan.forEach(d => {
+                if (d && d.meals && !d.meals.merenda) {
+                  d.meals.merenda = { recipeId: null, isFreeMeal: false, guests: null };
+                }
+                if (d && d.isCompleted === undefined) {
+                  d.isCompleted = !!d.isPastEmpty;
+                }
+              });
+            }
             updateGlobalGuestsUI(AppState.globalGuests);
             return !!AppState.plan;
           }
@@ -3474,6 +3811,14 @@
             const legacyParsed = JSON.parse(legacyRaw);
             if (legacyParsed && Array.isArray(legacyParsed.plan) && legacyParsed.plan.length === 7) {
               AppState.plan = legacyParsed.plan;
+              AppState.plan.forEach(d => {
+                if (d && d.meals && !d.meals.merenda) {
+                  d.meals.merenda = { recipeId: null, isFreeMeal: false, guests: null };
+                }
+                if (d && d.isCompleted === undefined) {
+                  d.isCompleted = !!d.isPastEmpty;
+                }
+              });
               AppState.checkedGroceries = legacyParsed.checkedGroceries || {};
               AppState.pantryGroceries = legacyParsed.pantryGroceries || {};
               updateGlobalGuestsUI(AppState.globalGuests);
@@ -3527,6 +3872,330 @@
       return false;
     }
 
+    function isWhiteMeatRecipe(recipe) {
+      if (!recipe) return false;
+      if (recipe.categoria === "Secondi Carne Bianca/Pollame") return true;
+      const whiteRegex = /\b(pollo|tacchino|fesa|coniglio|pollame|quaglia|galletto)\b/i;
+      if (recipe.nome && whiteRegex.test(recipe.nome)) return true;
+      if (recipe.ingredienti && Array.isArray(recipe.ingredienti)) {
+        return recipe.ingredienti.some(ing => whiteRegex.test(ing.nome));
+      }
+      return false;
+    }
+
+    function isMeatOrFish(recipe) {
+      if (!recipe) return false;
+      const cat = recipe.categoria;
+      if (cat === "Secondi Carne Bianca/Pollame" || cat === "Secondi Carne Rossa" || cat === "Secondi Pesce" || cat === "Salumi / Affettati" || cat === "Salumi e Affettati") {
+        return true;
+      }
+      if (isWhiteMeatRecipe(recipe) || isCuredMeatRecipe(recipe)) return true;
+      const regex = /\b(carne|pesce|pollo|tacchino|manzo|vitello|maiale|tonno|salmone|merluzzo|orata|spigola|branzino|salsiccia|bresaola|prosciutto|speck|salame)\b/i;
+      return regex.test(recipe.nome);
+    }
+
+    function isMensaMeal(recipe, meal, as) {
+      if (meal && (meal.recipeId === "rec-pasto-mensa" || (typeof meal.recipeId === "string" && /mensa/i.test(meal.recipeId)))) return true;
+      if (as && (as.recipeId === "rec-pasto-mensa" || (typeof as.recipeId === "string" && /mensa/i.test(as.recipeId)))) return true;
+      if (recipe) {
+        if (recipe.id === "rec-pasto-mensa") return true;
+        if (recipe.nome && /\bmensa\b/i.test(recipe.nome)) return true;
+        if (recipe.categoria && /\bmensa\b/i.test(recipe.categoria)) return true;
+        if (recipe.note && /\bmensa\b/i.test(recipe.note)) return true;
+      }
+      return false;
+    }
+
+    function getCanonicalProduceName(rawName) {
+      if (!rawName) return "";
+      const clean = rawName.trim().toLowerCase();
+      if (typeof PRODUCE_DICTIONARY !== "undefined") {
+        for (const [category, synonyms] of Object.entries(PRODUCE_DICTIONARY)) {
+          for (const syn of synonyms) {
+            const s = syn.toLowerCase();
+            const regex = new RegExp(`(^|\\b)${s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\b|$)`, 'i');
+            if (regex.test(clean)) {
+              return category;
+            }
+          }
+        }
+      }
+      const trimmed = rawName.trim();
+      return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+    }
+    window.getCanonicalProduceName = getCanonicalProduceName;
+
+    function detectIngredientDepartment(name) {
+      if (!name) return "Ortofrutta";
+      const s = name.toLowerCase().trim();
+
+      // Pesce
+      if (/\b(salmone|pesce|tonno|merluzzo|orata|spigola|branzino|calamari|gamberi|gamberetti|cozze|vongole|polpo|seppia|seppie|sgombro|trota|alici|acciughe|pescespada|spada|baccalà|nasello|pescatrice|platessa)\b/i.test(s)) {
+        return "Pesce";
+      }
+
+      // Carne / Salumi
+      if (/\b(pollo|tacchino|fesa|manzo|vitello|vitellone|maiale|lonza|costine|salsiccia|macinato|coniglio|quaglia|prosciutto|bresaola|speck|salame|pancetta|guanciale|mortadella|affettato|affettati|lonzino|carpaccio)\b/i.test(s)) {
+        return "Carne";
+      }
+
+      // Latticini e Formaggi
+      if (/\b(formaggio|formaggi|mozzarella|parmigiano|grana|pecorino|ricotta|feta|latte|yogurt|burro|panna|gorgonzola|stracchino|crescenza|robiola|asiago|fontina|provola|scamorza|burrata|mascarpone)\b/i.test(s)) {
+        return "Latticini e Formaggi";
+      }
+
+      // Pasta, Cereali e Legumi
+      if (/\b(pasta|spaghetti|penne|fusilli|rigatoni|farfalle|linguine|tagliatelle|riso|risotto|orzo|farro|quinoa|couscous|cous cous|avena|polenta|gnocchi|legumi|ceci|fagioli|lenticchie|piselli|fave|edamame|pane|farina)\b/i.test(s)) {
+        return "Pasta, Cereali e Legumi";
+      }
+
+      // Condimenti e Dispensa
+      if (/\b(olio|olio evo|aceto|sale|pepe|spezie|origano|rosmarino|basilico|paprika|curcuma|curry|cannella|noce moscata|zucchero|caffè|tè|lievito|bicarbonato|dado|brodo|passata|pelati|concentrato|maionese|senape|ketchup|salsa di soia)\b/i.test(s)) {
+        return "Condimenti e Dispensa";
+      }
+
+      // Ortofrutta check in PRODUCE_DICTIONARY
+      if (typeof PRODUCE_DICTIONARY !== "undefined") {
+        for (const synonyms of Object.values(PRODUCE_DICTIONARY)) {
+          if (synonyms.some(syn => s.includes(syn.toLowerCase()))) {
+            return "Ortofrutta";
+          }
+        }
+      }
+
+      if (/\b(mela|mele|banana|banane|pera|pere|arancia|arance|limone|limoni|frutta|pesca|pesche|fragola|fragole|uva|kiwi|albicocche|anguria|melone|pomodoro|pomodori|zucchina|zucchine|melanzana|melanzane|carota|carote|cipolla|cipolle|aglio|insalata|lattuga|patata|patate|verdura|verdure)\b/i.test(s)) {
+        return "Ortofrutta";
+      }
+
+      return "Condimenti e Dispensa";
+    }
+    window.detectIngredientDepartment = detectIngredientDepartment;
+
+    function parseSingleIngredientLine(rawLine) {
+      if (!rawLine || !rawLine.trim()) return null;
+      let text = rawLine.trim().replace(/^[-*•\s]+/, "").trim();
+
+      let quantita = "";
+      let unita = "g";
+      let nome = "";
+
+      // 1. Check for "q.b." / "qb"
+      if (/\bq\.?b\.?\b/i.test(text)) {
+        unita = "q.b.";
+        quantita = "q.b.";
+        nome = text.replace(/\bq\.?b\.?\b/i, "").trim().replace(/^[-:,]+|[-:,]+$/g, "").trim();
+      } else {
+        // Pattern A: Number + Unit at the BEGINNING (es. "150g petto di pollo", "150 g pollo", "2 pz uova", "2 uova", "1.5 kg mele", "200ml latte")
+        const numPrefixRegex = /^(\d+(?:[.,]\d+)?)\s*(kg|kilo|chili|g|gr|grammi|hg|etti|l|lt|litri|ml|cl|dl|pz|pezzi|fette|cucchiai|cucchiaini|spicchi|foglie)?\b\s*(?:di|d')?\s*(.*)$/i;
+        // Pattern B: Number + Unit at the END (es. "petto di pollo 150g", "pomodori 200 g", "uova 2 pz", "mele 1.5 kg", "latte 200ml")
+        const numSuffixRegex = /^(.*?)\s+(\d+(?:[.,]\d+)?)\s*(kg|kilo|chili|g|gr|grammi|hg|etti|l|lt|litri|ml|cl|dl|pz|pezzi|fette|cucchiai|cucchiaini|spicchi|foglie)?$/i;
+
+        let m = text.match(numPrefixRegex);
+        if (m && m[1] && m[3] && m[3].trim().length > 0) {
+          let rawVal = parseFloat(m[1].replace(",", "."));
+          let rawUnit = (m[2] || "").toLowerCase();
+          nome = m[3].trim();
+
+          if (rawUnit === "kg" || rawUnit === "kilo" || rawUnit === "chili") {
+            quantita = Math.round(rawVal * 1000);
+            unita = "g";
+          } else if (rawUnit === "hg" || rawUnit === "etti") {
+            quantita = Math.round(rawVal * 100);
+            unita = "g";
+          } else if (rawUnit === "l" || rawUnit === "lt" || rawUnit === "litri") {
+            quantita = Math.round(rawVal * 1000);
+            unita = "ml";
+          } else if (rawUnit === "cl") {
+            quantita = Math.round(rawVal * 10);
+            unita = "ml";
+          } else if (rawUnit === "dl") {
+            quantita = Math.round(rawVal * 100);
+            unita = "ml";
+          } else if (rawUnit === "ml") {
+            quantita = rawVal;
+            unita = "ml";
+          } else if (["pz", "pezzi", "fette", "cucchiai", "cucchiaini", "spicchi", "foglie"].includes(rawUnit)) {
+            quantita = rawVal;
+            unita = "pz";
+          } else if (rawUnit === "g" || rawUnit === "gr" || rawUnit === "grammi") {
+            quantita = rawVal;
+            unita = "g";
+          } else {
+            quantita = rawVal;
+            unita = (rawVal <= 10 && !/pasta|riso|farina|carne|pollo|pesce/i.test(nome)) ? "pz" : "g";
+          }
+        } else {
+          m = text.match(numSuffixRegex);
+          if (m && m[1] && m[2]) {
+            let rawVal = parseFloat(m[2].replace(",", "."));
+            let rawUnit = (m[3] || "").toLowerCase();
+            nome = m[1].trim();
+
+            if (rawUnit === "kg" || rawUnit === "kilo" || rawUnit === "chili") {
+              quantita = Math.round(rawVal * 1000);
+              unita = "g";
+            } else if (rawUnit === "hg" || rawUnit === "etti") {
+              quantita = Math.round(rawVal * 100);
+              unita = "g";
+            } else if (rawUnit === "l" || rawUnit === "lt" || rawUnit === "litri") {
+              quantita = Math.round(rawVal * 1000);
+              unita = "ml";
+            } else if (rawUnit === "cl") {
+              quantita = Math.round(rawVal * 10);
+              unita = "ml";
+            } else if (rawUnit === "dl") {
+              quantita = Math.round(rawVal * 100);
+              unita = "ml";
+            } else if (rawUnit === "ml") {
+              quantita = rawVal;
+              unita = "ml";
+            } else if (["pz", "pezzi", "fette", "cucchiai", "cucchiaini", "spicchi", "foglie"].includes(rawUnit)) {
+              quantita = rawVal;
+              unita = "pz";
+            } else if (rawUnit === "g" || rawUnit === "gr" || rawUnit === "grammi") {
+              quantita = rawVal;
+              unita = "g";
+            } else {
+              quantita = rawVal;
+              unita = (rawVal <= 10 && !/pasta|riso|farina|carne|pollo|pesce/i.test(nome)) ? "pz" : "g";
+            }
+          } else {
+            nome = text;
+            quantita = "";
+            unita = "g";
+          }
+        }
+      }
+
+      nome = nome.replace(/^[-:,]+|[-:,]+$/g, "").trim();
+      const reparto = detectIngredientDepartment(nome);
+
+      return {
+        nome,
+        quantita,
+        unita,
+        reparto
+      };
+    }
+    window.parseSingleIngredientLine = parseSingleIngredientLine;
+
+    function handleSmartIngredientNameInput(inputEl) {
+      if (!inputEl) return;
+      const raw = inputEl.value;
+      const row = inputEl.closest("tr");
+      if (!row) return;
+
+      const parsed = parseSingleIngredientLine(raw);
+      if (!parsed) return;
+
+      if (parsed.quantita !== "" && parsed.nome && parsed.nome !== raw.trim()) {
+        inputEl.value = parsed.nome;
+        const qtyInput = row.querySelector(".ing-qty");
+        const unitSelect = row.querySelector(".ing-unit");
+        if (qtyInput) {
+          qtyInput.value = parsed.quantita;
+          if (parsed.unita === "q.b.") {
+            qtyInput.removeAttribute("required");
+            qtyInput.placeholder = "q.b.";
+          }
+        }
+        if (unitSelect && parsed.unita) {
+          unitSelect.value = parsed.unita;
+        }
+      }
+
+      const currentName = inputEl.value.trim();
+      if (currentName.length >= 3) {
+        const depSelect = row.querySelector(".ing-dep");
+        if (depSelect) {
+          const detectedDep = detectIngredientDepartment(currentName);
+          if (detectedDep && depSelect.value !== detectedDep) {
+            depSelect.value = detectedDep;
+          }
+        }
+      }
+    }
+    window.handleSmartIngredientNameInput = handleSmartIngredientNameInput;
+
+    function parseBulkIngredientsToTable(tbodyId = "ingredients-form-tbody") {
+      const textarea = document.getElementById("bulk-ingredients-input");
+      if (!textarea || !textarea.value.trim()) {
+        showToast("Nessun ingrediente", "Scrivi o incolla almeno una riga di ingredienti nel campo rapido.");
+        return;
+      }
+      const lines = textarea.value.split("\n").map(l => l.trim()).filter(Boolean);
+      const tbody = document.getElementById(tbodyId);
+      if (!tbody) return;
+
+      const rows = tbody.querySelectorAll("tr");
+      if (rows.length === 1) {
+        const nameVal = rows[0].querySelector(".ing-name")?.value.trim();
+        const qtyVal = rows[0].querySelector(".ing-qty")?.value.trim();
+        if (!nameVal && !qtyVal) {
+          tbody.innerHTML = "";
+        }
+      }
+
+      let addedCount = 0;
+      lines.forEach(line => {
+        const parsed = parseSingleIngredientLine(line);
+        if (parsed && parsed.nome) {
+          addIngredientRow(parsed.nome, parsed.quantita, parsed.unita, parsed.reparto, tbodyId);
+          addedCount++;
+        }
+      });
+
+      textarea.value = "";
+      if (addedCount > 0) {
+        showToast("Ingredienti Aggiunti", `${addedCount} ${addedCount === 1 ? 'ingrediente inserito' : 'ingredienti inseriti'} nella tabella.`);
+      }
+    }
+    window.parseBulkIngredientsToTable = parseBulkIngredientsToTable;
+
+    function toggleDayCompleted(dayIdx) {
+      if (!AppState.plan || !AppState.plan[dayIdx]) return;
+      const current = !!AppState.plan[dayIdx].isCompleted;
+      AppState.plan[dayIdx].isCompleted = !current;
+      saveToStorage();
+      renderWeeklyGrid();
+      renderShoppingList();
+      showToast(
+        !current ? "Giornata Conclusa" : "Giornata Ripristinata",
+        !current ? `${DAYS_OF_WEEK[dayIdx]} contrassegnato come consumato (escluso dalla spesa rimasta).` : `${DAYS_OF_WEEK[dayIdx]} ripristinato come da consumare.`
+      );
+    }
+    window.toggleDayCompleted = toggleDayCompleted;
+
+    function requestWeeklyPlanGeneration() {
+      const modal = document.getElementById("prompt-fruit-vendor-modal");
+      if (modal) {
+        modal.classList.remove("hidden");
+        lucide.createIcons();
+      } else {
+        generateWeeklyPlan(true);
+      }
+    }
+    window.requestWeeklyPlanGeneration = requestWeeklyPlanGeneration;
+
+    function closePromptFruitVendorModal() {
+      const modal = document.getElementById("prompt-fruit-vendor-modal");
+      if (modal) modal.classList.add("hidden");
+    }
+    window.closePromptFruitVendorModal = closePromptFruitVendorModal;
+
+    function confirmGenerateWithoutVendor() {
+      closePromptFruitVendorModal();
+      generateWeeklyPlan(true);
+    }
+    window.confirmGenerateWithoutVendor = confirmGenerateWithoutVendor;
+
+    function openFruitVendorFromPrompt() {
+      closePromptFruitVendorModal();
+      AppState.pendingGenerationAfterVendor = true;
+      openFruitVendorModal();
+    }
+    window.openFruitVendorFromPrompt = openFruitVendorFromPrompt;
+
     function generateBalancedWeeklyPlan() {
       const goals = AppState.goals;
 
@@ -3542,8 +4211,6 @@
       }
 
       // 1. Rilevamento temporale giorno di inizio pianificazione:
-      // Se siamo nella settimana corrente (weekOffset === 0), pianifichiamo da oggi a domenica.
-      // Se siamo in una settimana futura (weekOffset > 0) o passata (< 0), pianifichiamo tutti i 7 giorni.
       const currentOffset = AppState.weekOffset || 0;
       if (currentOffset > 2) {
         showToast("Limite Raggiunto", "Puoi pianificare fino a un massimo di 2 settimane successive a quella corrente (3 settimane in totale).");
@@ -3560,17 +4227,16 @@
       const numActiveDays = Math.max(1, 7 - startDayIdx);
       const activeScale = numActiveDays / 7;
 
-      // 2. Mappatura slot pasti fuori (adattata e scalata ai giorni attivi)
-      const rawFreeTarget = goals.freeMeals !== undefined ? goals.freeMeals : 1;
-      const freeMealsTarget = Math.max(0, Math.min(numActiveDays * 2, Math.round(rawFreeTarget * activeScale)));
+      // 2. Mappatura slot pasti fuori (HARD CONSTRAINT: rispettare esattamente goals.freeMeals)
+      const rawFreeTarget = (goals.freeMeals !== undefined && goals.freeMeals !== null) ? goals.freeMeals : 1;
+      const eligibleFreeSlots = PREFERRED_FREE_SLOTS.filter(s => s.dayIdx >= startDayIdx);
+      const freeMealsTarget = Math.min(eligibleFreeSlots.length, Math.max(0, rawFreeTarget));
       
       const freeSlotMap = new Set();
       let freeLunchCount = 0;
       let freeDinnerCount = 0;
 
-      // Filtra solo gli slot preferiti nei giorni attivi (>= startDayIdx)
-      const eligibleFreeSlots = PREFERRED_FREE_SLOTS.filter(s => s.dayIdx >= startDayIdx);
-      for (let i = 0; i < freeMealsTarget && i < eligibleFreeSlots.length; i++) {
+      for (let i = 0; i < freeMealsTarget; i++) {
         const s = eligibleFreeSlots[i];
         freeSlotMap.add(`${s.dayIdx}_${s.slotKey}`);
         if (s.slotKey === "pranzo") freeLunchCount++;
@@ -3583,10 +4249,11 @@
 
       // 3. Riproprozionamento soft targets nutrizionali sui giorni attivi
       const scaledMinFish = Math.min(availableDinners, Math.max(numActiveDays >= 4 ? 1 : 0, Math.round((goals.minFish !== undefined ? goals.minFish : 2) * activeScale)));
-      const scaledMaxRed = Math.max(0, Math.round((goals.maxRedMeat !== undefined ? goals.maxRedMeat : 2) * activeScale));
+      const scaledMaxRed = Math.max(0, Math.round((goals.maxRedMeat !== undefined ? goals.maxRedMeat : 1) * activeScale));
       const scaledMaxCured = Math.max(0, Math.round((goals.maxCuredMeat !== undefined ? goals.maxCuredMeat : 1) * activeScale));
-      const scaledTargetWhite = Math.min(availableDinners + availableLunches, Math.max(1, Math.round((goals.targetWhiteMeat !== undefined ? goals.targetWhiteMeat : 4) * activeScale)));
-      const rawMaxTrials = goals.maxTrials !== undefined ? goals.maxTrials : (goals.targetTrials !== undefined ? goals.targetTrials : 2);
+      // La carne bianca è programmata unicamente a cena:
+      const scaledTargetWhite = Math.min(availableDinners, Math.max(1, Math.round((goals.targetWhiteMeat !== undefined ? goals.targetWhiteMeat : 3) * activeScale)));
+      const rawMaxTrials = goals.maxTrials !== undefined ? goals.maxTrials : (goals.targetTrials !== undefined ? goals.targetTrials : 1);
       const scaledMaxTrials = Math.max(0, Math.round(rawMaxTrials * activeScale));
 
       let bestPlan = null;
@@ -3599,6 +4266,7 @@
         const recipeUsageCounts = {};
         const lastDayUsed = {}; // Traccia l'ultimo dayIdx in cui ogni ricetta è stata usata
         const plannedIngredients = new Map(); // normalizzato -> { reparto, count }
+        const dayUsedWhiteMeat = {}; // Anti-collisione: evita doppioni di carne bianca nello stesso giorno
 
         let currentTrialCount = 0;
         let redMeatCount = 0;
@@ -3608,13 +4276,12 @@
         let legumesCount = 0;
 
         // Regola Frequenza Ricette 'Saltuarie':
-        // Una ricetta Saltuaria non deve apparire a ogni ciclo di pianificazione.
-        // Tetto massimo: nell'arco dell'intera settimana puÃ² essere estratta al massimo 1 sola ricetta saltuaria (o nessuna, con una probabilitÃ  del 25%).
+        // Una ricetta Saltuaria non deve apparire a ogni ciclo di pianificazione (max 1 a settimana, con 25% probabilità di 0)
         let currentOccasionalCount = 0;
         const allowOccasionalThisWeek = Math.random() < 0.25;
         const maxOccasionalsAllowed = allowOccasionalThisWeek ? 1 : 0;
 
-        // Distribuzione target Cene sui giorni attivi
+        // Distribuzione target Cene sui giorni attivi (ESCLUSIVAMENTE SECONDI)
         const targetDinners = [];
         for (let f = 0; f < scaledMinFish; f++) {
           targetDinners.push("Secondi Pesce");
@@ -3636,22 +4303,13 @@
         }
         const shuffledDinnerCats = [...targetDinners].sort(() => Math.random() - 0.5);
 
-        // Distribuzione target Pranzi sui giorni attivi
+        // Distribuzione target Pranzi sui giorni attivi (STILE MEDITERRANEO RIGIDO: ESCLUSIVAMENTE PRIMI)
         const targetLunches = [];
-        const extraWhiteNeededInLunch = Math.min(availableLunches, Math.max(0, scaledTargetWhite - whiteTarget));
         for (let l = 0; l < availableLunches; l++) {
           if (goals.alternationStyle === "plant_focused") {
             targetLunches.push(l % 2 === 0 ? "Piatti Unici / Legumi / Speciali" : "Primi");
-          } else if (goals.alternationStyle === "free_variety") {
-            targetLunches.push(l < 3 ? "Primi" : (l < 5 ? "Piatti Unici / Legumi / Speciali" : "Secondi Carne Bianca/Pollame"));
           } else {
-            if (l < extraWhiteNeededInLunch) {
-              targetLunches.push("Secondi Carne Bianca/Pollame");
-            } else if (l === 4 && availableLunches > 4) {
-              targetLunches.push("Piatti Unici / Legumi / Speciali");
-            } else {
-              targetLunches.push("Primi");
-            }
+            targetLunches.push("Primi");
           }
         }
         const shuffledLunchCats = [...targetLunches].sort(() => Math.random() - 0.5);
@@ -3678,8 +4336,8 @@
           return affinity;
         }
 
-        // Funzione di selezione ricetta con score di affinità e vincolo di varietà (distanza >= 3 giorni)
-        function chooseRecipeForSlot(targetCat, allowedCats, dayIdx) {
+        // Funzione di selezione ricetta con score di affinità, vincolo di varietà e anti-collisione carne bianca
+        function chooseRecipeForSlot(targetCat, allowedCats, dayIdx, slotType = "dinner") {
           let pool = AppState.recipes.filter(r => r.categoria === targetCat);
           if (pool.length === 0) {
             pool = AppState.recipes.filter(r => allowedCats.includes(r.categoria));
@@ -3688,13 +4346,25 @@
             pool = AppState.recipes;
           }
 
+          // A PRANZO: Regola Mediterranea Rigida -> esclude categorized meat/fish e salumi
+          if (slotType === "lunch") {
+            const noMeatFishPool = pool.filter(r => !isMeatOrFish(r));
+            if (noMeatFishPool.length > 0) pool = noMeatFishPool;
+          }
+
+          // Anti-collisione Carne Bianca: se già programmata nello stesso giorno, escludi carne bianca
+          if (dayUsedWhiteMeat[dayIdx]) {
+            const withoutWhite = pool.filter(r => !isWhiteMeatRecipe(r));
+            if (withoutWhite.length > 0) pool = withoutWhite;
+          }
+
           // Filtro per limite massimo di ricette 'Da provare'
           if (currentTrialCount >= scaledMaxTrials) {
             const habitualOnly = pool.filter(r => r.stato !== "Da provare");
             if (habitualOnly.length > 0) pool = habitualOnly;
           }
 
-          // Regola Ricette 'Saltuarie': se il tetto per la settimana Ã¨ raggiunto (o se non ammessa questa settimana), escludi le saltuarie dal pool
+          // Regola Ricette 'Saltuarie': se il tetto per la settimana è raggiunto, escludi le saltuarie dal pool
           if (currentOccasionalCount >= maxOccasionalsAllowed) {
             const nonOccasional = pool.filter(r => r.stato !== "Saltuaria");
             if (nonOccasional.length > 0) pool = nonOccasional;
@@ -3741,7 +4411,6 @@
                 weight *= 0.5;
               }
             } else {
-              // Moltiplicatore stagionalità statistico standard: favorite ricette di stagione o annuali (1.6x), attenuate fuori stagione (0.4x)
               if (isRecipeInSeason(r, currentSeason)) {
                 weight *= 1.6;
               } else {
@@ -3763,10 +4432,14 @@
             rnd -= item.weight;
           }
 
-          // Registrazione dell'utilizzo e spaziatura temporale
+          // Registrazione dell'utilizzo e tracciamento
           usedRecipeIds.add(selected.id);
           recipeUsageCounts[selected.id] = (recipeUsageCounts[selected.id] || 0) + 1;
           lastDayUsed[selected.id] = dayIdx;
+
+          if (isWhiteMeatRecipe(selected)) {
+            dayUsedWhiteMeat[dayIdx] = true;
+          }
 
           if (selected.stato === "Da provare") {
             currentTrialCount++;
@@ -3797,6 +4470,59 @@
           return selected;
         }
 
+        // Selezione del Paniere Frutta per la Merenda Settimanale (2 Varietà Top con dose standard 2 frutti/persona)
+        let fruitPool = AppState.recipes.filter(r => r.categoria === "Frutta / Merenda");
+        if (fruitPool.length === 0) {
+          fruitPool = DEFAULT_RECIPES.filter(r => r.categoria === "Frutta / Merenda");
+        }
+        const currentSeason = getCurrentSeason();
+        const hasVendorItems = AppState.fruitVendorInventory && AppState.fruitVendorInventory.length > 0;
+
+        function pickWeightedFruit(pool, excludeId = null) {
+          const candidates = pool.filter(r => !excludeId || r.id !== excludeId);
+          const list = candidates.length > 0 ? candidates : pool;
+          const weighted = list.map(r => {
+            let weight = 1.0;
+            if (hasVendorItems) {
+              if (doesRecipeMatchVendorInventory(r, AppState.fruitVendorInventory)) weight *= 2.5;
+              if (!isRecipeInSeason(r, currentSeason)) weight *= 0.5;
+            } else {
+              if (isRecipeInSeason(r, currentSeason)) weight *= 1.8;
+              else weight *= 0.5;
+            }
+            return { recipe: r, weight };
+          });
+          const totalW = weighted.reduce((s, x) => s + x.weight, 0);
+          let rnd = Math.random() * totalW;
+          for (const item of weighted) {
+            if (rnd < item.weight) return item.recipe;
+            rnd -= item.weight;
+          }
+          return weighted[0].recipe;
+        }
+
+        const basketFruitA = pickWeightedFruit(fruitPool);
+        const basketFruitB = pickWeightedFruit(fruitPool, basketFruitA ? basketFruitA.id : null);
+        const preferredFruitMode = AppState.goals?.fruitMerendaMode || "combined";
+
+        [basketFruitA, basketFruitB].forEach(f => {
+          if (f && f.id) usedRecipeIds.add(f.id);
+          if (f && f.ingredienti && Array.isArray(f.ingredienti)) {
+            f.ingredienti.forEach(ing => {
+              const norm = normalizeIngName(ing.nome);
+              if (!norm) return;
+              if (plannedIngredients.has(norm)) {
+                plannedIngredients.get(norm).count += 1;
+              } else {
+                plannedIngredients.set(norm, {
+                  reparto: ing.reparto || "Ortofrutta",
+                  count: 1
+                });
+              }
+            });
+          }
+        });
+
         let lunchCatIdx = 0;
         let dinnerCatIdx = 0;
 
@@ -3808,9 +4534,11 @@
             candidatePlan.push({
               day: dayName,
               isPastEmpty: true,
+              isCompleted: true,
               meals: {
                 colazione: { recipeId: null, isFreeMeal: false, guests: null },
                 pranzo: { recipeId: null, isFreeMeal: false, guests: null },
+                merenda: { recipeId: null, secondRecipeId: null, fruitMode: preferredFruitMode, isFreeMeal: false, guests: null },
                 cena: { recipeId: null, isFreeMeal: false, guests: null }
               }
             });
@@ -3818,31 +4546,38 @@
           }
 
           // 1. Colazione (sempre pianificata nei giorni attivi)
-          const bkRecipe = chooseRecipeForSlot("Colazione", ["Colazione"], dayIdx);
+          const bkRecipe = chooseRecipeForSlot("Colazione", ["Colazione"], dayIdx, "breakfast");
 
-          // 2. Pranzo (può essere Pasto Fuori)
+          // 2. Pranzo (può essere Pasto Fuori; se cucinato: RIGOROSAMENTE PRIMI)
           let pranzoMeal;
           const isLunchFree = freeSlotMap.has(`${dayIdx}_pranzo`);
           if (isLunchFree) {
             pranzoMeal = { recipeId: "pasto-libero", isFreeMeal: true, guests: null };
           } else {
             const lCat = shuffledLunchCats[lunchCatIdx++] || "Primi";
-            const lRecipe = chooseRecipeForSlot(lCat, ["Primi", "Piatti Unici / Legumi / Speciali", "Secondi Carne Bianca/Pollame", "Secondi Pesce", "Salumi / Affettati"], dayIdx);
+            const lRecipe = chooseRecipeForSlot(lCat, ["Primi", "Piatti Unici / Legumi / Speciali"], dayIdx, "lunch");
             pranzoMeal = { recipeId: lRecipe.id, isFreeMeal: false, guests: null };
-            if (lRecipe.categoria === "Secondi Carne Rossa") redMeatCount++;
-            if (lRecipe.categoria === "Secondi Pesce" || (lRecipe.ingredienti && lRecipe.ingredienti.some(i => normalizeDepartment(i.reparto, i.nome) === "Pesce"))) fishCount++;
-            if (lRecipe.categoria === "Secondi Carne Bianca/Pollame") whiteMeatCount++;
             if (lRecipe.categoria === "Piatti Unici / Legumi / Speciali") legumesCount++;
           }
 
-          // 3. Cena (può essere Pasto Fuori)
+          // 3. Merenda / Spuntino Frutta (Dose standard 2 frutti a persona calcolata in background per la spesa)
+          const fruitOfTheDay = (dayIdx % 2 === 0 || !basketFruitB) ? basketFruitA : basketFruitB;
+          const merendaMeal = {
+            recipeId: fruitOfTheDay ? fruitOfTheDay.id : "rec-frutta-mela",
+            secondRecipeId: null,
+            fruitMode: "standard",
+            isFreeMeal: false,
+            guests: null
+          };
+
+          // 4. Cena (può essere Pasto Fuori; se cucinato: ROTAZIONE SECONDI)
           let cenaMeal;
           const isDinnerFree = freeSlotMap.has(`${dayIdx}_cena`);
           if (isDinnerFree) {
             cenaMeal = { recipeId: "pasto-libero", isFreeMeal: true, guests: null };
           } else {
             const dCat = shuffledDinnerCats[dinnerCatIdx++] || "Secondi Carne Bianca/Pollame";
-            const dRecipe = chooseRecipeForSlot(dCat, ["Secondi Pesce", "Secondi Carne Bianca/Pollame", "Secondi Carne Rossa", "Piatti Unici / Legumi / Speciali", "Salumi / Affettati"], dayIdx);
+            const dRecipe = chooseRecipeForSlot(dCat, ["Secondi Pesce", "Secondi Carne Bianca/Pollame", "Secondi Carne Rossa", "Piatti Unici / Legumi / Speciali", "Salumi / Affettati"], dayIdx, "dinner");
             cenaMeal = { recipeId: dRecipe.id, isFreeMeal: false, guests: null };
             if (dRecipe.categoria === "Secondi Carne Rossa") redMeatCount++;
             if (dRecipe.categoria === "Secondi Pesce" || (dRecipe.ingredienti && dRecipe.ingredienti.some(i => normalizeDepartment(i.reparto, i.nome) === "Pesce"))) fishCount++;
@@ -3853,9 +4588,11 @@
           candidatePlan.push({
             day: dayName,
             isPastEmpty: false,
+            isCompleted: false,
             meals: {
               colazione: { recipeId: bkRecipe.id, isFreeMeal: false, guests: null },
               pranzo: pranzoMeal,
+              merenda: merendaMeal,
               cena: cenaMeal
             }
           });
@@ -3897,11 +4634,9 @@
         score += currentTrialCount * 8;
 
         // B. PUNTEGGIO ANTI-SPRECO & RIDUZIONE VOCI LISTA SPESA
-        // 1. Minore numero totale di ingredienti unici = lista spesa più snella e meno spreco
         const totalUniqueIngredients = plannedIngredients.size;
         score += (45 - totalUniqueIngredients) * 3.5;
 
-        // 2. Bonus elevato per il riutilizzo di ingredienti freschi deperibili (Ortofrutta, Carne, Pesce, Formaggi e Latticini)
         let freshOverlapsCount = 0;
         plannedIngredients.forEach((info) => {
           const dep = normalizeDepartment(info.reparto, info.name);
@@ -3921,15 +4656,19 @@
     }
 
     function generateEmergencyPlan(startDayIdx = 0) {
-      const habituals = AppState.recipes.filter(r => r.stato !== "Da provare");
+      const habituals = AppState.recipes.filter(r => r.stato !== "Da provare" && r.categoria !== "Frutta / Merenda");
       const basePool = habituals.length > 0 ? habituals : AppState.recipes;
-      const freeMealsTarget = Math.max(0, Math.min(14, AppState.goals.freeMeals !== undefined ? AppState.goals.freeMeals : 1));
+      const fruitPool = AppState.recipes.filter(r => r.categoria === "Frutta / Merenda");
+      const baseFruit = fruitPool.length > 0 ? fruitPool : DEFAULT_RECIPES.filter(r => r.categoria === "Frutta / Merenda");
+
+      const rawFreeTarget = (AppState.goals.freeMeals !== undefined && AppState.goals.freeMeals !== null) ? AppState.goals.freeMeals : 1;
+      const eligibleFreeSlots = PREFERRED_FREE_SLOTS.filter(s => s.dayIdx >= startDayIdx);
+      const freeMealsTarget = Math.min(eligibleFreeSlots.length, Math.max(0, rawFreeTarget));
+
       const freeSlotMap = new Set();
-      for (let i = 0; i < freeMealsTarget && i < PREFERRED_FREE_SLOTS.length; i++) {
-        const s = PREFERRED_FREE_SLOTS[i];
-        if (s.dayIdx >= startDayIdx) {
-          freeSlotMap.add(`${s.dayIdx}_${s.slotKey}`);
-        }
+      for (let i = 0; i < freeMealsTarget; i++) {
+        const s = eligibleFreeSlots[i];
+        freeSlotMap.add(`${s.dayIdx}_${s.slotKey}`);
       }
 
       return DAYS_OF_WEEK.map((dayName, idx) => {
@@ -3937,21 +4676,29 @@
           return {
             day: dayName,
             isPastEmpty: true,
+            isCompleted: true,
             meals: {
               colazione: { recipeId: null, isFreeMeal: false, guests: null },
               pranzo: { recipeId: null, isFreeMeal: false, guests: null },
+              merenda: { recipeId: null, secondRecipeId: null, fruitMode: "combined", isFreeMeal: false, guests: null },
               cena: { recipeId: null, isFreeMeal: false, guests: null }
             }
           };
         }
         const isLunchFree = freeSlotMap.has(`${idx}_pranzo`);
         const isDinnerFree = freeSlotMap.has(`${idx}_cena`);
+        const fruitA = baseFruit[0] || { id: "rec-frutta-mela" };
+        const fruitB = baseFruit.length > 1 ? baseFruit[1] : fruitA;
+        const f = (idx % 2 === 0 || !fruitB) ? fruitA : fruitB;
+        const emMerenda = { recipeId: f.id, secondRecipeId: null, fruitMode: "standard", isFreeMeal: false, guests: null };
         return {
           day: dayName,
           isPastEmpty: false,
+          isCompleted: false,
           meals: {
             colazione: { recipeId: basePool[idx % basePool.length].id, isFreeMeal: false, guests: null },
             pranzo: isLunchFree ? { recipeId: "pasto-libero", isFreeMeal: true, guests: null } : { recipeId: basePool[(idx + 1) % basePool.length].id, isFreeMeal: false, guests: null },
+            merenda: emMerenda,
             cena: isDinnerFree ? { recipeId: "pasto-libero", isFreeMeal: true, guests: null } : { recipeId: basePool[(idx + 2) % basePool.length].id, isFreeMeal: false, guests: null }
           }
         };
@@ -3999,12 +4746,12 @@
       const trialsEl = document.getElementById("input-goal-trials");
       const altEl = document.getElementById("input-goal-alternation");
 
-      if (redEl) redEl.value = g.maxRedMeat;
+      if (redEl) redEl.value = g.maxRedMeat !== undefined ? g.maxRedMeat : 1;
       if (curedEl) curedEl.value = g.maxCuredMeat !== undefined ? g.maxCuredMeat : 1;
-      if (fishEl) fishEl.value = g.minFish;
-      if (whiteEl) whiteEl.value = g.targetWhiteMeat !== undefined ? g.targetWhiteMeat : 4;
+      if (fishEl) fishEl.value = g.minFish !== undefined ? g.minFish : 2;
+      if (whiteEl) whiteEl.value = g.targetWhiteMeat !== undefined ? g.targetWhiteMeat : 3;
       if (freeEl) freeEl.value = g.freeMeals !== undefined ? g.freeMeals : 1;
-      const maxTrialsVal = g.maxTrials !== undefined ? g.maxTrials : (g.targetTrials !== undefined ? g.targetTrials : 2);
+      const maxTrialsVal = g.maxTrials !== undefined ? g.maxTrials : (g.targetTrials !== undefined ? g.targetTrials : 1);
       if (trialsEl) trialsEl.value = maxTrialsVal;
       if (altEl) altEl.value = g.alternationStyle || "mediterranean";
     }
@@ -4012,13 +4759,14 @@
     function saveNutritionalGoals(regenerateNow = false) {
       if (AppState.tempModalGoals) {
         AppState.goals = {
-          maxRedMeat: AppState.tempModalGoals.maxRedMeat,
+          maxRedMeat: AppState.tempModalGoals.maxRedMeat !== undefined ? AppState.tempModalGoals.maxRedMeat : 1,
           maxCuredMeat: AppState.tempModalGoals.maxCuredMeat !== undefined ? AppState.tempModalGoals.maxCuredMeat : 1,
-          minFish: AppState.tempModalGoals.minFish,
-          targetWhiteMeat: AppState.tempModalGoals.targetWhiteMeat,
+          minFish: AppState.tempModalGoals.minFish !== undefined ? AppState.tempModalGoals.minFish : 2,
+          targetWhiteMeat: AppState.tempModalGoals.targetWhiteMeat !== undefined ? AppState.tempModalGoals.targetWhiteMeat : 3,
           freeMeals: AppState.tempModalGoals.freeMeals !== undefined ? AppState.tempModalGoals.freeMeals : 1,
-          maxTrials: AppState.tempModalGoals.maxTrials,
-          alternationStyle: document.getElementById("input-goal-alternation").value
+          maxTrials: AppState.tempModalGoals.maxTrials !== undefined ? AppState.tempModalGoals.maxTrials : 1,
+          alternationStyle: document.getElementById("input-goal-alternation") ? document.getElementById("input-goal-alternation").value : (AppState.goals.alternationStyle || "mediterranean"),
+          fruitMerendaMode: AppState.goals.fruitMerendaMode || "combined"
         };
       }
       saveGoalsToStorage();
@@ -4060,28 +4808,12 @@
       let freeMeals = 0;
 
       const goals = AppState.goals;
+      const maxRedVal = goals.maxRedMeat !== undefined ? goals.maxRedMeat : 1;
+      const minFishVal = goals.minFish !== undefined ? goals.minFish : 2;
+      const targetWhiteVal = goals.targetWhiteMeat !== undefined ? goals.targetWhiteMeat : 3;
       const maxCuredMeatVal = goals.maxCuredMeat !== undefined ? goals.maxCuredMeat : 1;
-      const maxTrialsVal = goals.maxTrials !== undefined ? goals.maxTrials : (goals.targetTrials !== undefined ? goals.targetTrials : 2);
-      const targetWhiteVal = goals.targetWhiteMeat !== undefined ? goals.targetWhiteMeat : 4;
+      const maxTrialsVal = goals.maxTrials !== undefined ? goals.maxTrials : (goals.targetTrials !== undefined ? goals.targetTrials : 1);
       const targetFreeVal = goals.freeMeals !== undefined ? goals.freeMeals : 1;
-
-      // Conteggio giorni effettivamente attivi nel piano corrente (esclusi giorni passati non pianificati)
-      let activeDaysCount = 7;
-      if (AppState.plan && Array.isArray(AppState.plan) && AppState.plan.length > 0) {
-        const activeDays = AppState.plan.filter(d => !d.isPastEmpty);
-        if (activeDays.length > 0) {
-          activeDaysCount = activeDays.length;
-        }
-      }
-      const activeScale = activeDaysCount / 7;
-
-      // Soft targets proporzionati ai soli giorni effettivamente pianificati
-      const effMaxRed = Math.max(0, Math.round(goals.maxRedMeat * activeScale));
-      const effMaxCured = Math.max(0, Math.round(maxCuredMeatVal * activeScale));
-      const effMinFish = Math.min(activeDaysCount, Math.max(activeDaysCount >= 4 ? 1 : 0, Math.round(goals.minFish * activeScale)));
-      const effTargetWhite = Math.max(1, Math.round(targetWhiteVal * activeScale));
-      const effMaxTrials = Math.max(0, Math.round(maxTrialsVal * activeScale));
-      const effTargetFree = Math.max(0, Math.round(targetFreeVal * activeScale));
 
       const redMeatEl = document.getElementById("stat-red-meat-val");
       const redMeatDot = document.getElementById("stat-red-meat-dot");
@@ -4098,11 +4830,11 @@
       const mobileSummaryEl = document.getElementById("goals-mobile-summary");
 
       if (!AppState.plan || !Array.isArray(AppState.plan) || AppState.plan.length === 0) {
-        if (redMeatEl) redMeatEl.innerText = `0 / ${goals.maxRedMeat} max`;
+        if (redMeatEl) redMeatEl.innerText = `0 / ${maxRedVal} max`;
         if (redMeatDot) redMeatDot.className = "w-2 h-2 rounded-full bg-slate-500";
         if (curedMeatEl) curedMeatEl.innerText = `0 / ${maxCuredMeatVal} max`;
         if (curedMeatDot) curedMeatDot.className = "w-2 h-2 rounded-full bg-slate-500";
-        if (fishEl) fishEl.innerText = `0 / ${goals.minFish} min`;
+        if (fishEl) fishEl.innerText = `0 / ${minFishVal} min`;
         if (fishDot) fishDot.className = "w-2 h-2 rounded-full bg-slate-500";
         if (whiteMeatEl) whiteMeatEl.innerText = `0 / ${targetWhiteVal}`;
         if (whiteMeatDot) whiteMeatDot.className = "w-2 h-2 rounded-full bg-slate-500";
@@ -4111,7 +4843,7 @@
         if (freeMealsEl) freeMealsEl.innerText = `0 / ${targetFreeVal}`;
         if (freeMealsDot) freeMealsDot.className = "w-2 h-2 rounded-full bg-slate-500";
         if (mobileSummaryEl) {
-          mobileSummaryEl.innerText = `0/${targetWhiteVal} bianca • 0/${goals.minFish} pesce`;
+          mobileSummaryEl.innerText = `0/${targetWhiteVal} bianca • 0/${minFishVal} pesce • 0/${maxRedVal} rossa`;
         }
         return;
       }
@@ -4145,39 +4877,39 @@
         });
       });
 
-      // 1. TOP SUBHEADER BADGES (Target proporzionati)
-      if (redMeatEl) redMeatEl.innerText = `${redMeat} / ${effMaxRed} max`;
+      // 1. TOP SUBHEADER BADGES (Obiettivi Reali Imposti dall'utente)
+      if (redMeatEl) redMeatEl.innerText = `${redMeat} / ${maxRedVal} max`;
       if (redMeatDot) {
-        redMeatDot.className = redMeat > effMaxRed ? "w-2 h-2 rounded-full bg-rose-400" : "w-2 h-2 rounded-full bg-emerald-400";
+        redMeatDot.className = redMeat > maxRedVal ? "w-2 h-2 rounded-full bg-rose-400" : "w-2 h-2 rounded-full bg-emerald-400";
       }
 
-      if (curedMeatEl) curedMeatEl.innerText = `${curedMeat} / ${effMaxCured} max`;
+      if (curedMeatEl) curedMeatEl.innerText = `${curedMeat} / ${maxCuredMeatVal} max`;
       if (curedMeatDot) {
-        curedMeatDot.className = curedMeat > effMaxCured ? "w-2 h-2 rounded-full bg-rose-400" : "w-2 h-2 rounded-full bg-amber-400";
+        curedMeatDot.className = curedMeat > maxCuredMeatVal ? "w-2 h-2 rounded-full bg-rose-400" : "w-2 h-2 rounded-full bg-amber-400";
       }
 
-      if (fishEl) fishEl.innerText = `${fish} / ${effMinFish} min`;
+      if (fishEl) fishEl.innerText = `${fish} / ${minFishVal} min`;
       if (fishDot) {
-        fishDot.className = fish < effMinFish ? "w-2 h-2 rounded-full bg-amber-400" : "w-2 h-2 rounded-full bg-cyan-400";
+        fishDot.className = fish < minFishVal ? "w-2 h-2 rounded-full bg-amber-400" : "w-2 h-2 rounded-full bg-cyan-400";
       }
 
-      if (whiteMeatEl) whiteMeatEl.innerText = `${whiteMeat} / ${effTargetWhite}`;
+      if (whiteMeatEl) whiteMeatEl.innerText = `${whiteMeat} / ${targetWhiteVal}`;
       if (whiteMeatDot) {
-        whiteMeatDot.className = "w-2 h-2 rounded-full bg-emerald-400";
+        whiteMeatDot.className = whiteMeat > targetWhiteVal ? "w-2 h-2 rounded-full bg-rose-400" : "w-2 h-2 rounded-full bg-emerald-400";
       }
 
-      if (trialsEl) trialsEl.innerText = `${trials} / ${effMaxTrials} max`;
+      if (trialsEl) trialsEl.innerText = `${trials} / ${maxTrialsVal} max`;
       if (trialsDot) {
-        trialsDot.className = trials > effMaxTrials ? "w-2 h-2 rounded-full bg-rose-400" : "w-2 h-2 rounded-full bg-purple-400";
+        trialsDot.className = trials > maxTrialsVal ? "w-2 h-2 rounded-full bg-rose-400" : "w-2 h-2 rounded-full bg-purple-400";
       }
 
-      if (freeMealsEl) freeMealsEl.innerText = `${freeMeals} / ${effTargetFree}`;
+      if (freeMealsEl) freeMealsEl.innerText = `${freeMeals} / ${targetFreeVal}`;
       if (freeMealsDot) {
-        freeMealsDot.className = freeMeals === effTargetFree ? "w-2 h-2 rounded-full bg-amber-400" : (freeMeals > effTargetFree ? "w-2 h-2 rounded-full bg-amber-500" : "w-2 h-2 rounded-full bg-amber-300");
+        freeMealsDot.className = freeMeals === targetFreeVal ? "w-2 h-2 rounded-full bg-amber-400" : (freeMeals > targetFreeVal ? "w-2 h-2 rounded-full bg-rose-400" : "w-2 h-2 rounded-full bg-amber-300");
       }
 
       if (mobileSummaryEl) {
-        mobileSummaryEl.innerText = `${whiteMeat}/${effTargetWhite} bianca • ${fish}/${effMinFish} pesce • ${redMeat}/${effMaxRed} rossa`;
+        mobileSummaryEl.innerText = `${whiteMeat}/${targetWhiteVal} bianca • ${fish}/${minFishVal} pesce • ${redMeat}/${maxRedVal} rossa`;
       }
     }
 
@@ -4549,7 +5281,7 @@
             <h3 class="text-lg sm:text-xl font-extrabold text-slate-900">Nessun piano per questa settimana</h3>
             <p class="text-xs sm:text-sm text-slate-500 mt-1">Questa settimana è ancora vuota. Fai clic sul pulsante qui sotto per creare un menu bilanciato con i tuoi obiettivi nutrizionali.</p>
           </div>
-          <button onclick="generateWeeklyPlan(true)" class="px-6 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-sm shadow-md shadow-emerald-600/25 flex items-center gap-2 transition">
+          <button onclick="requestWeeklyPlanGeneration()" class="px-6 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-sm shadow-md shadow-emerald-600/25 flex items-center gap-2 transition">
             <i data-lucide="sparkles" class="w-4 h-4"></i>
             <span>Pianifica questa settimana</span>
           </button>
@@ -4581,7 +5313,7 @@
               ${MEAL_SLOTS.map(slot => `
                 <div class="p-2.5 rounded-xl border border-dashed border-slate-200 bg-white/60 flex items-center justify-between text-slate-400 text-xs">
                   <span class="text-[10px] uppercase font-bold text-slate-400 flex items-center gap-1">
-                    <i data-lucide="${slot.key === 'colazione' ? 'coffee' : slot.key === 'pranzo' ? 'sun' : 'moon'}" class="w-3 h-3"></i>
+                    <i data-lucide="${slot.key === 'colazione' ? 'coffee' : slot.key === 'pranzo' ? 'sun' : slot.key === 'merenda' ? 'apple' : 'moon'}" class="w-3 h-3"></i>
                     ${slot.key}
                   </span>
                   <span class="text-[11px] italic text-slate-400">Nessun pasto pianificato</span>
@@ -4613,9 +5345,13 @@
         const isToday = currentDayDate.getTime() === todayDate.getTime();
         const isPast = currentDayDate.getTime() < todayDate.getTime();
         const isPastEmpty = !!dayData.isPastEmpty;
+        const isCompleted = !!dayData.isCompleted;
 
-        // Card Styling: Evidenza Oggi vs Giorni Passati de-enfatizzati
-        if (isToday) {
+        // Card Styling: Evidenza Oggi vs Giorni Conclusi/Passati de-enfatizzati
+        if (isCompleted) {
+          dayCard.id = isToday ? "day-card-today" : `day-card-${dayIdx}`;
+          dayCard.className = `rounded-2xl border border-slate-200 bg-slate-50/70 shadow-xs flex flex-col overflow-hidden transition-all duration-300 opacity-60 hover:opacity-100 grayscale-[25%] hover:grayscale-0 ${isWeekend ? 'bg-indigo-50/30' : ''}`;
+        } else if (isToday) {
           dayCard.id = "day-card-today";
           dayCard.className = "bg-white rounded-2xl border-2 border-emerald-500 ring-2 ring-emerald-400/50 shadow-lg shadow-emerald-500/10 flex flex-col overflow-hidden transition-all duration-300 relative z-10 scale-[1.01]";
         } else if (isPast) {
@@ -4634,7 +5370,16 @@
         let headerTextColor = "";
         let badgeHtml = "";
 
-        if (isToday) {
+        if (isCompleted) {
+          headerBgClass = "bg-slate-100/90 border-slate-200 text-slate-600";
+          headerTextColor = "text-slate-600 font-bold";
+          badgeHtml = `
+            <span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 uppercase tracking-tight flex items-center gap-1">
+              <i data-lucide="check-check" class="w-3 h-3 text-emerald-600"></i>
+              Consumato
+            </span>
+          `;
+        } else if (isToday) {
           headerBgClass = "bg-gradient-to-r from-emerald-600 to-teal-600 text-white";
           headerTextColor = "text-white font-extrabold";
           badgeHtml = `
@@ -4648,8 +5393,8 @@
           headerTextColor = "text-slate-600 font-bold";
           badgeHtml = `
             <span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-slate-200/80 text-slate-600 uppercase tracking-tight flex items-center gap-1">
-              <i data-lucide="check-check" class="w-3 h-3 text-slate-500"></i>
-              Concluso
+              <i data-lucide="clock" class="w-3 h-3 text-slate-500"></i>
+              Passato
             </span>
           `;
         } else if (isWeekend) {
@@ -4671,15 +5416,23 @@
               <span class="text-xs uppercase tracking-wider ${headerTextColor}">${dayDateLabel}</span>
               ${badgeHtml}
             </div>
-            ${(!isPastEmpty && !isPast) ? `
-              <button onclick="regenerateDay(${dayIdx})" class="p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition ${isToday ? 'text-white/80 hover:text-white hover:bg-white/20' : ''}" title="Rigenera i pasti cucinati della giornata">
-                <i data-lucide="shuffle" class="w-3.5 h-3.5"></i>
-              </button>
-            ` : (isPastEmpty ? `
-              <button onclick="regenerateDay(${dayIdx})" class="text-[10px] font-semibold px-2 py-0.5 rounded-lg bg-slate-200/70 text-slate-600 hover:bg-emerald-100 hover:text-emerald-800 transition" title="Pianifica questo giorno">
-                + Pianifica
-              </button>
-            ` : '')}
+            <div class="flex items-center gap-1">
+              ${!isPastEmpty ? `
+                <button onclick="toggleDayCompleted(${dayIdx})" class="flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold transition active:scale-95 ${isCompleted ? 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-2xs' : (isToday ? 'bg-white/20 text-white hover:bg-white/30 border border-white/30' : 'bg-slate-200/80 text-slate-700 hover:bg-slate-300')}" title="${isCompleted ? 'Ripristina come da consumare' : 'Contrassegna giornata come conclusa/consumata'}">
+                  <i data-lucide="${isCompleted ? 'check-square' : 'square'}" class="w-3 h-3"></i>
+                  <span>${isCompleted ? '✓ Consumato' : 'Mangiato'}</span>
+                </button>
+              ` : ''}
+              ${(!isPastEmpty && !isPast && !isCompleted) ? `
+                <button onclick="regenerateDay(${dayIdx})" class="p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition ${isToday ? 'text-white/80 hover:text-white hover:bg-white/20' : ''}" title="Rigenera i pasti cucinati della giornata">
+                  <i data-lucide="shuffle" class="w-3.5 h-3.5"></i>
+                </button>
+              ` : (isPastEmpty ? `
+                <button onclick="regenerateDay(${dayIdx})" class="text-[10px] font-semibold px-2 py-0.5 rounded-lg bg-slate-200/70 text-slate-600 hover:bg-emerald-100 hover:text-emerald-800 transition" title="Pianifica questo giorno">
+                  + Pianifica
+                </button>
+              ` : '')}
+            </div>
           </div>
           <div class="p-2 sm:p-2.5 space-y-1.5 sm:space-y-2 flex-1 flex flex-col justify-between">
             ${MEAL_SLOTS.map(slot => renderMealSlotCard(dayIdx, slot.key)).join("")}
@@ -4712,6 +5465,22 @@
       const meal = day.meals[slotKey];
       if (!meal) return [];
       const effectiveGuests = getEffectiveGuestsForMeal(dayIdx, slotKey);
+
+      if (slotKey === "merenda") {
+        if (meal.isFreeMeal || meal.recipeId === "pasto-libero") {
+          return [{ recipeId: "pasto-libero", isFreeMeal: true, portions: effectiveGuests }];
+        }
+        if (meal.secondRecipeId && meal.recipeId && meal.secondRecipeId !== meal.recipeId) {
+          return [
+            { recipeId: meal.recipeId, portions: effectiveGuests },
+            { recipeId: meal.secondRecipeId, portions: effectiveGuests }
+          ];
+        }
+        if (meal.recipeId) {
+          return [{ recipeId: meal.recipeId, portions: effectiveGuests * 2 }];
+        }
+        return [];
+      }
 
       if (meal.assignments && Array.isArray(meal.assignments) && meal.assignments.length > 0) {
         const valid = meal.assignments.filter(a => a && a.recipeId);
@@ -4959,6 +5728,7 @@
       else if (recipe.categoria === 'Secondi Pesce') shortCat = 'Pesce';
       else if (recipe.categoria === 'Primi') shortCat = 'Primo';
       else if (recipe.categoria === 'Colazione') shortCat = 'Colazione';
+      else if (recipe.categoria === 'Frutta / Merenda') shortCat = 'Frutta';
 
       return `
         <div class="py-1 first:pt-0 last:pb-0 flex items-center justify-between gap-1.5 min-w-0">
@@ -5015,6 +5785,70 @@
       `;
     }
 
+    function getFruitEmoji(name) {
+      if (!name) return "🍎";
+      const lower = name.toLowerCase();
+      if (lower.includes("mela")) return "🍎";
+      if (lower.includes("pera")) return "🍐";
+      if (lower.includes("kiwi")) return "🥝";
+      if (lower.includes("aranc") || lower.includes("mandar") || lower.includes("clement")) return "🍊";
+      if (lower.includes("banana")) return "🍌";
+      if (lower.includes("ananas")) return "🍍";
+      if (lower.includes("melone") || lower.includes("anguria") || lower.includes("cocomero")) return "🍈";
+      if (lower.includes("limon") || lower.includes("pompelm")) return "🍋";
+      if (lower.includes("pesca") || lower.includes("albicocc")) return "🍑";
+      if (lower.includes("uva")) return "🍇";
+      if (lower.includes("fragol")) return "🍓";
+      if (lower.includes("fico") || lower.includes("fichi")) return "🫐";
+      return "🍎";
+    }
+
+    function formatFruitPortion(recipe, count) {
+      if (!recipe) return "";
+      const emoji = getFruitEmoji(recipe.nome);
+      return `${emoji} ${count} ${recipe.nome}`;
+    }
+
+    function toggleFruitMerendaMode(dayIdx) {
+      const meal = AppState.plan[dayIdx]?.meals?.merenda;
+      if (!meal) return;
+      const currentMode = meal.fruitMode || "combined";
+      meal.fruitMode = (currentMode === "combined") ? "alternated" : "combined";
+
+      if (meal.fruitMode === "combined" && (!meal.secondRecipeId || meal.secondRecipeId === meal.recipeId)) {
+        const fruitPool = AppState.recipes.filter(r => r.categoria === "Frutta / Merenda" && r.id !== meal.recipeId);
+        if (fruitPool.length > 0) {
+          meal.secondRecipeId = fruitPool[0].id;
+        }
+      }
+
+      saveToStorage();
+      renderWeeklyGrid();
+      renderShoppingList();
+      showToast("Modalità Merenda Modificata", meal.fruitMode === "combined" ? "Modalità Combinata: 1+1 frutto diverso a persona" : "Modalità Alternata: 2 frutti stessa varietà a persona");
+    }
+
+    function quickRandomSwapFruit(dayIdx, fruitSlot = 'A') {
+      const meal = AppState.plan[dayIdx]?.meals?.merenda;
+      if (!meal) return;
+      const fruitPool = AppState.recipes.filter(r => r.categoria === "Frutta / Merenda");
+      if (fruitPool.length <= 1) return;
+
+      const currentId = fruitSlot === 'A' ? meal.recipeId : meal.secondRecipeId;
+      const otherId = fruitSlot === 'A' ? meal.secondRecipeId : meal.recipeId;
+      const candidates = fruitPool.filter(r => r.id !== currentId && r.id !== otherId);
+      const picked = candidates.length > 0 ? candidates[Math.floor(Math.random() * candidates.length)] : fruitPool.find(r => r.id !== currentId);
+
+      if (picked) {
+        if (fruitSlot === 'A') meal.recipeId = picked.id;
+        else meal.secondRecipeId = picked.id;
+        saveToStorage();
+        renderWeeklyGrid();
+        renderShoppingList();
+        showToast("Frutto Sostituito", `Nuovo frutto: ${picked.nome}`);
+      }
+    }
+
     function renderMealSlotCard(dayIdx, slotKey) {
       if (!AppState.plan[dayIdx] || !AppState.plan[dayIdx].meals) return "";
       if (!AppState.plan[dayIdx].meals[slotKey]) {
@@ -5029,7 +5863,7 @@
           <div class="group relative px-2.5 py-1.5 rounded-xl border border-amber-200 bg-gradient-to-r from-amber-50/90 to-orange-50/40 hover:border-amber-300 transition flex items-center justify-between gap-1.5">
             <div class="flex items-center gap-1.5 min-w-0">
               <span class="text-[10px] uppercase font-bold text-amber-800 tracking-wider flex items-center gap-1 shrink-0">
-                <i data-lucide="${slotKey === 'colazione' ? 'coffee' : slotKey === 'pranzo' ? 'sun' : 'moon'}" class="w-3 h-3 text-amber-600"></i>
+                <i data-lucide="${slotKey === 'colazione' ? 'coffee' : slotKey === 'pranzo' ? 'sun' : slotKey === 'merenda' ? 'apple' : 'moon'}" class="w-3 h-3 text-amber-600"></i>
                 <span>${slotKey}</span>
               </span>
               <span class="font-bold text-xs text-amber-950 truncate flex items-center gap-1">
@@ -5060,7 +5894,7 @@
           return `
             <div class="px-2.5 py-1.5 rounded-xl border border-dashed border-slate-200/90 bg-slate-50/50 flex items-center justify-between gap-1 text-slate-400">
               <span class="text-[10px] uppercase font-bold tracking-wider flex items-center gap-1 text-slate-400 shrink-0">
-                <i data-lucide="${slotKey === 'colazione' ? 'coffee' : slotKey === 'pranzo' ? 'sun' : 'moon'}" class="w-3 h-3 text-slate-400"></i>
+                <i data-lucide="${slotKey === 'colazione' ? 'coffee' : slotKey === 'pranzo' ? 'sun' : slotKey === 'merenda' ? 'apple' : 'moon'}" class="w-3 h-3 text-slate-400"></i>
                 <span>${slotKey}</span>
               </span>
               <span class="text-[10px] italic text-slate-400 truncate">Non programmato</span>
@@ -5075,7 +5909,7 @@
           <div class="group relative px-2.5 py-1.5 rounded-xl border border-dashed border-rose-300 bg-rose-50/40 hover:bg-rose-50/70 hover:border-rose-400 transition flex items-center justify-between gap-1.5">
             <div class="flex items-center gap-1.5 min-w-0">
               <span class="text-[10px] uppercase font-bold text-rose-700 tracking-wider flex items-center gap-1 shrink-0">
-                <i data-lucide="${slotKey === 'colazione' ? 'coffee' : slotKey === 'pranzo' ? 'sun' : 'moon'}" class="w-3 h-3 text-rose-500"></i>
+                <i data-lucide="${slotKey === 'colazione' ? 'coffee' : slotKey === 'pranzo' ? 'sun' : slotKey === 'merenda' ? 'apple' : 'moon'}" class="w-3 h-3 text-rose-500"></i>
                 <span>${slotKey}</span>
               </span>
               <span class="text-[11px] font-semibold text-rose-800 truncate">Da assegnare</span>
@@ -5095,6 +5929,69 @@
         `;
       }
 
+      // --- CASO MERENDA / FRUTTA (LAYOUT IDENTICO AGLI ALTRI PASTI, PULITO ED ESSENZIALE) ---
+      if (slotKey === "merenda") {
+        const recipeA = AppState.recipes.find(r => r.id === meal.recipeId) || AppState.recipes.find(r => r.categoria === "Frutta / Merenda") || DEFAULT_RECIPES.find(r => r.categoria === "Frutta / Merenda");
+        if (!recipeA) return "";
+
+        const catStyle = CATEGORY_STYLES["Frutta / Merenda"] || { bg: "bg-lime-100", text: "text-lime-800", border: "border-lime-200" };
+        const isTrial = recipeA.stato === "Da provare";
+        const isSaltuaria = recipeA.stato === "Saltuaria";
+        const displayName = recipeA.nome;
+
+        return `
+          <div class="group relative p-2 sm:p-2.5 rounded-xl border border-slate-200/90 bg-slate-50/50 hover:bg-white hover:border-slate-300 hover:shadow-xs transition flex flex-col justify-between gap-1">
+            
+            <!-- Riga 1: Slot + Categoria Frutta + Commensali + Azioni Rapide -->
+            <div class="flex items-center justify-between gap-1">
+              <div class="flex items-center gap-1 sm:gap-1.5 min-w-0">
+                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1 shrink-0">
+                  <i data-lucide="apple" class="w-3 h-3"></i>
+                  <span>merenda</span>
+                </span>
+                <span class="truncate max-w-[75px] sm:max-w-[95px] text-[9px] font-semibold px-1.5 py-0.2 rounded ${catStyle.bg} ${catStyle.text}">
+                  Frutta
+                </span>
+                ${isTrial ? '<span class="text-[8px] font-bold px-1 py-0.2 rounded bg-purple-100 text-purple-700 border border-purple-200 uppercase shrink-0">Prova</span>' : ''}
+                ${isSaltuaria ? '<span class="text-[8px] font-bold px-1 py-0.2 rounded bg-amber-50 text-amber-700 border border-amber-200 uppercase shrink-0">Saltuaria</span>' : ''}
+              </div>
+
+              <div class="flex items-center gap-0.5 sm:gap-1 shrink-0">
+                <!-- Commensali Pill -->
+                <button onclick="openMealModal(${dayIdx}, 'merenda')" class="text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-md flex items-center gap-0.5 transition ${isCustomGuests ? 'bg-amber-100 text-amber-800 border border-amber-300' : 'bg-slate-200/80 text-slate-700 hover:bg-slate-300'}" title="Modifica commensali merenda">
+                  <i data-lucide="users" class="w-2.5 h-2.5"></i>
+                  <span>${guests}</span>
+                </button>
+
+                <!-- Swap rapido frutto compatibile -->
+                <button onclick="quickRandomSwap(${dayIdx}, 'merenda')" class="p-1 rounded text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition" title="Cambia frutto compatibile">
+                  <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+                </button>
+
+                <!-- Scelta catalogo -->
+                <button onclick="openMealModal(${dayIdx}, 'merenda')" class="p-1 rounded text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition" title="Scegli frutta dal catalogo">
+                  <i data-lucide="edit-3" class="w-3 h-3"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Riga 2: Nome Semplice e Naturale del Frutto / Merenda (senza formule o moltiplicatori) -->
+            <div class="pt-0.5 flex items-center justify-between gap-1">
+              <button onclick="openRecipeDetailModal('${recipeA.id}')" class="text-left font-bold text-xs sm:text-[13px] text-slate-900 hover:text-emerald-600 line-clamp-1 leading-snug transition flex-1" title="${displayName}">
+                ${displayName}
+              </button>
+              ${recipeA.videoUrl ? `
+                <a href="${recipeA.videoUrl}" target="_blank" rel="noopener noreferrer" class="px-1.5 py-0.5 rounded bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 transition shrink-0 flex items-center gap-1 text-[10px] font-bold" title="Guarda Reel / Video ricetta">
+                  <i data-lucide="play" class="w-2.5 h-2.5 fill-current"></i>
+                  <span>Reel ↗</span>
+                </a>
+              ` : ''}
+            </div>
+
+          </div>
+        `;
+      }
+
       // --- CASO PASTI DIFFERENZIATI (COMMENSALI >= 2 E MULTIPLE RICETTE) ---
       const totalAllocated = assignments.reduce((s, a) => s + (Number(a.portions) || 0), 0);
       const isDifferentiated = assignments.length > 1;
@@ -5106,7 +6003,7 @@
             <div class="flex items-center justify-between gap-1">
               <div class="flex items-center gap-1.5 min-w-0">
                 <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1 shrink-0">
-                  <i data-lucide="${slotKey === 'colazione' ? 'coffee' : slotKey === 'pranzo' ? 'sun' : 'moon'}" class="w-3 h-3 text-indigo-600"></i>
+                  <i data-lucide="${slotKey === 'colazione' ? 'coffee' : slotKey === 'pranzo' ? 'sun' : slotKey === 'merenda' ? 'apple' : 'moon'}" class="w-3 h-3 text-indigo-600"></i>
                   <span>${slotKey}</span>
                 </span>
                 <span class="text-[8px] sm:text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-indigo-100 text-indigo-800 uppercase tracking-tight flex items-center gap-0.5 shrink-0">
@@ -5163,6 +6060,7 @@
       else if (recipe.categoria === 'Secondi Pesce') shortCat = 'Pesce';
       else if (recipe.categoria === 'Primi') shortCat = 'Primo';
       else if (recipe.categoria === 'Colazione') shortCat = 'Colazione';
+      else if (recipe.categoria === 'Frutta / Merenda') shortCat = 'Frutta';
 
       return `
         <div class="group relative p-2 sm:p-2.5 rounded-xl border border-slate-200/90 bg-slate-50/50 hover:bg-white hover:border-slate-300 hover:shadow-xs transition flex flex-col justify-between gap-1">
@@ -5171,7 +6069,7 @@
           <div class="flex items-center justify-between gap-1">
             <div class="flex items-center gap-1 sm:gap-1.5 min-w-0">
               <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1 shrink-0">
-                <i data-lucide="${slotKey === 'colazione' ? 'coffee' : slotKey === 'pranzo' ? 'sun' : 'moon'}" class="w-3 h-3"></i>
+                <i data-lucide="${slotKey === 'colazione' ? 'coffee' : slotKey === 'pranzo' ? 'sun' : slotKey === 'merenda' ? 'apple' : 'moon'}" class="w-3 h-3"></i>
                 <span>${slotKey}</span>
               </span>
               <span class="truncate max-w-[75px] sm:max-w-[95px] text-[9px] font-semibold px-1.5 py-0.2 rounded ${catStyle.bg} ${catStyle.text}">
@@ -5322,10 +6220,16 @@
         }
       }
 
+      // Normalizzazione e Sinonimi Ortofrutta: unifica insalate, pomodori, cipolle, ecc. sotto nome canonico
+      let cleanIngName = ing.nome.trim();
+      if (depKey === "Ortofrutta") {
+        cleanIngName = getCanonicalProduceName(cleanIngName);
+      }
+
       const isQb = (ing.unita === 'q.b.' || ing.quantita === 'q.b.');
       const cleanKey = isQb 
-        ? `${ing.nome.trim().toLowerCase()}_qb`
-        : `${ing.nome.trim().toLowerCase()}_${(ing.unita || '').trim().toLowerCase()}`;
+        ? `${cleanIngName.toLowerCase()}_qb`
+        : `${cleanIngName.toLowerCase()}_${(ing.unita || '').trim().toLowerCase()}`;
       const targetMap = departmentsMap[depKey];
 
       if (isQb) {
@@ -5335,7 +6239,7 @@
         } else {
           targetMap.set(cleanKey, {
             rawKey: cleanKey,
-            nome: ing.nome.trim(),
+            nome: cleanIngName,
             quantita: "q.b.",
             unita: "q.b.",
             reparto: depKey,
@@ -5354,7 +6258,7 @@
       } else {
         targetMap.set(cleanKey, {
           rawKey: cleanKey,
-          nome: ing.nome.trim(),
+          nome: cleanIngName,
           quantita: Math.round(addedQty * 100) / 100,
           unita: ing.unita,
           reparto: depKey,
@@ -5375,19 +6279,31 @@
       const week1Guests = AppState.globalGuests || 1;
       let week2Guests = 1;
 
-      // 1. Settimana Corrente Visualizzata (esclude categoricamente i pasti liberi)
+      const currentOffset = AppState.weekOffset || 0;
+      const todayDayIdx = getDayOfWeekIndex(new Date());
+
+      // 1. Settimana Visualizzata:
+      // Se settimana corrente (offset === 0): esclude automaticamente giorni antecedenti a oggi
+      // Esclude categoricamente giorni contrassegnati come consumati (dayData.isCompleted) e vuoti passati
+      // Esclude categoricamente i piatti "Mensa" (isMensaMeal)
       const currentWeekPlan = (AppState.plan && Array.isArray(AppState.plan)) ? AppState.plan : [];
       currentWeekPlan.forEach((dayData, dayIdx) => {
+        if (currentOffset === 0 && dayIdx < todayDayIdx) return;
+        if (dayData.isCompleted || dayData.isPastEmpty) return;
+
         Object.entries(dayData.meals).forEach(([slotKey, meal]) => {
           if (meal.isFreeMeal || meal.recipeId === "pasto-libero") return;
+          if (isMensaMeal(null, meal, null)) return;
 
           const assignments = getMealAssignments(dayIdx, slotKey);
           if (!assignments || assignments.length === 0) return;
 
           assignments.forEach(as => {
             if (!as.recipeId || as.recipeId === "pasto-libero") return;
+            if (as.recipeId === "rec-pasto-mensa" || (typeof as.recipeId === "string" && /mensa/i.test(as.recipeId))) return;
             const recipe = AppState.recipes.find(r => r.id === as.recipeId);
             if (!recipe) return;
+            if (isMensaMeal(recipe, meal, as)) return;
 
             totalMealsProcessed++;
             const portions = Number(as.portions) || 1;
@@ -5410,14 +6326,42 @@
               const nextGuestsDefault = AppState.globalGuests || 1;
               week2Guests = nextGuestsDefault;
               nextData.plan.forEach((dayData, dayIdx) => {
+                if (dayData.isCompleted || dayData.isPastEmpty) return;
+
                 Object.entries(dayData.meals).forEach(([slotKey, meal]) => {
                   if (meal.isFreeMeal || meal.recipeId === "pasto-libero" || !meal.recipeId) return;
+                  if (isMensaMeal(null, meal, null)) return;
+
+                  if (slotKey === "merenda") {
+                    const mealGuests = (meal.guests !== null && meal.guests !== undefined) ? meal.guests : nextGuestsDefault;
+                    if (meal.secondRecipeId && meal.recipeId && meal.fruitMode !== "alternated" && meal.secondRecipeId !== meal.recipeId) {
+                      const recA = AppState.recipes.find(r => r.id === meal.recipeId);
+                      const recB = AppState.recipes.find(r => r.id === meal.secondRecipeId);
+                      if (recA) {
+                        totalMealsProcessed++;
+                        recA.ingredienti.forEach(ing => addIngredientToMap(departmentsMap, ing, mealGuests));
+                      }
+                      if (recB) {
+                        recB.ingredienti.forEach(ing => addIngredientToMap(departmentsMap, ing, mealGuests));
+                      }
+                    } else if (meal.recipeId) {
+                      const recA = AppState.recipes.find(r => r.id === meal.recipeId);
+                      if (recA) {
+                        totalMealsProcessed++;
+                        recA.ingredienti.forEach(ing => addIngredientToMap(departmentsMap, ing, mealGuests * 2));
+                      }
+                    }
+                    return;
+                  }
 
                   if (meal.assignments && Array.isArray(meal.assignments) && meal.assignments.length > 0) {
                     meal.assignments.forEach(as => {
                       if (!as.recipeId || as.recipeId === "pasto-libero") return;
+                      if (as.recipeId === "rec-pasto-mensa" || (typeof as.recipeId === "string" && /mensa/i.test(as.recipeId))) return;
                       const recipe = AppState.recipes.find(r => r.id === as.recipeId);
                       if (!recipe) return;
+                      if (isMensaMeal(recipe, meal, as)) return;
+
                       totalMealsProcessed++;
                       const portions = Number(as.portions) || 1;
                       recipe.ingredienti.forEach(ing => {
@@ -5425,8 +6369,10 @@
                       });
                     });
                   } else {
+                    if (meal.recipeId === "rec-pasto-mensa" || (typeof meal.recipeId === "string" && /mensa/i.test(meal.recipeId))) return;
                     const recipe = AppState.recipes.find(r => r.id === meal.recipeId);
                     if (!recipe) return;
+                    if (isMensaMeal(recipe, meal, null)) return;
 
                     totalMealsProcessed++;
                     const mealGuests = (meal.guests !== null && meal.guests !== undefined) ? meal.guests : nextGuestsDefault;
@@ -6817,6 +7763,27 @@
       lucide.createIcons();
     }
 
+    function onRecipeCategoryChange(tbodyId = null) {
+      updatePastaPlaceholders(tbodyId);
+      const isOb = tbodyId && tbodyId.includes("onboarding");
+      const cat = document.getElementById(isOb ? "onboarding-new-rec-cat" : "new-rec-cat")?.value || "";
+      if (cat === "Frutta / Merenda") {
+        const tid = tbodyId || "ingredients-form-tbody";
+        const tbody = document.getElementById(tid);
+        if (tbody) {
+          const depSelects = tbody.querySelectorAll(".ing-dep");
+          depSelects.forEach(sel => {
+            sel.value = "Ortofrutta";
+          });
+          const unitSelects = tbody.querySelectorAll(".ing-unit");
+          unitSelects.forEach(sel => {
+            if (sel.value === "g") sel.value = "pz";
+          });
+        }
+      }
+    }
+    window.onRecipeCategoryChange = onRecipeCategoryChange;
+
     function updatePastaPlaceholders(tbodyId = null) {
       const targets = tbodyId ? [tbodyId] : ["ingredients-form-tbody", "onboarding-ingredients-form-tbody"];
       targets.forEach(tid => {
@@ -6829,6 +7796,10 @@
           const nameInput = r.querySelector(".ing-name");
           const qtyInput = r.querySelector(".ing-qty");
           const unitSelect = r.querySelector(".ing-unit");
+          const depSelect = r.querySelector(".ing-dep");
+          if (cat === "Frutta / Merenda" && depSelect && (!depSelect.value || depSelect.value === "Condimenti e Dispensa")) {
+            depSelect.value = "Ortofrutta";
+          }
           if (nameInput && qtyInput) {
             if (unitSelect && unitSelect.value === "q.b.") {
               qtyInput.placeholder = "q.b.";
@@ -6837,7 +7808,9 @@
             const isPasta = /pasta/i.test(nameInput.value);
             if (cat === "Primi" && isPasta) {
               qtyInput.placeholder = "125";
-            } else if (qtyInput.placeholder === "125") {
+            } else if (cat === "Frutta / Merenda") {
+              qtyInput.placeholder = "1";
+            } else if (qtyInput.placeholder === "125" || qtyInput.placeholder === "1") {
               qtyInput.placeholder = "Dose";
             }
           }
@@ -6860,7 +7833,13 @@
         const isOb = tbody && tbody.id && tbody.id.includes("onboarding");
         const cat = document.getElementById(isOb ? "onboarding-new-rec-cat" : "new-rec-cat")?.value || "";
         const isPasta = nameInput && /pasta/i.test(nameInput.value);
-        qtyInput.placeholder = (cat === "Primi" && isPasta) ? "125" : "Dose";
+        if (cat === "Primi" && isPasta) {
+          qtyInput.placeholder = "125";
+        } else if (cat === "Frutta / Merenda") {
+          qtyInput.placeholder = "1";
+        } else {
+          qtyInput.placeholder = "Dose";
+        }
       }
     }
 
@@ -6874,22 +7853,29 @@
       const cat = document.getElementById(isOb ? "onboarding-new-rec-cat" : "new-rec-cat")?.value || "";
       const isPasta = /pasta/i.test(nome);
 
-      let safeUnit = unita || "g";
+      let safeUnit = unita || (cat === "Frutta / Merenda" ? "pz" : "g");
       if (!["g", "ml", "pz", "q.b."].includes(safeUnit)) {
-        safeUnit = "g";
+        safeUnit = (cat === "Frutta / Merenda" ? "pz" : "g");
       }
 
       const isQb = (safeUnit === "q.b.");
-      const qtyPlaceholder = isQb ? "q.b." : ((cat === "Primi" && isPasta) ? "125" : "Dose");
+      const qtyPlaceholder = isQb ? "q.b." : ((cat === "Primi" && isPasta) ? "125" : (cat === "Frutta / Merenda" ? "1" : "Dose"));
       const displayVal = (quantita !== "" && quantita !== null && quantita !== undefined)
         ? (isQb && (quantita === "q.b." || quantita === 1) ? "" : quantita)
         : "";
 
-      let safeDep = normalizeDepartment(reparto || "Condimenti e Dispensa", nome);
+      let targetRep = reparto;
+      if (cat === "Frutta / Merenda") {
+        targetRep = "Ortofrutta";
+      }
+      let safeDep = normalizeDepartment(targetRep || (cat === "Frutta / Merenda" ? "Ortofrutta" : "Condimenti e Dispensa"), nome);
+      if (cat === "Frutta / Merenda") {
+        safeDep = "Ortofrutta";
+      }
 
       row.innerHTML = `
         <td class="py-1.5 pr-2">
-          <input type="text" placeholder="Nome ingrediente (es. Fesa di tacchino)" value="${nome}" required oninput="updatePastaPlaceholders('${tbodyId}')" class="ing-name w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs focus:ring-1 focus:ring-emerald-500">
+          <input type="text" placeholder="${cat === 'Frutta / Merenda' ? 'Nome frutto (es. Mela Golden)' : 'Nome ingrediente (es. Fesa di tacchino)'}" value="${nome}" required oninput="handleSmartIngredientNameInput(this); updatePastaPlaceholders('${tbodyId}')" class="ing-name w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs focus:ring-1 focus:ring-emerald-500">
         </td>
         <td class="py-1.5 px-2">
           <input type="number" step="any" min="0" placeholder="${qtyPlaceholder}" value="${displayVal}" ${isQb ? '' : 'required'} class="ing-qty w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-center focus:ring-1 focus:ring-emerald-500">
@@ -7200,6 +8186,7 @@
 
       const catSelect = document.getElementById("modal-cat-filter");
       if (slotKey === "colazione") catSelect.value = "Colazione";
+      else if (slotKey === "merenda") catSelect.value = "Frutta / Merenda";
       else catSelect.value = "ALL";
 
       renderModalRecipeChoices();
@@ -8696,6 +9683,7 @@
       const cats = [
         { key: "all", label: "Tutti" },
         { key: "Colazione", label: "Colazione" },
+        { key: "Frutta / Merenda", label: "Frutta" },
         { key: "Primi", label: "Primi" },
         { key: "Carne", label: "Carne" },
         { key: "Pesce", label: "Pesce" },
@@ -8727,6 +9715,7 @@
     function isRecipeMatchingFilter(rec, filterKey) {
       if (!filterKey || filterKey === "all") return true;
       if (filterKey === "Colazione") return rec.categoria === "Colazione";
+      if (filterKey === "Frutta / Merenda") return rec.categoria === "Frutta / Merenda";
       if (filterKey === "Primi") return rec.categoria === "Primi";
       if (filterKey === "Carne") return rec.categoria.includes("Carne");
       if (filterKey === "Pesce") return rec.categoria.includes("Pesce");
@@ -8988,26 +9977,116 @@
     /* ==========================================================================
        15-C. LISTINO FRUTTIVENDOLO (WHATSAPP) & GESTIONE DISPONIBILITÀ
        ========================================================================== */
+    const MACRO_FAMILY_KEYWORDS = {
+      "Arance": ["arance", "arancia", "navel", "spremuta"],
+      "Limoni": ["limoni", "limone"],
+      "Pompelmi": ["pompelmi", "pompelmo"],
+      "Ananas": ["ananas"],
+      "Melone": ["melone", "meloni", "gialletto", "retato", "cantalupo"],
+      "Fichi d'India": ["fichi d'india", "fico d'india"],
+      "Banane": ["banane", "banana"],
+      "Kiwi": ["kiwi"],
+      "Mele": ["mele", "mela", "golden", "gala", "pink lady"],
+      "Pere": ["pere", "pera", "williams", "nashi", "abate"],
+      "Prugne": ["prugne", "prugna", "susine", "susina"],
+      "Pesche": ["pesche", "pesca", "nettarine", "nettarina"],
+      "Avocado": ["avocado"],
+      "Uva": ["uva"],
+      "Noci": ["noci", "noce"],
+      "Zucchine": ["zucchine", "zucchina"],
+      "Fagiolini": ["fagiolini", "fagiolino"],
+      "Broccoli": ["broccoli", "broccolo", "cime di rapa"],
+      "Melanzane": ["melanzane", "melanzana"],
+      "Peperoni": ["peperoni", "peperone"],
+      "Zucca": ["zucca", "zucche"],
+      "Cavolfiore": ["cavolfiore", "cavolfiori"],
+      "Bietole e Coste": ["bietole", "bietola", "coste", "costa", "costine", "bieta"],
+      "Pomodori": ["pomodori", "pomodoro", "datterini", "datterino", "cuore di bue", "pomodorini", "ciliegino", "ciliegini", "pelati", "passata"],
+      "Finocchi": ["finocchi", "finocchio"],
+      "Cetrioli": ["cetrioli", "cetriolo"],
+      "Carote": ["carote", "carota"],
+      "Insalata": ["insalata", "insalate", "lattuga", "lattughe", "misticanza", "rucola", "scarola", "songino", "valeriana", "gentilina"],
+      "Radicchio": ["radicchio", "radicchi"],
+      "Sedano": ["sedano"],
+      "Patate": ["patate", "patata"],
+      "Cipolle": ["cipolle", "cipolla", "cipollotto", "cipollotti", "scalogno", "tropea"],
+      "Aglio": ["aglio"],
+      "Funghi": ["funghi", "fungo", "champignon", "porcini", "porcino", "chiodini", "pioppini"],
+      "Pronti / Speciali": ["pannocchie", "pannocchia", "mais", "rapa", "minestrone"]
+    };
+    window.MACRO_FAMILY_KEYWORDS = MACRO_FAMILY_KEYWORDS;
+
     function doesRecipeMatchVendorInventory(recipe, inventory) {
       if (!recipe || !Array.isArray(recipe.ingredienti) || !Array.isArray(inventory) || inventory.length === 0) {
         return false;
       }
-      const activeTerms = [];
-      inventory.forEach(category => {
-        if (typeof PRODUCE_DICTIONARY !== "undefined" && PRODUCE_DICTIONARY[category]) {
-          activeTerms.push(...PRODUCE_DICTIONARY[category]);
-        } else {
-          activeTerms.push(category.toLowerCase());
+
+      const activeSpecificKeywords = [];
+      const activeFamilyKeywords = [];
+
+      inventory.forEach(invItem => {
+        if (!invItem) return;
+        if (typeof invItem === "object") {
+          const variety = (typeof PRODUCE_VARIETY_MAP !== "undefined" && Array.isArray(PRODUCE_VARIETY_MAP))
+            ? PRODUCE_VARIETY_MAP.find(v => v.id === invItem.id || v.name === invItem.name)
+            : null;
+
+          if (variety && Array.isArray(variety.keywords)) {
+            activeSpecificKeywords.push(...variety.keywords);
+          } else if (invItem.name) {
+            activeSpecificKeywords.push(invItem.name.toLowerCase());
+          }
+
+          const fam = invItem.family || (variety ? variety.family : null);
+          if (fam && MACRO_FAMILY_KEYWORDS[fam]) {
+            activeFamilyKeywords.push(...MACRO_FAMILY_KEYWORDS[fam]);
+          }
+        } else if (typeof invItem === "string") {
+          const variety = (typeof PRODUCE_VARIETY_MAP !== "undefined" && Array.isArray(PRODUCE_VARIETY_MAP))
+            ? PRODUCE_VARIETY_MAP.find(v => v.id === invItem || v.name.toLowerCase() === invItem.toLowerCase())
+            : null;
+
+          if (variety) {
+            if (Array.isArray(variety.keywords)) activeSpecificKeywords.push(...variety.keywords);
+            if (variety.family && MACRO_FAMILY_KEYWORDS[variety.family]) {
+              activeFamilyKeywords.push(...MACRO_FAMILY_KEYWORDS[variety.family]);
+            }
+          } else {
+            if (MACRO_FAMILY_KEYWORDS[invItem]) {
+              activeFamilyKeywords.push(...MACRO_FAMILY_KEYWORDS[invItem]);
+            }
+            if (typeof PRODUCE_DICTIONARY !== "undefined" && PRODUCE_DICTIONARY[invItem]) {
+              activeFamilyKeywords.push(...PRODUCE_DICTIONARY[invItem]);
+            }
+            activeSpecificKeywords.push(invItem.toLowerCase());
+          }
         }
       });
+
+      function matchesText(text, term) {
+        if (!text || !term) return false;
+        const t = term.toLowerCase().trim();
+        if (!t) return false;
+        if (t.length <= 3) {
+          const escaped = t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          return new RegExp(`(^|\\s|[.,;()/-])${escaped}($|\\s|[.,;()/-])`, 'i').test(text);
+        }
+        return text.includes(t);
+      }
 
       return recipe.ingredienti.some(ing => {
         const name = (typeof ing === "string" ? ing : (ing && ing.nome ? ing.nome : "")).toLowerCase();
         if (!name) return false;
-        return activeTerms.some(term => {
-          const t = term.toLowerCase();
-          return name.includes(t);
-        });
+
+        // a) Match specifico sulla varietà/cultivar
+        const matchSpecific = activeSpecificKeywords.some(kw => matchesText(name, kw));
+        if (matchSpecific) return true;
+
+        // b) Match generico sulla macro-famiglia
+        const matchFamily = activeFamilyKeywords.some(kw => matchesText(name, kw));
+        if (matchFamily) return true;
+
+        return false;
       });
     }
     window.doesRecipeMatchVendorInventory = doesRecipeMatchVendorInventory;
@@ -9047,7 +10126,19 @@
       // Badge conteggio
       const countBadge = document.getElementById("fruit-vendor-count-badge");
       if (countBadge) {
-        countBadge.innerText = `${inventory.length} categorie riconosciute attive`;
+        countBadge.innerText = inventory.length === 1
+          ? '1 prodotto specifico riconosciuto'
+          : `${inventory.length} prodotti specifici riconosciuti`;
+      }
+
+      function escapeText(str) {
+        return String(str || "").replace(/[&<>"']/g, m => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;'
+        }[m]));
       }
 
       // Container tag
@@ -9056,13 +10147,23 @@
         if (!hasItems) {
           tagsContainer.innerHTML = `<span class="text-xs text-slate-400 italic">Nessun listino memorizzato. Incolla il testo sopra e premi "Analizza e Salva".</span>`;
         } else {
-          tagsContainer.innerHTML = inventory.map(item => `
-            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-lime-100 text-lime-900 border border-lime-300 text-xs font-semibold shadow-2xs">
-              <i data-lucide="check" class="w-3.5 h-3.5 text-lime-700"></i>
-              <span>${item}</span>
-            </span>
-          `).join("");
-          lucide.createIcons();
+          tagsContainer.innerHTML = inventory.map(item => {
+            const isObj = item && typeof item === "object";
+            const name = isObj ? (item.name || item.id) : item;
+            const pricePill = (isObj && item.price)
+              ? `<span class="ml-1 text-[11px] font-mono text-lime-800 bg-lime-200/70 px-1.5 py-0.5 rounded-md border border-lime-300/60 font-semibold">${escapeText(item.price)}</span>`
+              : "";
+            return `
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-lime-100 text-lime-900 border border-lime-300 text-xs font-semibold shadow-2xs">
+                <i data-lucide="check" class="w-3.5 h-3.5 text-lime-700 shrink-0"></i>
+                <span>${escapeText(name)}</span>
+                ${pricePill}
+              </span>
+            `;
+          }).join("");
+          if (typeof lucide !== "undefined" && lucide.createIcons) {
+            lucide.createIcons();
+          }
         }
       }
     }
@@ -9086,55 +10187,120 @@
         return [];
       }
 
-      const recognizedCategories = new Set();
+      // Prepara l'elenco delle keyword specifiche ordinate per lunghezza decrescente
+      const allKeywords = [];
+      if (typeof PRODUCE_VARIETY_MAP !== "undefined" && Array.isArray(PRODUCE_VARIETY_MAP)) {
+        PRODUCE_VARIETY_MAP.forEach(item => {
+          if (Array.isArray(item.keywords)) {
+            item.keywords.forEach(kw => {
+              const cleanKw = kw.toLowerCase().trim();
+              if (cleanKw) {
+                allKeywords.push({
+                  item,
+                  keyword: cleanKw,
+                  length: cleanKw.length
+                });
+              }
+            });
+          }
+        });
+      }
+      allKeywords.sort((a, b) => b.length - a.length);
+
+      const recognizedMap = new Map();
       const lines = text.split('\n');
 
-      // Regex per isolare e rimuovere prezzi, valute, unità di misura e simboli di elenco
-      const priceRegex = /(?:€\s*\d+(?:[.,]\d+)?|\d+(?:[.,]\d+)?\s*€|\d+(?:[.,]\d+)?\s*(?:kg|al kg|kilo|al kilo|cad|al mazzo|l|hg))/gi;
+      // Regex per estrarre e isolare prezzi, valute, unità di misura (ordinate per lunghezza per evitare troncamenti)
+      const priceRegex = /(?:€\s*\d+(?:[.,]\d+)?|\d+(?:[.,]\d+)?\s*€)(?:\s*(?:\/\s*kg|\/\s*kilo|\/\s*hg|\/\s*etto|\/\s*pz|\/\s*pezzo|\/|al\s*kilo|al\s*kg|al\s*mazzo|al\s*cestino|alla\s*vaschetta|la\s*confezione|la\s*vaschetta|il\s*mazzo|il\s*cestino|a\s*confezione|a\s*mazzo|cad\.?|cad|kilo|kg|etto|hg|pezzo|pz|confezione|conf\.?|mazzo|cestino|vaschetta|al|la|a))?/gi;
       const bulletRegex = /^[\s\-*•–—\d\.\)\(]+/g;
-      // Parole accessorie frequenti (geografie, convenevoli, formati) da non confondere
-      const fillerRegex = /\b(buonasera|buongiorno|ciao|grazie|disponibile|disponibili|ordine|ritiro|banco|chiarimento|frutta|verdura|selezione|raccolto|fresco|freschi|origine|cat|categoria|extra|italia|sicilia|piemonte|puglia|campania|trentino|romagna|nuova zelanda|costa rica|spagna|chiquita|satispay|bancomat|kg|kilo|cad|al|di|del|della|da|con|e|o|senza)\b/gi;
 
       lines.forEach(rawLine => {
-        let line = rawLine.toLowerCase();
+        let lower = rawLine.toLowerCase();
 
         // Scarta righe discorsive o convenevoli
         if (
-          line.includes('grazie') ||
-          line.includes('satispay') ||
-          line.includes('bancomat') ||
-          line.includes('ritiro') ||
-          line.includes('buonasera') ||
-          line.includes('esaurimento scorte')
+          lower.includes('grazie') ||
+          lower.includes('satispay') ||
+          lower.includes('bancomat') ||
+          lower.includes('ritiro') ||
+          lower.includes('buonasera') ||
+          lower.includes('buongiorno') ||
+          lower.includes('ciao') ||
+          lower.includes('esaurimento scorte')
         ) {
           return;
         }
 
-        // Pulisci riga da prezzi, elenchi e parole superflue
-        line = line.replace(priceRegex, ' ')
-                   .replace(bulletRegex, ' ')
-                   .replace(/[.,;:!?\(\)\[\]]/g, ' ')
-                   .trim();
+        // Estrai il prezzo se presente sulla riga
+        const priceMatches = rawLine.match(priceRegex);
+        const matchedPrice = priceMatches && priceMatches.length > 0 ? priceMatches[0].trim() : null;
+
+        // Pulisci riga da prezzi, elenchi numerati/puntati e punteggiatura
+        let line = rawLine
+          .replace(priceRegex, ' ')
+          .replace(bulletRegex, ' ')
+          .replace(/[.,;:!?\(\)\[\]*]/g, ' ')
+          .replace(/\s+/g, ' ')
+          .toLowerCase()
+          .trim();
 
         if (!line) return;
 
-        // Confronta con il dizionario
-        for (const [category, synonyms] of Object.entries(PRODUCE_DICTIONARY)) {
-          const match = synonyms.some(synonym => {
-            const syn = synonym.toLowerCase().replace(/[.,;:!?\(\)\[\]]/g, ' ').trim();
-            // Cerca la parola intera con confine di parola
-            const escaped = syn.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const regex = new RegExp(`(^|\\s)${escaped}($|\\s)`, 'i');
-            return regex.test(line);
-          });
+        // Confronta con PRODUCE_VARIETY_MAP (cultivar specifiche)
+        let matchedAny = false;
+        for (const entry of allKeywords) {
+          const kw = entry.keyword;
+          const escaped = kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          const regex = (kw.length <= 4 || !kw.includes(' '))
+            ? new RegExp(`(^|\\s)${escaped}($|\\s)`, 'i')
+            : new RegExp(escaped, 'i');
 
-          if (match) {
-            recognizedCategories.add(category);
+          if (regex.test(line)) {
+            matchedAny = true;
+            if (!recognizedMap.has(entry.item.id)) {
+              recognizedMap.set(entry.item.id, {
+                id: entry.item.id,
+                name: entry.item.name,
+                family: entry.item.family,
+                price: matchedPrice
+              });
+            } else if (matchedPrice && !recognizedMap.get(entry.item.id).price) {
+              recognizedMap.get(entry.item.id).price = matchedPrice;
+            }
+
+            // Rimuovi il termine matchato dalla riga per evitare falsi match a cascata
+            line = line.replace(regex, ' ').replace(/\s+/g, ' ').trim();
+            if (!line) break;
+          }
+        }
+
+        // Fallback su PRODUCE_DICTIONARY se la riga non ha matchato cultivar specifiche
+        if (!matchedAny && line && typeof PRODUCE_DICTIONARY !== "undefined") {
+          for (const [category, synonyms] of Object.entries(PRODUCE_DICTIONARY)) {
+            const match = synonyms.some(synonym => {
+              const syn = synonym.toLowerCase().replace(/[.,;:!?\(\)\[\]]/g, ' ').trim();
+              const escaped = syn.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+              const regex = new RegExp(`(^|\\s)${escaped}($|\\s)`, 'i');
+              return regex.test(line);
+            });
+
+            if (match) {
+              const fallbackId = category.toLowerCase().replace(/\s+/g, '_');
+              if (!recognizedMap.has(fallbackId)) {
+                recognizedMap.set(fallbackId, {
+                  id: fallbackId,
+                  name: category,
+                  family: category,
+                  price: matchedPrice
+                });
+              }
+              break;
+            }
           }
         }
       });
 
-      const recognized = Array.from(recognizedCategories).sort();
+      const recognized = Array.from(recognizedMap.values()).sort((a, b) => a.name.localeCompare(b.name, "it"));
 
       if (isInteractive) {
         if (recognized.length === 0) {
@@ -9151,7 +10317,15 @@
 
         updateFruitVendorUI();
         renderShoppingList();
-        showToast("Listino Salvato!", `${recognized.length} categorie riconosciute attive (+50% priorità ricette).`);
+        showToast("Listino Salvato!", `${recognized.length} prodotti specifici riconosciuti (+50% priorità ricette).`);
+
+        if (AppState.pendingGenerationAfterVendor) {
+          AppState.pendingGenerationAfterVendor = false;
+          closeFruitVendorModal();
+          generateWeeklyPlan(false);
+          renderWeeklyGrid();
+          renderShoppingList();
+        }
       }
 
       return recognized;
@@ -9220,7 +10394,7 @@
 
     function isValidHouseCode(code) {
       const sanitized = sanitizeHouseCode(code);
-      return sanitized.length >= 6 && sanitized.length <= 32 && /^[A-Z0-9]+(-[A-Z0-9]+)*$/.test(sanitized);
+      return sanitized.length >= 3 && sanitized.length <= 64 && /^[A-Z0-9]+(-[A-Z0-9]+)*$/.test(sanitized);
     }
     window.isValidHouseCode = isValidHouseCode;
 
@@ -9276,7 +10450,7 @@
 
     function triggerCloudSync() {
       if (isApplyingRemoteUpdate) return;
-      const houseCode = localStorage.getItem(STORAGE_KEY_HOUSE_CODE);
+      const houseCode = getSavedHouseCode() || AppState.houseCode;
       if (!houseCode || !db) return;
 
       if (cloudSyncTimer) clearTimeout(cloudSyncTimer);
@@ -9288,7 +10462,7 @@
     window.triggerCloudSync = triggerCloudSync;
 
     async function executeCloudSync(rawCode) {
-      const houseCode = sanitizeHouseCode(rawCode);
+      const houseCode = sanitizeHouseCode(rawCode || getSavedHouseCode() || AppState.houseCode);
       if (!db || !isValidHouseCode(houseCode)) return;
       try {
         AppState.syncStatus = "syncing";
@@ -9308,7 +10482,7 @@
         unsubscribeHouseListener();
         unsubscribeHouseListener = null;
       }
-      const houseCode = sanitizeHouseCode(rawCode);
+      const houseCode = sanitizeHouseCode(rawCode || getSavedHouseCode() || AppState.houseCode);
       if (!db || !isValidHouseCode(houseCode)) return;
 
       try {
@@ -9407,7 +10581,7 @@
       try {
         const payload = getHousePayload(code);
         await db.collection("houses").doc(code).set(payload);
-        localStorage.setItem(STORAGE_KEY_HOUSE_CODE, code);
+        saveHouseCodeToStorage(code);
         AppState.houseCode = code;
         startHouseListener(code);
         updateSyncHouseModalUI();
@@ -9430,7 +10604,7 @@
         return;
       }
       if (!isValidHouseCode(code)) {
-        showToast("Codice Non Valido", "Il codice deve contenere almeno 6 caratteri alfanumerici (es. CASA-4K9P).");
+        showToast("Codice Non Valido", "Il codice contiene caratteri non validi (es. CASA-4K9P).");
         if (inputEl) inputEl.focus();
         return;
       }
@@ -9447,7 +10621,7 @@
           return;
         }
         const data = doc.data();
-        localStorage.setItem(STORAGE_KEY_HOUSE_CODE, code);
+        saveHouseCodeToStorage(code);
         AppState.houseCode = code;
         applyRemoteHouseData(data);
         startHouseListener(code);
@@ -9462,7 +10636,7 @@
     window.joinSharedHouse = joinSharedHouse;
 
     function disconnectSharedHouse() {
-      const code = localStorage.getItem(STORAGE_KEY_HOUSE_CODE);
+      const code = getSavedHouseCode() || AppState.houseCode;
       if (!code) return;
       const isConfirmed = confirm(`Vuoi scollegare questo dispositivo dallo Spazio Casa (${code})?\nI dati attuali rimarranno salvati sul dispositivo in modalità locale.`);
       if (!isConfirmed) return;
@@ -9471,7 +10645,7 @@
         unsubscribeHouseListener();
         unsubscribeHouseListener = null;
       }
-      localStorage.removeItem(STORAGE_KEY_HOUSE_CODE);
+      removeHouseCodeFromStorage();
       AppState.houseCode = null;
       updateSyncHouseModalUI();
       updateHeaderHouseUI();
@@ -9480,7 +10654,7 @@
     window.disconnectSharedHouse = disconnectSharedHouse;
 
     function copyHouseCode() {
-      const code = localStorage.getItem(STORAGE_KEY_HOUSE_CODE) || AppState.houseCode;
+      const code = getSavedHouseCode() || AppState.houseCode;
       if (!code) return;
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(code).then(() => {
@@ -9525,7 +10699,7 @@
     window.closeSyncHouseModal = closeSyncHouseModal;
 
     function updateSyncHouseModalUI() {
-      const houseCode = localStorage.getItem(STORAGE_KEY_HOUSE_CODE);
+      const houseCode = getSavedHouseCode() || AppState.houseCode;
       const statusBox = document.getElementById("house-sync-status-box");
       const disconnectedView = document.getElementById("house-sync-disconnected-view");
       const connectedView = document.getElementById("house-sync-connected-view");
@@ -9575,7 +10749,7 @@
     window.updateSyncHouseModalUI = updateSyncHouseModalUI;
 
     function updateHeaderHouseUI() {
-      const houseCode = localStorage.getItem(STORAGE_KEY_HOUSE_CODE);
+      const houseCode = getSavedHouseCode() || AppState.houseCode;
       const badge = document.getElementById("house-sync-header-badge");
       const dot = document.getElementById("house-sync-header-dot");
       const headerBtn = document.getElementById("house-code-badge") || document.getElementById("btn-header-house-sync");
@@ -9602,7 +10776,7 @@
     window.updateHeaderHouseUI = updateHeaderHouseUI;
 
     function triggerManualSync() {
-      const houseCode = localStorage.getItem(STORAGE_KEY_HOUSE_CODE);
+      const houseCode = getSavedHouseCode() || AppState.houseCode;
       if (!houseCode) return;
       executeCloudSync(houseCode);
       showToast("Sincronizzazione in corso", "Dati inviati a Firestore in tempo reale.");
@@ -9645,7 +10819,7 @@
         localStorage.removeItem("mealplan_pro_goals_v3");
         localStorage.removeItem(STORAGE_KEY_GLOBAL_GUESTS);
         localStorage.removeItem(STORAGE_KEY_FRUIT_VENDOR);
-        localStorage.removeItem(STORAGE_KEY_HOUSE_CODE);
+        removeHouseCodeFromStorage();
         AppState.fruitVendorInventory = [];
         AppState.houseCode = null;
         AppState.globalGuests = 1;
@@ -9700,14 +10874,15 @@
       }
       updateFruitVendorUI();
 
-      // Inizializzazione Spazio Casa / Coppia Firebase
-      const savedHouseCode = localStorage.getItem(STORAGE_KEY_HOUSE_CODE);
-      if (savedHouseCode && isValidHouseCode(savedHouseCode)) {
+      // Inizializzazione Spazio Casa / Coppia Firebase con fallback difensivo e persistenza garantita
+      const savedHouseCode = getSavedHouseCode() || AppState.houseCode;
+      if (savedHouseCode) {
         const cleanCode = sanitizeHouseCode(savedHouseCode);
-        AppState.houseCode = cleanCode;
-        startHouseListener(cleanCode);
-      } else if (savedHouseCode) {
-        localStorage.removeItem(STORAGE_KEY_HOUSE_CODE);
+        if (cleanCode) {
+          AppState.houseCode = cleanCode;
+          saveHouseCodeToStorage(cleanCode);
+          startHouseListener(cleanCode);
+        }
       }
       updateHeaderHouseUI();
 

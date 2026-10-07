@@ -30,7 +30,8 @@ try {
   console.warn("[Firebase] Inizializzazione fallita o offline:", e);
 }
 
-// Costanti Storage
+// Costanti Storage & Chiavi di Compatibilità per Spazio Casa
+const HOUSE_CODE_STORAGE_KEYS = ["shared_house_code", "house_code", "household_id", "pasti_sync_code"];
 const STORAGE_KEY_HOUSE_CODE = "shared_house_code";
 const STORAGE_KEY_DEVICE_ID = "mealplan_device_id";
 
@@ -50,10 +51,10 @@ function sanitizeHouseCode(code) {
   return code.trim().toUpperCase().replace(/[^A-Z0-9-]/g, "").replace(/-+/g, "-").replace(/^-|-$/g, "");
 }
 
-// Validazione Document ID: lunghezza >= 6 e caratteri alfanumerici con trattini
+// Validazione Document ID: lunghezza flessibile (3-64 caratteri alfanumerici con trattini)
 function isValidHouseCode(code) {
   const sanitized = sanitizeHouseCode(code);
-  return sanitized.length >= 6 && sanitized.length <= 32 && /^[A-Z0-9]+(-[A-Z0-9]+)*$/.test(sanitized);
+  return sanitized.length >= 3 && sanitized.length <= 64 && /^[A-Z0-9]+(-[A-Z0-9]+)*$/.test(sanitized);
 }
 
 // Generatore codice casa compatto (es. CASA-4K9P)
@@ -66,6 +67,40 @@ function generateHouseCode() {
   return `CASA-${rand}`;
 }
 
+// Lettura difensiva multi-chiave del codice casa salvato
+function getSavedHouseCode() {
+  for (const key of HOUSE_CODE_STORAGE_KEYS) {
+    try {
+      const val = localStorage.getItem(key);
+      if (val && typeof val === "string" && val.trim().length > 0) {
+        const clean = sanitizeHouseCode(val);
+        if (clean) return clean;
+      }
+    } catch (e) {}
+  }
+  return "";
+}
+
+// Scrittura ridondante del codice casa su tutte le chiavi supportate
+function saveHouseCodeToStorage(code) {
+  const clean = sanitizeHouseCode(code);
+  if (!clean) return;
+  for (const key of HOUSE_CODE_STORAGE_KEYS) {
+    try {
+      localStorage.setItem(key, clean);
+    } catch (e) {}
+  }
+}
+
+// Rimozione sicura del codice casa da tutte le chiavi supportate
+function removeHouseCodeFromStorage() {
+  for (const key of HOUSE_CODE_STORAGE_KEYS) {
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {}
+  }
+}
+
 // Esporta oggetto FirebaseSync per integrazione modulare
 window.FirebaseSync = {
   config: firebaseConfig,
@@ -73,5 +108,9 @@ window.FirebaseSync = {
   getDeviceId,
   sanitizeHouseCode,
   isValidHouseCode,
-  generateHouseCode
+  generateHouseCode,
+  getSavedHouseCode,
+  saveHouseCodeToStorage,
+  removeHouseCodeFromStorage,
+  HOUSE_CODE_STORAGE_KEYS
 };
